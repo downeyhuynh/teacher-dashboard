@@ -4,9 +4,10 @@ import { ToolToolbar } from './ToolToolbar'
 import { FloatingPanel } from '../ui/FloatingPanel'
 import { useFloatingPanels } from '../../hooks/useFloatingPanels'
 import {
-  PANEL_REGISTRY,
   PANEL_REGISTRY_BY_ID,
   REGISTERED_PANEL_IDS,
+  MAIN_TOOLBAR_TOOLS,
+  QUICK_TOOLBAR_TOOLS,
 } from '../../panels/panelRegistry'
 import { PANEL_IDS } from '../../utils/panelDefaults'
 
@@ -74,7 +75,8 @@ export function AppShell() {
       </div>
 
       <ToolToolbar
-        tools={PANEL_REGISTRY}
+        tools={MAIN_TOOLBAR_TOOLS}
+        quickTools={QUICK_TOOLBAR_TOOLS}
         activeIds={activeIds}
         onToolSelect={togglePanel}
       />

@@ -1,5 +1,6 @@
 import { PresentationProvider } from './context/PresentationContext'
 import { ToolsProvider } from './context/ToolsContext'
+import { SeatingProvider } from './context/SeatingContext'
 import { AppShell } from './components/layout/AppShell'
 
 /**
@@ -9,7 +10,9 @@ function App() {
   return (
     <PresentationProvider>
       <ToolsProvider>
-        <AppShell />
+        <SeatingProvider>
+          <AppShell />
+        </SeatingProvider>
       </ToolsProvider>
     </PresentationProvider>
   )

@@ -1,25 +1,9 @@
-import { useState } from 'react'
 import { IconButton } from '../ui/IconButton'
-import { BellIcon } from '../ui/icons'
-import { playAttentionBell } from '../../utils/attentionBell'
 
 /**
  * Fixed thin tool rail. Always visible.
  */
-export function ToolToolbar({ tools, activeIds, onToolSelect }) {
-  const [bellPlaying, setBellPlaying] = useState(false)
-
-  const ringBell = async () => {
-    if (bellPlaying) return
-    try {
-      const { durationMs } = await playAttentionBell()
-      setBellPlaying(true)
-      window.setTimeout(() => setBellPlaying(false), durationMs || 3100)
-    } catch {
-      setBellPlaying(false)
-    }
-  }
-
+export function ToolToolbar({ tools, quickTools = [], activeIds, onToolSelect }) {
   return (
     <aside className="tool-toolbar" aria-label="Teaching tools">
       <div className="tool-toolbar__brand" aria-hidden="true">
@@ -38,16 +22,20 @@ export function ToolToolbar({ tools, activeIds, onToolSelect }) {
         ))}
       </div>
 
-      <div className="tool-toolbar__quick">
-        <IconButton
-          label="Attention bell"
-          isActive={bellPlaying}
-          onClick={ringBell}
-          className={bellPlaying ? 'is-ringing' : ''}
-        >
-          <BellIcon className="icon-button__glyph" />
-        </IconButton>
-      </div>
+      {quickTools.length > 0 && (
+        <div className="tool-toolbar__quick" role="toolbar" aria-label="Quick tools">
+          {quickTools.map((tool) => (
+            <IconButton
+              key={tool.id}
+              label={tool.label}
+              isActive={activeIds.has(tool.id)}
+              onClick={() => onToolSelect(tool.id)}
+            >
+              <tool.Icon className="icon-button__glyph" />
+            </IconButton>
+          ))}
+        </div>
+      )}
     </aside>
   )
 }

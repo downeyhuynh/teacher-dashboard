@@ -49,6 +49,27 @@ export function StudentsIcon({ className }) {
   )
 }
 
+export function SeatingIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <rect x="3" y="4" width="8" height="6" rx="1" />
+      <rect x="13" y="4" width="8" height="6" rx="1" />
+      <rect x="3" y="14" width="8" height="6" rx="1" />
+      <rect x="13" y="14" width="8" height="6" rx="1" />
+    </svg>
+  )
+}
+
+export function AttendanceIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+      <rect x="9" y="3" width="6" height="4" rx="1" />
+      <path d="M9 12h6M9 16h4" />
+    </svg>
+  )
+}
+
 export function MinimizeIcon({ className }) {
   return (
     <svg className={className} {...iconProps} strokeWidth={2}>
@@ -108,16 +129,6 @@ export function HandIcon({ className }) {
       <path d="M8 11V6.5a1.5 1.5 0 0 1 3 0V11" />
       <path d="M11 10.5V5.5a1.5 1.5 0 0 1 3 0V11" />
       <path d="M14 10.5V7a1.5 1.5 0 0 1 3 0v6.5a5 5 0 0 1-5 5H11a5 5 0 0 1-4.5-2.7L5 13.5a1.5 1.5 0 0 1 2.5-1.6L8 13" />
-    </svg>
-  )
-}
-
-export function BellIcon({ className }) {
-  return (
-    <svg className={className} {...iconProps}>
-      <path d="M6.5 16h11l-1.2-1.4a6.5 6.5 0 0 1-1.3-4V9a4 4 0 1 0-8 0v1.6c0 1.5-.45 2.9-1.3 4L6.5 16z" />
-      <path d="M10 16.2a2 2 0 0 0 4 0" />
-      <path d="M12 4v1.2" />
     </svg>
   )
 }

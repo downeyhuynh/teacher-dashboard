@@ -1,12 +1,16 @@
 import {
   AnnotateIcon,
+  AttendanceIcon,
   CalculatorIcon,
+  SeatingIcon,
   StudentsIcon,
   TimerIcon,
 } from '../components/ui/icons'
 import { PANEL_IDS } from '../utils/panelDefaults'
 import { AnnotatePanel } from './AnnotatePanel'
+import { AttendancePanel } from './AttendancePanel'
 import { CalculatorPanel } from './CalculatorPanel'
+import { SeatingChartPanel } from './SeatingChartPanel'
 import { StudentPickerPanel } from './StudentPickerPanel'
 import { TimerPanel } from './TimerPanel'
 
@@ -39,6 +43,20 @@ export const PANEL_REGISTRY = [
     Icon: StudentsIcon,
     Component: StudentPickerPanel,
   },
+  {
+    id: PANEL_IDS.SEATING,
+    label: 'Seating',
+    Icon: SeatingIcon,
+    Component: SeatingChartPanel,
+    dock: 'quick',
+  },
+  {
+    id: PANEL_IDS.ATTENDANCE,
+    label: 'Attendance',
+    Icon: AttendanceIcon,
+    Component: AttendancePanel,
+    dock: 'quick',
+  },
 ]
 
 export const PANEL_REGISTRY_BY_ID = Object.fromEntries(
@@ -46,3 +64,11 @@ export const PANEL_REGISTRY_BY_ID = Object.fromEntries(
 )
 
 export const REGISTERED_PANEL_IDS = PANEL_REGISTRY.map((entry) => entry.id)
+
+export const MAIN_TOOLBAR_TOOLS = PANEL_REGISTRY.filter(
+  (entry) => entry.dock !== 'quick',
+)
+
+export const QUICK_TOOLBAR_TOOLS = PANEL_REGISTRY.filter(
+  (entry) => entry.dock === 'quick',
+)

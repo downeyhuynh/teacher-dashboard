@@ -47,26 +47,6 @@
   border-top: 1px solid var(--color-border);
 }
 
-.icon-button.is-ringing,
-.icon-button.is-ringing.is-active {
-  background: rgba(217, 119, 6, 0.14);
-  color: #b45309;
-  animation: bell-pulse 0.55s var(--ease-out) infinite alternate;
-}
-
-.icon-button.is-ringing.is-active::after {
-  background: #b45309;
-}
-
-@keyframes bell-pulse {
-  from {
-    transform: rotate(-8deg) scale(1);
-  }
-  to {
-    transform: rotate(8deg) scale(1.04);
-  }
-}
-
 .icon-button {
   position: relative;
   display: inline-flex;
