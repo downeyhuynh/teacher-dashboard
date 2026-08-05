@@ -1,0 +1,182 @@
+.tool-toolbar {
+  position: relative;
+  z-index: var(--z-toolbar);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--toolbar-gap);
+  width: var(--toolbar-width);
+  height: 100%;
+  padding: 10px 0;
+  background: var(--color-chrome);
+  border-left: 1px solid var(--color-border);
+  box-shadow: var(--shadow-toolbar);
+}
+
+.tool-toolbar__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  user-select: none;
+}
+
+.tool-toolbar__tools {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--toolbar-gap);
+  flex: 1;
+}
+
+.tool-toolbar__quick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 6px;
+  margin-top: 4px;
+  border-top: 1px solid var(--color-border);
+}
+
+.icon-button.is-ringing,
+.icon-button.is-ringing.is-active {
+  background: rgba(217, 119, 6, 0.14);
+  color: #b45309;
+  animation: bell-pulse 0.55s var(--ease-out) infinite alternate;
+}
+
+.icon-button.is-ringing.is-active::after {
+  background: #b45309;
+}
+
+@keyframes bell-pulse {
+  from {
+    transform: rotate(-8deg) scale(1);
+  }
+  to {
+    transform: rotate(8deg) scale(1.04);
+  }
+}
+
+.icon-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  color: var(--color-text-muted);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.icon-button:hover {
+  background: rgba(26, 35, 50, 0.06);
+  color: var(--color-text);
+}
+
+.icon-button:active {
+  transform: scale(0.96);
+}
+
+.icon-button.is-active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.icon-button.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  border-radius: 0 2px 2px 0;
+  background: var(--color-accent);
+}
+
+.icon-button__glyph {
+  width: 22px;
+  height: 22px;
+}
+
+.icon-button__tooltip {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: var(--color-text);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.icon-button:hover .icon-button__tooltip,
+.icon-button:focus-visible .icon-button__tooltip {
+  opacity: 1;
+}
+
+@media (max-width: 720px) {
+  .tool-toolbar {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    height: var(--toolbar-width);
+    padding: 0 10px;
+    border-left: none;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .tool-toolbar__brand {
+    margin-bottom: 0;
+    margin-right: 4px;
+  }
+
+  .tool-toolbar__tools {
+    flex-direction: row;
+    flex: 0 1 auto;
+  }
+
+  .tool-toolbar__quick {
+    flex-direction: row;
+    padding-top: 0;
+    padding-left: 6px;
+    margin-top: 0;
+    margin-left: 4px;
+    border-top: none;
+    border-left: 1px solid var(--color-border);
+  }
+
+  .icon-button.is-active::after {
+    left: 50%;
+    top: auto;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 3px;
+    border-radius: 2px 2px 0 0;
+  }
+
+  .icon-button__tooltip {
+    display: none;
+  }
+}

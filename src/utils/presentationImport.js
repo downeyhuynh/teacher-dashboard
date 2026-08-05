@@ -1,0 +1,150 @@
+import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs'
+import { createId } from './id'
+
+// Legacy build includes polyfills for newer JS APIs (e.g. Map.getOrInsertComputed)
+// that the modern pdfjs-dist build requires but many browsers still lack.
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
+  import.meta.url,
+).toString()
+
+const IMAGE_TYPES = new Set([
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/webp',
+  'image/gif',
+])
+
+/**
+ * @typedef {{ id: string, source: 'pdf' | 'image', name: string, src: string, pageNumber?: number }} Slide
+ */
+
+/**
+ * Render every page of a PDF to object-URL slide images.
+ * @returns {Promise<Slide[]>}
+ */
+export async function slidesFromPdf(file, { scale = 1.5, onProgress } = {}) {
+  const data = await file.arrayBuffer()
+  const loadingTask = pdfjs.getDocument({
+    data,
+    useSystemFonts: true,
+  })
+  const pdf = await loadingTask.promise
+  const slides = []
+
+  try {
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+      const page = await pdf.getPage(pageNumber)
+      const viewport = page.getViewport({ scale })
+      const canvas = document.createElement('canvas')
+      const context = canvas.getContext('2d', { alpha: false })
+
+      if (!context) {
+        throw new Error('Could not create canvas for PDF page')
+      }
+
+      canvas.width = Math.ceil(viewport.width)
+      canvas.height = Math.ceil(viewport.height)
+
+      await page.render({
+        canvasContext: context,
+        viewport,
+        canvas,
+      }).promise
+
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob(
+          (result) => {
+            if (result) resolve(result)
+            else reject(new Error('Failed to encode PDF page image'))
+          },
+          'image/jpeg',
+          0.92,
+        )
+      })
+
+      const src = URL.createObjectURL(blob)
+      slides.push({
+        id: createId('slide'),
+        source: 'pdf',
+        name: `${file.name} — p.${pageNumber}`,
+        src,
+        pageNumber,
+      })
+
+      onProgress?.({ pageNumber, total: pdf.numPages })
+      page.cleanup()
+    }
+  } finally {
+    try {
+      await pdf.cleanup()
+    } catch {
+      // Ignore cleanup failures after a successful import.
+    }
+    try {
+      await loadingTask.destroy()
+    } catch {
+      // Ignore worker teardown failures.
+    }
+  }
+
+  return slides
+}
+
+/**
+ * Create a slide from an image file (e.g. PowerPoint export).
+ * @returns {Promise<Slide>}
+ */
+export async function slideFromImage(file) {
+  const src = URL.createObjectURL(file)
+  return {
+    id: createId('slide'),
+    source: 'image',
+    name: file.name,
+    src,
+  }
+}
+
+/**
+ * Parse a FileList / File[] into slides (PDF pages + images).
+ * @returns {Promise<{ slides: Slide[], errors: string[] }>}
+ */
+export async function importPresentationFiles(files, { onProgress } = {}) {
+  const list = Array.from(files)
+  const slides = []
+  const errors = []
+
+  for (const file of list) {
+    try {
+      if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+        const pdfSlides = await slidesFromPdf(file, {
+          onProgress: (progress) =>
+            onProgress?.({ fileName: file.name, ...progress }),
+        })
+        slides.push(...pdfSlides)
+      } else if (IMAGE_TYPES.has(file.type) || /\.(png|jpe?g|webp|gif)$/i.test(file.name)) {
+        slides.push(await slideFromImage(file))
+        onProgress?.({ fileName: file.name, pageNumber: 1, total: 1 })
+      } else {
+        errors.push(`Unsupported file: ${file.name}`)
+      }
+    } catch (error) {
+      const message = error?.message || String(error) || 'Unknown error'
+      errors.push(`Failed to import ${file.name}: ${message}`)
+    }
+  }
+
+  return { slides, errors }
+}
+
+/**
+ * Revoke object URLs for slides to free memory.
+ */
+export function revokeSlideUrls(slides) {
+  for (const slide of slides) {
+    if (slide.src?.startsWith('blob:')) {
+      URL.revokeObjectURL(slide.src)
+    }
+  }
+}

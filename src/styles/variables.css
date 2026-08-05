@@ -1,0 +1,50 @@
+:root {
+  /* Surfaces */
+  --color-canvas: #e8edf2;
+  --color-stage: #f7f9fc;
+  --color-stage-border: #d0d8e2;
+  --color-chrome: #f4f7fa;
+  --color-panel: #ffffff;
+  --color-panel-header: #f0f4f8;
+
+  /* Text */
+  --color-text: #1a2332;
+  --color-text-muted: #5a6a7e;
+  --color-text-subtle: #8a97a8;
+
+  /* Accent — classroom teal */
+  --color-accent: #0d7a6f;
+  --color-accent-hover: #0a635a;
+  --color-accent-soft: rgba(13, 122, 111, 0.12);
+  --color-accent-ring: rgba(13, 122, 111, 0.35);
+
+  /* Borders & elevation */
+  --color-border: #c8d2de;
+  --color-border-strong: #a8b6c8;
+  --shadow-panel: 0 8px 28px rgba(26, 35, 50, 0.14), 0 2px 8px rgba(26, 35, 50, 0.06);
+  --shadow-toolbar: 0 0 0 1px var(--color-border), 0 4px 16px rgba(26, 35, 50, 0.08);
+
+  /* Layout */
+  --toolbar-width: 52px;
+  --toolbar-gap: 6px;
+  --panel-radius: 10px;
+  --panel-header-height: 40px;
+  --panel-min-width: 280px;
+  --panel-min-height: 180px;
+  --minimized-width: 200px;
+  --minimized-height: 40px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 140ms;
+  --duration-panel: 220ms;
+
+  /* Typography */
+  --font-ui: 'Outfit', 'Segoe UI', sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+
+  --z-stage: 1;
+  --z-panels: 100;
+  --z-toolbar: 200;
+  --z-minimized: 150;
+}

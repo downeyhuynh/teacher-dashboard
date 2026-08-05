@@ -1,0 +1,323 @@
+/* Presentation stage content */
+
+.presentation-stage__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: clamp(16px, 3vw, 40px);
+}
+
+.presentation-stage__busy {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(26, 35, 50, 0.88);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 500;
+  z-index: 5;
+}
+
+.slide-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(244, 247, 250, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+.slide-nav__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.slide-nav__deck {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40vw;
+}
+
+.slide-nav__count {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.slide-nav__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.slide-view-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+}
+
+.slide-view-controls__zoom {
+  min-width: 3.2rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+.stage-button--icon {
+  width: 32px;
+  min-height: 32px;
+  padding: 0;
+}
+
+.stage-button--icon.is-active {
+  background: var(--color-accent-soft);
+  border-color: transparent;
+  color: var(--color-accent);
+}
+
+.stage-button__icon {
+  width: 16px;
+  height: 16px;
+  margin: 0 auto;
+}
+
+.slide-viewport {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: calc(100% - 53px);
+  min-height: 0;
+}
+
+.slide-viewport__frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 12px;
+  overflow: hidden;
+  touch-action: none;
+  background:
+    linear-gradient(45deg, #eef2f6 25%, transparent 25%) 0 0 / 16px 16px,
+    linear-gradient(-45deg, #eef2f6 25%, transparent 25%) 0 0 / 16px 16px,
+    #f7f9fc;
+}
+
+.slide-viewport__frame.is-panning {
+  cursor: grab;
+}
+
+.slide-viewport__frame.is-panning:active {
+  cursor: grabbing;
+}
+
+.slide-viewport__slide {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+  line-height: 0;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.slide-viewport__image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(26, 35, 50, 0.12);
+  user-select: none;
+}
+
+.annotation-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+  pointer-events: none;
+  z-index: 2;
+  border-radius: 4px;
+}
+
+.annotation-layer.is-active {
+  pointer-events: auto;
+}
+
+.slide-viewport__rail {
+  padding: 8px 12px 10px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-chrome);
+}
+
+.import-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(520px, 100%);
+  padding: clamp(28px, 5vw, 48px);
+  border: 1.5px dashed var(--color-border-strong);
+  border-radius: 14px;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(247, 249, 252, 0.9));
+  text-align: center;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.import-dropzone.is-dragover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  transform: translateY(-2px);
+}
+
+.import-dropzone.is-compact {
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 8px;
+  text-align: left;
+  gap: 10px;
+}
+
+.import-dropzone__input {
+  display: none;
+}
+
+.import-dropzone__eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.import-dropzone__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+  font-weight: 550;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.import-dropzone__copy {
+  max-width: 38ch;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.import-dropzone__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.import-dropzone.is-compact .import-dropzone__actions {
+  margin-top: 0;
+}
+
+.import-dropzone__progress {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.import-dropzone__errors {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8rem;
+  color: #a32828;
+  text-align: left;
+}
+
+.stage-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 7px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-text);
+  font-size: 0.8rem;
+  font-weight: 550;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.stage-button:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+  background: #f8fafc;
+}
+
+.stage-button:disabled {
+  opacity: 0.45;
+}
+
+.stage-button--primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+.stage-button--primary:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: #fff;
+}
+
+.stage-button--danger {
+  color: #a32828;
+  border-color: #e2b4b4;
+}
+
+.stage-button--danger:hover:not(:disabled) {
+  background: rgba(180, 50, 50, 0.08);
+}
+
+@media (max-width: 720px) {
+  .slide-nav__deck {
+    max-width: 50vw;
+  }
+
+  .slide-viewport__rail {
+    padding: 6px 8px 8px;
+  }
+}
