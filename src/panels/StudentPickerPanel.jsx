@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { SpinWheel } from '../components/students/SpinWheel'
 import { useTools } from '../context/ToolsContext'
 import { rosterToText } from '../utils/roster'
+import { playSpinWheelSound } from '../utils/spinWheelSound'
 
 const SPIN_DURATION_MS = 4200
 
@@ -30,6 +32,7 @@ export function StudentPickerPanel() {
   const [spinning, setSpinning] = useState(false)
   const [spinTargetIndex, setSpinTargetIndex] = useState(null)
   const [pendingWinner, setPendingWinner] = useState(null)
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   useEffect(() => {
     setDraftText(rosterToText(activeRoster))
@@ -41,6 +44,15 @@ export function StudentPickerPanel() {
     setSpinTargetIndex(null)
     setPendingWinner(null)
   }, [activeClassId])
+
+  useEffect(() => {
+    if (!isFullscreen) return undefined
+    const onKey = (event) => {
+      if (event.key === 'Escape') setIsFullscreen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [isFullscreen])
 
   const activeLabel =
     classOptions.find((option) => option.id === activeClassId)?.label || 'Class'
@@ -66,6 +78,9 @@ export function StudentPickerPanel() {
     setPendingWinner(next.name)
     setSpinTargetIndex(next.index)
     setSpinning(true)
+    playSpinWheelSound(SPIN_DURATION_MS).catch(() => {
+      // Ignore audio unlock / unsupported-browser failures.
+    })
   }
 
   const instantChoose = () => {
@@ -75,22 +90,31 @@ export function StudentPickerPanel() {
 
   const busy = spinning
 
-  return (
-    <div className="student-picker-panel">
-      <div className="timer-panel__modes" role="tablist" aria-label="Class">
-        {classOptions.map((option) => (
-          <button
-            type="button"
-            key={option.id}
-            role="tab"
-            className={`tool-chip ${activeClassId === option.id ? 'is-active' : ''}`}
-            aria-selected={activeClassId === option.id}
-            disabled={busy}
-            onClick={() => selectClass(option.id)}
-          >
-            {option.label}
-          </button>
-        ))}
+  const panel = (
+    <div className={`student-picker-panel ${isFullscreen ? 'is-fullscreen' : ''}`}>
+      <div className="student-picker-panel__topbar">
+        <div className="timer-panel__modes" role="tablist" aria-label="Class">
+          {classOptions.map((option) => (
+            <button
+              type="button"
+              key={option.id}
+              role="tab"
+              className={`tool-chip ${activeClassId === option.id ? 'is-active' : ''}`}
+              aria-selected={activeClassId === option.id}
+              disabled={busy}
+              onClick={() => selectClass(option.id)}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          className="stage-button"
+          onClick={() => setIsFullscreen((value) => !value)}
+        >
+          {isFullscreen ? 'Exit full screen' : 'Full screen'}
+        </button>
       </div>
 
       <SpinWheel
@@ -99,6 +123,9 @@ export function StudentPickerPanel() {
         spinning={spinning}
         durationMs={SPIN_DURATION_MS}
         onSpinEnd={handleSpinEnd}
+        onSpinRequest={spinWheel}
+        labelMode={isFullscreen ? 'initials' : 'auto'}
+        size={isFullscreen ? 'large' : 'default'}
       />
 
       <div className="student-picker-panel__result" aria-live="polite">
@@ -111,7 +138,9 @@ export function StudentPickerPanel() {
           </>
         ) : (
           <span className="student-picker-panel__result-empty">
-            Pick a student from {activeLabel}
+            {isFullscreen
+              ? `Tap the wheel to pick from ${activeLabel}`
+              : `Pick a student from ${activeLabel}`}
           </span>
         )}
       </div>
@@ -160,7 +189,7 @@ export function StudentPickerPanel() {
         </p>
       )}
 
-      <div className="tool-panel__section">
+      <div className="tool-panel__section student-picker-panel__settings">
         <label className="tool-panel__label" htmlFor="roster-editor">
           {activeLabel} roster ({activeRoster.length})
         </label>
@@ -180,4 +209,13 @@ export function StudentPickerPanel() {
       </div>
     </div>
   )
+
+  if (isFullscreen) {
+    return createPortal(
+      <div className="student-picker-fullscreen-root">{panel}</div>,
+      document.body,
+    )
+  }
+
+  return panel
 }
