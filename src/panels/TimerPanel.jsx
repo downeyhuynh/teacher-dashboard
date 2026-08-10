@@ -1,6 +1,50 @@
 import { useRef, useState } from 'react'
 import { formatDuration } from '../utils/time'
 import { useTools } from '../context/ToolsContext'
+import { MusicOffIcon, NoiseIcon } from '../components/ui/icons'
+
+function FocusMusicButton({ timer, fileInputRef, uploading, uploadError, onUpload }) {
+  const trackLabel = timer.focusTrack?.name || 'Soft jazz (default)'
+  const clickTimerRef = useRef(null)
+
+  return (
+    <div className="timer-panel__sound">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac"
+        className="timer-panel__file-input"
+        onChange={onUpload}
+      />
+      <button
+        type="button"
+        className={`timer-panel__sound-logo ${timer.focusMusicEnabled ? 'is-on' : ''}`}
+        aria-label={
+          timer.focusMusicEnabled
+            ? `Focus music on (${trackLabel}). Click to mute, double-click to change track.`
+            : `Focus music off (${trackLabel}). Click to unmute, double-click to change track.`
+        }
+        title={`${trackLabel}\nClick: mute/unmute · Double-click: change track`}
+        disabled={uploading}
+        onClick={() => {
+          if (clickTimerRef.current) {
+            clearTimeout(clickTimerRef.current)
+            clickTimerRef.current = null
+            fileInputRef.current?.click()
+            return
+          }
+          clickTimerRef.current = setTimeout(() => {
+            clickTimerRef.current = null
+            timer.setFocusMusicEnabled(!timer.focusMusicEnabled)
+          }, 220)
+        }}
+      >
+        {timer.focusMusicEnabled ? <NoiseIcon /> : <MusicOffIcon />}
+      </button>
+      {uploadError && <p className="timer-panel__upload-error">{uploadError}</p>}
+    </div>
+  )
+}
 
 export function TimerPanel() {
   const { timer } = useTools()
@@ -28,11 +72,67 @@ export function TimerPanel() {
     setUploadError('')
     try {
       await timer.uploadFocusTrack(file)
+      timer.setFocusMusicEnabled(true)
     } catch (error) {
       setUploadError(error?.message || 'Could not save that audio file.')
     } finally {
       setUploading(false)
     }
+  }
+
+  if (timer.compact) {
+    return (
+      <div
+        className={`timer-panel timer-panel--run ${timer.finished ? 'is-finished' : ''} ${
+          timer.running ? 'is-running' : ''
+        }`}
+      >
+        <button
+          type="button"
+          className="timer-panel__run-display"
+          aria-live="polite"
+          aria-label="Expand timer settings"
+          title="Expand"
+          onClick={timer.expand}
+        >
+          {formatDuration(displayMs)}
+        </button>
+
+        <div className="timer-panel__run-actions">
+          <FocusMusicButton
+            timer={timer}
+            fileInputRef={fileInputRef}
+            uploading={uploading}
+            uploadError={uploadError}
+            onUpload={onUpload}
+          />
+          {timer.running ? (
+            <button
+              type="button"
+              className="stage-button stage-button--primary"
+              onClick={timer.pause}
+            >
+              Pause
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="stage-button stage-button--primary"
+              onClick={timer.start}
+            >
+              {timer.finished ? 'Restart' : 'Resume'}
+            </button>
+          )}
+          <button type="button" className="stage-button" onClick={timer.reset}>
+            Reset
+          </button>
+        </div>
+
+        {timer.finished && timer.mode === 'countdown' && (
+          <p className="timer-panel__done">Time&apos;s up</p>
+        )}
+      </div>
+    )
   }
 
   return (
@@ -98,59 +198,13 @@ export function TimerPanel() {
         </label>
       )}
 
-      <div className="tool-panel__section">
-        <span className="tool-panel__label">Focus music</span>
-        <label className="student-picker-panel__toggle">
-          <input
-            type="checkbox"
-            checked={timer.focusMusicEnabled}
-            onChange={(event) => timer.setFocusMusicEnabled(event.target.checked)}
-          />
-          <span>Play music while timer runs</span>
-        </label>
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac"
-          className="timer-panel__file-input"
-          onChange={onUpload}
-        />
-
-        <div className="timer-panel__actions">
-          <button
-            type="button"
-            className="stage-button stage-button--primary"
-            disabled={uploading}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            {uploading ? 'Uploading…' : 'Upload MP3'}
-          </button>
-          {timer.focusTrack && (
-            <button
-              type="button"
-              className="stage-button stage-button--danger"
-              onClick={() => timer.removeFocusTrack()}
-            >
-              Remove
-            </button>
-          )}
-        </div>
-
-        <p className="timer-panel__music-note">
-          {timer.focusTrack
-            ? `Using: ${timer.focusTrack.name}`
-            : 'No upload yet — soft jazz will play by default.'}
-        </p>
-
-        {uploadError && <p className="timer-panel__upload-error">{uploadError}</p>}
-
-        {timer.running && timer.focusMusicEnabled && (
-          <p className="timer-panel__music-note">
-            {timer.focusTrack ? 'Your track is playing' : 'Focus jazz is playing'}
-          </p>
-        )}
-      </div>
+      <FocusMusicButton
+        timer={timer}
+        fileInputRef={fileInputRef}
+        uploading={uploading}
+        uploadError={uploadError}
+        onUpload={onUpload}
+      />
 
       <div className="timer-panel__actions">
         {timer.running ? (

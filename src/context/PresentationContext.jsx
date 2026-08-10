@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 import {
+  createWhiteboardSlide,
   importPresentationFiles,
   revokeSlideUrls,
 } from '../utils/presentationImport'
@@ -31,6 +32,7 @@ export function PresentationProvider({ children }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [annotationsBySlide, setAnnotationsBySlide] = useState({})
   const [annotationTool, setAnnotationTool] = useState(defaultInkTool)
+  const [annotateEnabled, setAnnotateEnabled] = useState(false)
   const [slideView, setSlideView] = useState(DEFAULT_VIEW)
   const [isImporting, setIsImporting] = useState(false)
   const [importProgress, setImportProgress] = useState(null)
@@ -91,6 +93,19 @@ export function PresentationProvider({ children }) {
     setSlideView(DEFAULT_VIEW)
   }, [])
 
+  /** Insert a blank whiteboard after the current slide and jump to it. */
+  const addWhiteboardSlide = useCallback(() => {
+    const board = createWhiteboardSlide()
+    setSlides((prev) => {
+      if (!prev.length) return [board]
+      const insertAt = currentIndex + 1
+      return [...prev.slice(0, insertAt), board, ...prev.slice(insertAt)]
+    })
+    setCurrentIndex((prev) => (slides.length === 0 ? 0 : prev + 1))
+    setSlideView(DEFAULT_VIEW)
+    setDeckName((prev) => prev || 'Lesson')
+  }, [currentIndex, slides.length])
+
   const goToSlide = useCallback(
     (index) => {
       setCurrentIndex(() => {
@@ -143,16 +158,40 @@ export function PresentationProvider({ children }) {
     setAnnotationTool((prev) => ({ ...prev, ...patch }))
   }, [])
 
+  const toggleAnnotateEnabled = useCallback(() => {
+    setAnnotateEnabled((prev) => !prev)
+  }, [])
+
+  const enableAnnotate = useCallback(() => {
+    setAnnotateEnabled(true)
+  }, [])
+
+  const disableAnnotate = useCallback(() => {
+    setAnnotateEnabled(false)
+  }, [])
+
   const clearAllMarks = useCallback(() => {
     setAnnotationsBySlide({})
   }, [])
 
-  const zoomBy = useCallback((factor) => {
-    setSlideView((prev) => ({
-      ...prev,
-      scale: clamp(Number((prev.scale * factor).toFixed(3)), 0.4, 4),
-    }))
+  const zoomAt = useCallback((factor, origin = null) => {
+    setSlideView((prev) => {
+      const nextScale = clamp(Number((prev.scale * factor).toFixed(3)), 0.4, 4)
+      if (!origin || nextScale === prev.scale) {
+        return { ...prev, scale: nextScale }
+      }
+
+      // Keep the point under the cursor fixed while scaling around center origin.
+      const ratio = nextScale / prev.scale
+      return {
+        scale: nextScale,
+        x: origin.x * (1 - ratio) + prev.x * ratio,
+        y: origin.y * (1 - ratio) + prev.y * ratio,
+      }
+    })
   }, [])
+
+  const zoomBy = useCallback((factor) => zoomAt(factor, null), [zoomAt])
 
   const zoomIn = useCallback(() => zoomBy(1.2), [zoomBy])
   const zoomOut = useCallback(() => zoomBy(1 / 1.2), [zoomBy])
@@ -177,6 +216,7 @@ export function PresentationProvider({ children }) {
       deckName,
       annotationsBySlide,
       annotationTool,
+      annotateEnabled,
       annotationColors: ANNOTATION_COLORS,
       annotationStamps: ANNOTATION_STAMPS,
       slideView,
@@ -185,6 +225,7 @@ export function PresentationProvider({ children }) {
       importErrors,
       importFiles,
       clearDeck,
+      addWhiteboardSlide,
       goToSlide,
       nextSlide,
       prevSlide,
@@ -193,7 +234,11 @@ export function PresentationProvider({ children }) {
       undoSlideAnnotation,
       clearAllAnnotations,
       updateAnnotationTool,
+      toggleAnnotateEnabled,
+      enableAnnotate,
+      disableAnnotate,
       clearAllMarks,
+      zoomAt,
       zoomIn,
       zoomOut,
       resetSlideView,
@@ -210,12 +255,14 @@ export function PresentationProvider({ children }) {
       deckName,
       annotationsBySlide,
       annotationTool,
+      annotateEnabled,
       slideView,
       isImporting,
       importProgress,
       importErrors,
       importFiles,
       clearDeck,
+      addWhiteboardSlide,
       goToSlide,
       nextSlide,
       prevSlide,
@@ -224,7 +271,11 @@ export function PresentationProvider({ children }) {
       undoSlideAnnotation,
       clearAllAnnotations,
       updateAnnotationTool,
+      toggleAnnotateEnabled,
+      enableAnnotate,
+      disableAnnotate,
       clearAllMarks,
+      zoomAt,
       zoomIn,
       zoomOut,
       resetSlideView,

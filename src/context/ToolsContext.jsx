@@ -36,6 +36,7 @@ export function ToolsProvider({ children }) {
   const [timerElapsedMs, setTimerElapsedMs] = useState(0)
   const [timerRunning, setTimerRunning] = useState(false)
   const [timerFinished, setTimerFinished] = useState(false)
+  const [timerCompact, setTimerCompact] = useState(false)
   const [focusMusicEnabled, setFocusMusicEnabled] = useState(true)
   const [focusTrack, setFocusTrack] = useState(null) // { name, url } | null
   const lastTickRef = useRef(null)
@@ -137,6 +138,7 @@ export function ToolsProvider({ children }) {
       setTimerRemainingMs((prev) => (prev <= 0 ? timerDurationMs : prev))
     }
     setTimerRunning(true)
+    setTimerCompact(true)
   }, [timerDurationMs, timerMode])
 
   const pauseTimer = useCallback(() => {
@@ -148,6 +150,7 @@ export function ToolsProvider({ children }) {
     setTimerFinished(false)
     setTimerElapsedMs(0)
     setTimerRemainingMs(timerDurationMs)
+    setTimerCompact(false)
   }, [timerDurationMs])
 
   const applyTimerPreset = useCallback((ms) => {
@@ -157,6 +160,7 @@ export function ToolsProvider({ children }) {
     setTimerElapsedMs(0)
     setTimerRunning(false)
     setTimerFinished(false)
+    setTimerCompact(false)
   }, [])
 
   const setCustomDurationMinutes = useCallback((minutes) => {
@@ -170,7 +174,12 @@ export function ToolsProvider({ children }) {
     setTimerFinished(false)
     setTimerElapsedMs(0)
     setTimerRemainingMs(timerDurationMs)
+    setTimerCompact(false)
   }, [timerDurationMs])
+
+  const expandTimer = useCallback(() => {
+    setTimerCompact(false)
+  }, [])
 
   const setClassRosterText = useCallback((classId, text) => {
     const names = parseRosterText(text)
@@ -239,12 +248,14 @@ export function ToolsProvider({ children }) {
         elapsedMs: timerElapsedMs,
         running: timerRunning,
         finished: timerFinished,
+        compact: timerCompact,
         focusMusicEnabled,
         focusTrack,
         presets: TIMER_PRESETS,
         start: startTimer,
         pause: pauseTimer,
         reset: resetTimer,
+        expand: expandTimer,
         applyPreset: applyTimerPreset,
         setCustomDurationMinutes,
         switchMode: switchTimerMode,
@@ -276,11 +287,13 @@ export function ToolsProvider({ children }) {
       timerElapsedMs,
       timerRunning,
       timerFinished,
+      timerCompact,
       focusMusicEnabled,
       focusTrack,
       startTimer,
       pauseTimer,
       resetTimer,
+      expandTimer,
       applyTimerPreset,
       setCustomDurationMinutes,
       switchTimerMode,

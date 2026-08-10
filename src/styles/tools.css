@@ -237,17 +237,99 @@
   gap: 8px;
 }
 
+.timer-panel__sound {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.timer-panel__sound-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-subtle);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.timer-panel__sound-logo:hover {
+  color: var(--color-text);
+}
+
+.timer-panel__sound-logo.is-on {
+  color: var(--color-accent);
+}
+
+.timer-panel__sound-logo svg {
+  width: 16px;
+  height: 16px;
+}
+
+.timer-panel--run {
+  gap: 8px;
+  align-items: stretch;
+}
+
+.timer-panel__run-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 6px 4px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #f7fafb, #eef3f6);
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.timer-panel--run.is-running .timer-panel__run-display {
+  color: var(--color-accent);
+}
+
+.timer-panel--run.is-finished .timer-panel__run-display {
+  color: #a32828;
+  animation: timer-pulse 1s var(--ease-out) infinite;
+}
+
+.timer-panel__run-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.timer-panel--run .timer-panel__sound-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.timer-panel--run .timer-panel__sound-logo svg {
+  width: 14px;
+  height: 14px;
+}
+
+.timer-panel--run .stage-button {
+  flex: 1;
+  padding: 5px 6px;
+  font-size: 0.72rem;
+}
+
 .timer-panel__done {
   text-align: center;
   font-size: 0.85rem;
   font-weight: 600;
   color: #a32828;
-}
-
-.timer-panel__music-note {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--color-accent);
 }
 
 .timer-panel__file-input {
@@ -256,7 +338,7 @@
 
 .timer-panel__upload-error {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #a32828;
 }
 

@@ -109,6 +109,8 @@ export function useDrawingCanvas({
     (event) => {
       if (!enabled) return
       if (event.button !== 0) return
+      // Ctrl/Cmd + drag is reserved for panning the slide.
+      if (event.ctrlKey || event.metaKey) return
 
       const point = getLocalPoint(event)
 

@@ -142,6 +142,17 @@ export function useFloatingPanels(panelIds) {
     })
   }, [])
 
+  const setPanelSize = useCallback((id, size) => {
+    setPanels((prev) => {
+      const current = prev[id]
+      if (!current) return prev
+      return {
+        ...prev,
+        [id]: { ...current, size: { ...size } },
+      }
+    })
+  }, [])
+
   const openPanels = useMemo(
     () => panelIds.map((id) => panels[id]).filter((panel) => panel?.isOpen),
     [panelIds, panels],
@@ -158,5 +169,6 @@ export function useFloatingPanels(panelIds) {
     restorePanel,
     bringToFront,
     setPanelPosition,
+    setPanelSize,
   }
 }

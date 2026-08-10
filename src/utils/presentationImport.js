@@ -17,8 +17,23 @@ const IMAGE_TYPES = new Set([
 ])
 
 /**
- * @typedef {{ id: string, source: 'pdf' | 'image', name: string, src: string, pageNumber?: number }} Slide
+ * @typedef {{ id: string, source: 'pdf' | 'image' | 'whiteboard', name: string, src?: string, pageNumber?: number }} Slide
  */
+
+/**
+ * Create a blank whiteboard slide for freehand teaching.
+ * Uses a white SVG image so layout + ink overlays match normal slides.
+ * @returns {Slide}
+ */
+export function createWhiteboardSlide(label = 'Whiteboard') {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><rect width="1920" height="1080" fill="#ffffff"/></svg>`
+  return {
+    id: createId('slide'),
+    source: 'whiteboard',
+    name: label,
+    src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`,
+  }
+}
 
 /**
  * Render every page of a PDF to object-URL slide images.

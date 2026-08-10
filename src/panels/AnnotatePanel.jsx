@@ -72,7 +72,7 @@ export function AnnotatePanel() {
       <p className="tool-panel__hint">
         {slideCount === 0
           ? 'Import a presentation first, then draw on slides from this panel.'
-          : 'Draw or stamp directly on the current slide. Marks are saved per slide.'}
+          : 'Draw on the slide while Annotate is toggled on in the toolbar. Closing this panel keeps drawing on until you toggle Annotate off.'}
       </p>
 
       <div className="tool-panel__row">

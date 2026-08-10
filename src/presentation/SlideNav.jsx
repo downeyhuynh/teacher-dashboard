@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { usePresentation } from '../context/PresentationContext'
 
 /**
@@ -12,9 +13,36 @@ export function SlideNav({ viewControls = null }) {
     nextSlide,
     clearDeck,
     clearAllMarks,
+    addWhiteboardSlide,
+    enableAnnotate,
   } = usePresentation()
 
-  if (slideCount === 0) return null
+  const [confirmClear, setConfirmClear] = useState(false)
+
+  useEffect(() => {
+    setConfirmClear(false)
+  }, [slideCount])
+
+  const handleAddWhiteboard = () => {
+    addWhiteboardSlide()
+    enableAnnotate()
+  }
+
+  if (slideCount === 0) {
+    return (
+      <div className="slide-nav" role="navigation" aria-label="Slide navigation">
+        <div className="slide-nav__controls">
+          <button
+            type="button"
+            className="stage-button stage-button--primary"
+            onClick={handleAddWhiteboard}
+          >
+            Whiteboard
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="slide-nav" role="navigation" aria-label="Slide navigation">
@@ -48,18 +76,49 @@ export function SlideNav({ viewControls = null }) {
         </button>
         <button
           type="button"
+          className="stage-button stage-button--primary"
+          onClick={handleAddWhiteboard}
+        >
+          Whiteboard
+        </button>
+        <button
+          type="button"
           className="stage-button"
           onClick={() => clearAllMarks()}
         >
           Clear marks
         </button>
-        <button
-          type="button"
-          className="stage-button stage-button--danger"
-          onClick={clearDeck}
-        >
-          Clear deck
-        </button>
+
+        {confirmClear ? (
+          <div className="slide-nav__confirm" role="group" aria-label="Confirm clear deck">
+            <span className="slide-nav__confirm-text">Are you sure?</span>
+            <button
+              type="button"
+              className="stage-button stage-button--danger"
+              onClick={() => {
+                clearDeck()
+                setConfirmClear(false)
+              }}
+            >
+              Yes, clear
+            </button>
+            <button
+              type="button"
+              className="stage-button"
+              onClick={() => setConfirmClear(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="stage-button stage-button--danger"
+            onClick={() => setConfirmClear(true)}
+          >
+            Clear deck
+          </button>
+        )}
       </div>
     </div>
   )

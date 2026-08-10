@@ -20,6 +20,8 @@ export function FloatingPanel({
   onRestore,
   onClose,
   onPositionChange,
+  compact = false,
+  hideMinimize = false,
   children,
 }) {
   const displaySize = useMemo(() => {
@@ -46,6 +48,7 @@ export function FloatingPanel({
 
   const className = [
     'floating-panel',
+    compact ? 'floating-panel--compact' : '',
     isMinimized ? 'is-minimized' : '',
     isFocused ? 'is-focused' : '',
     isDragging ? 'is-dragging' : '',
@@ -71,25 +74,26 @@ export function FloatingPanel({
       <header className="floating-panel__header" {...dragHandleProps}>
         <h2 className="floating-panel__title">{title}</h2>
         <div className="floating-panel__actions">
-          {isMinimized ? (
-            <button
-              type="button"
-              className="floating-panel__action"
-              aria-label={`Restore ${title}`}
-              onClick={() => onRestore(id)}
-            >
-              <RestoreIcon />
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="floating-panel__action"
-              aria-label={`Minimize ${title}`}
-              onClick={() => onMinimize(id)}
-            >
-              <MinimizeIcon />
-            </button>
-          )}
+          {!hideMinimize &&
+            (isMinimized ? (
+              <button
+                type="button"
+                className="floating-panel__action"
+                aria-label={`Restore ${title}`}
+                onClick={() => onRestore(id)}
+              >
+                <RestoreIcon />
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="floating-panel__action"
+                aria-label={`Minimize ${title}`}
+                onClick={() => onMinimize(id)}
+              >
+                <MinimizeIcon />
+              </button>
+            ))}
           <button
             type="button"
             className="floating-panel__action is-danger"

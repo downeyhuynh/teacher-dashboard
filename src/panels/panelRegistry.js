@@ -1,7 +1,9 @@
 import {
   AnnotateIcon,
   AttendanceIcon,
+  BathroomIcon,
   CalculatorIcon,
+  NoiseIcon,
   SeatingIcon,
   StudentsIcon,
   TimerIcon,
@@ -9,7 +11,9 @@ import {
 import { PANEL_IDS } from '../utils/panelDefaults'
 import { AnnotatePanel } from './AnnotatePanel'
 import { AttendancePanel } from './AttendancePanel'
+import { BathroomPanel } from './BathroomPanel'
 import { CalculatorPanel } from './CalculatorPanel'
+import { NoiseLevelPanel } from './NoiseLevelPanel'
 import { SeatingChartPanel } from './SeatingChartPanel'
 import { StudentPickerPanel } from './StudentPickerPanel'
 import { TimerPanel } from './TimerPanel'
@@ -56,6 +60,26 @@ export const PANEL_REGISTRY = [
     Icon: AttendanceIcon,
     Component: AttendancePanel,
     dock: 'quick',
+  },
+  {
+    id: PANEL_IDS.NOISE,
+    label: 'Noise',
+    Icon: NoiseIcon,
+    Component: NoiseLevelPanel,
+    dock: 'quick',
+    compact: true,
+    hideMinimize: true,
+    corner: 'top-right',
+  },
+  {
+    id: PANEL_IDS.BATHROOM,
+    label: 'Bathroom',
+    Icon: BathroomIcon,
+    Component: BathroomPanel,
+    dock: 'quick',
+    compact: true,
+    hideMinimize: true,
+    corner: 'bottom-right',
   },
 ]
 

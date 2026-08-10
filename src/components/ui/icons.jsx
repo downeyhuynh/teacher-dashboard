@@ -70,6 +70,46 @@ export function AttendanceIcon({ className }) {
   )
 }
 
+export function NoiseIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <path d="M11 5L6 9H3v6h3l5 4V5z" />
+      <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+      <path d="M18.5 6a8.5 8.5 0 0 1 0 12" />
+    </svg>
+  )
+}
+
+export function MusicIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <path d="M9 18V5l12-2v13" />
+      <circle cx="6" cy="18" r="3" />
+      <circle cx="18" cy="16" r="3" />
+    </svg>
+  )
+}
+
+export function MusicOffIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <path d="M9 18V5l12-2v5" />
+      <circle cx="6" cy="18" r="3" />
+      <path d="M4 4l16 16" />
+    </svg>
+  )
+}
+
+export function BathroomIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <circle cx="12" cy="5.5" r="2" />
+      <path d="M9 10h6l-1 11h-4L9 10z" />
+      <path d="M8 13.5H5.5M16 13.5h2.5" />
+    </svg>
+  )
+}
+
 export function MinimizeIcon({ className }) {
   return (
     <svg className={className} {...iconProps} strokeWidth={2}>

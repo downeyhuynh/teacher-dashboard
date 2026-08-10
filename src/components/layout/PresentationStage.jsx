@@ -8,7 +8,10 @@ import { SlideViewControls } from '../../presentation/SlideViewControls'
 /**
  * Main presentation viewport: slides, import, on-slide ink overlays.
  */
-export function PresentationStage({ annotateActive = false }) {
+export function PresentationStage({
+  annotateActive = false,
+  onRequestAnnotate,
+}) {
   const {
     currentSlide,
     slideCount,
@@ -17,18 +20,56 @@ export function PresentationStage({ annotateActive = false }) {
     isImporting,
     slideView,
     panSlideView,
+    zoomAt,
     zoomIn,
     zoomOut,
+    resetSlideView,
     undoSlideAnnotation,
     canUndoAnnotation,
   } = usePresentation()
 
   const [panMode, setPanMode] = useState(false)
   const [spaceHeld, setSpaceHeld] = useState(false)
+  const [ctrlHeld, setCtrlHeld] = useState(false)
   const dragRef = useRef(null)
 
-  const isPanning = panMode || spaceHeld
+  const isPanning = panMode || spaceHeld || ctrlHeld
   const drawEnabled = annotateActive && !isPanning
+  const frameRef = useRef(null)
+
+  useEffect(() => {
+    // Block browser page-zoom (Ctrl/Cmd + wheel) so only the slide scales.
+    const preventBrowserZoom = (event) => {
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault()
+      }
+    }
+    window.addEventListener('wheel', preventBrowserZoom, { passive: false })
+    return () => {
+      window.removeEventListener('wheel', preventBrowserZoom)
+    }
+  }, [])
+
+  useEffect(() => {
+    const frame = frameRef.current
+    if (!frame || slideCount === 0) return undefined
+
+    const onWheel = (event) => {
+      event.preventDefault()
+
+      const rect = frame.getBoundingClientRect()
+      const origin = {
+        x: event.clientX - (rect.left + rect.width / 2),
+        y: event.clientY - (rect.top + rect.height / 2),
+      }
+
+      if (event.deltaY < 0) zoomAt(1.2, origin)
+      else zoomAt(1 / 1.2, origin)
+    }
+
+    frame.addEventListener('wheel', onWheel, { passive: false })
+    return () => frame.removeEventListener('wheel', onWheel)
+  }, [slideCount, zoomAt])
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -37,13 +78,42 @@ export function PresentationStage({ annotateActive = false }) {
         return
       }
 
+      if (event.key === 'Control' || event.key === 'Meta') {
+        setCtrlHeld(true)
+      }
+
       if (event.code === 'Space' && !event.repeat) {
         event.preventDefault()
         setSpaceHeld(true)
         return
       }
 
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') {
+      const key = event.key.toLowerCase()
+      const withMod = event.ctrlKey || event.metaKey
+
+      // Keep Ctrl/Cmd +/- for slide zoom only (never browser UI zoom).
+      if (withMod && (event.key === '+' || event.key === '=' || event.key === '-' || event.key === '_' || key === '0')) {
+        event.preventDefault()
+        if (key === '0') resetSlideView()
+        else if (event.key === '+' || event.key === '=') zoomIn()
+        else zoomOut()
+        return
+      }
+
+      if (key === 'h' && !withMod && !event.altKey) {
+        event.preventDefault()
+        setPanMode(true)
+        return
+      }
+
+      if (key === 'p' && !withMod && !event.altKey) {
+        event.preventDefault()
+        setPanMode(false)
+        onRequestAnnotate?.()
+        return
+      }
+
+      if (withMod && key === 'z') {
         if (canUndoAnnotation && currentSlide) {
           event.preventDefault()
           undoSlideAnnotation(currentSlide.id)
@@ -70,33 +140,48 @@ export function PresentationStage({ annotateActive = false }) {
       if (event.code === 'Space') {
         setSpaceHeld(false)
       }
+      if (event.key === 'Control' || event.key === 'Meta') {
+        setCtrlHeld(false)
+        if (!panMode && !spaceHeld) {
+          dragRef.current = null
+        }
+      }
+    }
+
+    const onBlur = () => {
+      setCtrlHeld(false)
+      setSpaceHeld(false)
     }
 
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('keyup', onKeyUp)
+    window.addEventListener('blur', onBlur)
     return () => {
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
+      window.removeEventListener('blur', onBlur)
     }
   }, [
     canUndoAnnotation,
     currentSlide,
     nextSlide,
+    onRequestAnnotate,
+    panMode,
     prevSlide,
+    spaceHeld,
     undoSlideAnnotation,
     zoomIn,
     zoomOut,
+    resetSlideView,
   ])
 
-  const onFrameWheel = (event) => {
-    if (slideCount === 0) return
-    event.preventDefault()
-    if (event.deltaY < 0) zoomIn()
-    else zoomOut()
-  }
-
   const onFramePointerDown = (event) => {
-    if (!isPanning || event.button !== 0) return
+    if (event.button !== 0) return
+    const modifierPan = event.ctrlKey || event.metaKey
+    if (!isPanning && !modifierPan) return
+
+    event.preventDefault()
+    event.stopPropagation()
     dragRef.current = {
       x: event.clientX,
       y: event.clientY,
@@ -106,6 +191,7 @@ export function PresentationStage({ annotateActive = false }) {
 
   const onFramePointerMove = (event) => {
     if (!dragRef.current) return
+    event.preventDefault()
     const dx = event.clientX - dragRef.current.x
     const dy = event.clientY - dragRef.current.y
     dragRef.current = { x: event.clientX, y: event.clientY }
@@ -134,9 +220,9 @@ export function PresentationStage({ annotateActive = false }) {
         ) : (
           <div className="slide-viewport">
             <div
+              ref={frameRef}
               className={`slide-viewport__frame ${isPanning ? 'is-panning' : ''}`}
-              onWheel={onFrameWheel}
-              onPointerDown={onFramePointerDown}
+              onPointerDownCapture={onFramePointerDown}
               onPointerMove={onFramePointerMove}
               onPointerUp={endPan}
               onPointerCancel={endPan}
@@ -147,12 +233,18 @@ export function PresentationStage({ annotateActive = false }) {
                   transform: `translate(${slideView.x}px, ${slideView.y}px) scale(${slideView.scale})`,
                 }}
               >
-                <img
-                  className="slide-viewport__image"
-                  src={currentSlide.src}
-                  alt={currentSlide.name}
-                  draggable={false}
-                />
+                {currentSlide?.src ? (
+                  <img
+                    className={`slide-viewport__image ${
+                      currentSlide.source === 'whiteboard'
+                        ? 'slide-viewport__image--whiteboard'
+                        : ''
+                    }`}
+                    src={currentSlide.src}
+                    alt={currentSlide.name}
+                    draggable={false}
+                  />
+                ) : null}
                 <AnnotationLayer enabled={annotateActive && drawEnabled} />
               </div>
             </div>
