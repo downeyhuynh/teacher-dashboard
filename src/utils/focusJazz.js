@@ -118,8 +118,9 @@ function playBrush(ctx, destination, start) {
 
 /**
  * Schedule one repeating bar of soft jazz-ish accompaniment.
+ * @param {number} [phase=0] Chord/bass rotation so each start can feel different.
  */
-function scheduleBar(ctx, destination, barStart, beat = 0.78) {
+function scheduleBar(ctx, destination, barStart, beat = 0.78, phase = 0) {
   // Warm ii–V–I-ish colors in C (Dm7 / G7 / Cmaj7 feel), kept simple and soft.
   const progression = [
     [146.83, 174.61, 220.0, 293.66], // D F A D
@@ -127,15 +128,18 @@ function scheduleBar(ctx, destination, barStart, beat = 0.78) {
     [130.81, 164.81, 196.0, 261.63], // C E G C
     [130.81, 164.81, 196.0, 246.94], // C E G B
   ]
+  const bassLine = [73.42, 87.31, 98.0, 65.41] // D2 F2 G2 C2-ish
+  const rotate = ((phase % 4) + 4) % 4
 
-  progression.forEach((chord, index) => {
+  for (let index = 0; index < 4; index += 1) {
+    const chord = progression[(index + rotate) % progression.length]
     const start = barStart + index * beat
     playRhodesChord(ctx, destination, chord, start, beat * 1.55)
-  })
+  }
 
   // Gentle walking bass
-  const bassLine = [73.42, 87.31, 98.0, 65.41] // D2 F2 G2 C2-ish
-  bassLine.forEach((frequency, index) => {
+  for (let index = 0; index < 4; index += 1) {
+    const frequency = bassLine[(index + rotate) % bassLine.length]
     playTone(ctx, destination, {
       frequency,
       start: barStart + index * beat,
@@ -143,12 +147,14 @@ function scheduleBar(ctx, destination, barStart, beat = 0.78) {
       type: 'triangle',
       gain: 0.045,
     })
-  })
+  }
 
   // Soft brushes on 2 and 4
   playBrush(ctx, destination, barStart + beat)
   playBrush(ctx, destination, barStart + beat * 3)
 }
+
+let jazzPhase = 0
 
 function loopBars() {
   if (!playing || !sharedContext || !masterGain) return
@@ -161,7 +167,7 @@ function loopBars() {
 
   // Schedule a few bars ahead, then re-schedule.
   for (let i = 0; i < 2; i += 1) {
-    scheduleBar(ctx, masterGain, start + i * barLength, beat)
+    scheduleBar(ctx, masterGain, start + i * barLength, beat, jazzPhase)
   }
 
   const id = window.setTimeout(() => {
@@ -183,6 +189,9 @@ export async function startFocusJazz({ volume = 0.22 } = {}) {
 
   clearScheduled()
   stopNodes(0.01)
+
+  // Start on a random chord so each timer session feels different.
+  jazzPhase = Math.floor(Math.random() * 4)
 
   masterGain = ctx.createGain()
   const compressor = ctx.createDynamicsCompressor()
