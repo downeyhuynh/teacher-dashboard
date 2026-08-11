@@ -37,6 +37,7 @@ export function ToolsProvider({ children }) {
   const [timerRunning, setTimerRunning] = useState(false)
   const [timerFinished, setTimerFinished] = useState(false)
   const [timerCompact, setTimerCompact] = useState(false)
+  const [musicSession, setMusicSession] = useState(0)
   const [focusMusicEnabled, setFocusMusicEnabled] = useState(true)
   const [focusTrack, setFocusTrack] = useState(null) // { name, url } | null
   const lastTickRef = useRef(null)
@@ -97,11 +98,15 @@ export function ToolsProvider({ children }) {
   }, [timerMode, timerRunning])
 
   // Focus music (uploaded MP3 or soft jazz) while the timer is running.
+  // musicSession bumps on every Start so each press picks a new random spot.
   useEffect(() => {
+    let cancelled = false
+
     const syncMusic = async () => {
       if (timerRunning && focusMusicEnabled) {
         try {
           await startFocusMusic({ trackUrl: focusTrack?.url || null })
+          if (cancelled) stopFocusMusic()
         } catch {
           // Autoplay / audio restrictions — ignore quietly.
         }
@@ -113,9 +118,10 @@ export function ToolsProvider({ children }) {
     syncMusic()
 
     return () => {
+      cancelled = true
       stopFocusMusic()
     }
-  }, [timerRunning, focusMusicEnabled, focusTrack?.url])
+  }, [timerRunning, focusMusicEnabled, focusTrack?.url, musicSession])
 
   useEffect(() => {
     return () => stopFocusMusic()
@@ -139,6 +145,7 @@ export function ToolsProvider({ children }) {
     }
     setTimerRunning(true)
     setTimerCompact(true)
+    setMusicSession((prev) => prev + 1)
   }, [timerDurationMs, timerMode])
 
   const pauseTimer = useCallback(() => {

@@ -40,6 +40,41 @@
   overflow: hidden;
 }
 
+.presentation-stage__surface:fullscreen,
+.presentation-stage__surface.is-fullscreen:fullscreen {
+  max-width: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  background: #0b1220;
+}
+
+.presentation-stage__surface:fullscreen .slide-nav,
+.presentation-stage__surface:fullscreen .slide-viewport__rail {
+  background: rgba(15, 23, 36, 0.92);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #e8eef6;
+}
+
+.presentation-stage__surface:fullscreen .slide-nav__deck,
+.presentation-stage__surface:fullscreen .slide-nav__count,
+.presentation-stage__surface:fullscreen .slide-view-controls__zoom {
+  color: #d7e0ea;
+}
+
+.presentation-stage__surface:fullscreen .slide-viewport {
+  height: calc(100% - 53px);
+}
+
+.presentation-stage__surface:fullscreen .slide-viewport__frame {
+  background:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%) 0 0 / 16px 16px,
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%) 0 0 / 16px 16px,
+    #111827;
+}
+
 .presentation-stage__placeholder {
   position: absolute;
   inset: 0;

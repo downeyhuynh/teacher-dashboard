@@ -177,7 +177,8 @@ function loopBars() {
 }
 
 /**
- * Start soft focus jazz (idempotent).
+ * Start soft focus jazz.
+ * Always restarts so each timer Start can begin on a new random chord.
  */
 export async function startFocusJazz({ volume = 0.22 } = {}) {
   const ctx = getAudioContext()
@@ -185,10 +186,15 @@ export async function startFocusJazz({ volume = 0.22 } = {}) {
     await ctx.resume()
   }
 
-  if (playing) return
-
-  clearScheduled()
-  stopNodes(0.01)
+  // Force a fresh start (do not early-return while already playing).
+  if (playing) {
+    playing = false
+    clearScheduled()
+    stopNodes(0.01)
+  } else {
+    clearScheduled()
+    stopNodes(0.01)
+  }
 
   // Start on a random chord so each timer session feels different.
   jazzPhase = Math.floor(Math.random() * 4)

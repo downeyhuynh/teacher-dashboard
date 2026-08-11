@@ -134,6 +134,24 @@ export function CloseIcon({ className }) {
   )
 }
 
+export function ExpandIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+      <path d="M4 4l5 5M20 4l-5 5M4 20l5-5M20 20l-5-5" />
+    </svg>
+  )
+}
+
+export function CompressIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
+      <path d="M9 9L4 4M15 9l5-5M9 15l-5 5M15 15l5 5" />
+    </svg>
+  )
+}
+
 export function CameraIcon({ className }) {
   return (
     <svg className={className} {...iconProps}>

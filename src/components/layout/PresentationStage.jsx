@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { usePresentation } from '../../context/PresentationContext'
 import { AnnotationLayer } from '../../presentation/AnnotationLayer'
 import { ImportDropzone } from '../../presentation/ImportDropzone'
@@ -31,11 +31,38 @@ export function PresentationStage({
   const [panMode, setPanMode] = useState(false)
   const [spaceHeld, setSpaceHeld] = useState(false)
   const [ctrlHeld, setCtrlHeld] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const dragRef = useRef(null)
+  const surfaceRef = useRef(null)
 
   const isPanning = panMode || spaceHeld || ctrlHeld
   const drawEnabled = annotateActive && !isPanning
   const frameRef = useRef(null)
+
+  const toggleFullscreen = useCallback(async () => {
+    const surface = surfaceRef.current
+    if (!surface) return
+
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen()
+      } else {
+        await surface.requestFullscreen()
+      }
+    } catch {
+      // Fullscreen may be blocked by the browser.
+    }
+  }, [])
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(document.fullscreenElement === surfaceRef.current)
+    }
+    document.addEventListener('fullscreenchange', onFullscreenChange)
+    return () => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange)
+    }
+  }, [])
 
   useEffect(() => {
     // Block browser page-zoom (Ctrl/Cmd + wheel) so only the slide scales.
@@ -113,6 +140,12 @@ export function PresentationStage({
         return
       }
 
+      if (key === 'f' && !withMod && !event.altKey) {
+        event.preventDefault()
+        toggleFullscreen()
+        return
+      }
+
       if (withMod && key === 'z') {
         if (canUndoAnnotation && currentSlide) {
           event.preventDefault()
@@ -169,6 +202,7 @@ export function PresentationStage({
     panMode,
     prevSlide,
     spaceHeld,
+    toggleFullscreen,
     undoSlideAnnotation,
     zoomIn,
     zoomOut,
@@ -204,11 +238,19 @@ export function PresentationStage({
 
   return (
     <main className="presentation-stage" aria-label="Presentation stage">
-      <div className="presentation-stage__surface">
+      <div
+        ref={surfaceRef}
+        className={`presentation-stage__surface ${isFullscreen ? 'is-fullscreen' : ''}`}
+      >
         <SlideNav
           viewControls={
             slideCount > 0 ? (
-              <SlideViewControls panMode={panMode} onPanModeChange={setPanMode} />
+              <SlideViewControls
+                panMode={panMode}
+                onPanModeChange={setPanMode}
+                isFullscreen={isFullscreen}
+                onToggleFullscreen={toggleFullscreen}
+              />
             ) : null
           }
         />

@@ -1,5 +1,7 @@
 import {
   CameraIcon,
+  CompressIcon,
+  ExpandIcon,
   HandIcon,
   ZoomInIcon,
   ZoomOutIcon,
@@ -7,9 +9,14 @@ import {
 import { usePresentation } from '../context/PresentationContext'
 
 /**
- * Camera / view controls for zoom, pan mode, and fit-to-screen.
+ * Camera / view controls for zoom, pan mode, fit, and fullscreen.
  */
-export function SlideViewControls({ panMode, onPanModeChange }) {
+export function SlideViewControls({
+  panMode,
+  onPanModeChange,
+  isFullscreen = false,
+  onToggleFullscreen,
+}) {
   const { slideView, zoomIn, zoomOut, resetSlideView } = usePresentation()
   const zoomPercent = Math.round(slideView.scale * 100)
 
@@ -55,6 +62,22 @@ export function SlideViewControls({ panMode, onPanModeChange }) {
       >
         <HandIcon className="stage-button__icon" />
       </button>
+      {onToggleFullscreen && (
+        <button
+          type="button"
+          className={`stage-button stage-button--icon ${isFullscreen ? 'is-active' : ''}`}
+          aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+          aria-pressed={isFullscreen}
+          title={isFullscreen ? 'Exit fullscreen (Esc or F)' : 'Fullscreen (F)'}
+          onClick={onToggleFullscreen}
+        >
+          {isFullscreen ? (
+            <CompressIcon className="stage-button__icon" />
+          ) : (
+            <ExpandIcon className="stage-button__icon" />
+          )}
+        </button>
+      )}
     </div>
   )
 }
