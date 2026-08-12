@@ -1,9 +1,12 @@
 import { useCallback, useMemo } from 'react'
 import { useDraggable } from '../../hooks/useDraggable'
+import { useResizable } from '../../hooks/useResizable'
 import { CloseIcon, MinimizeIcon, RestoreIcon } from './icons'
 
+const RESIZE_EDGES = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']
+
 /**
- * Draggable floating window chrome.
+ * Draggable + resizable floating window chrome.
  * Children stay mounted while minimized so tool state can keep running.
  */
 export function FloatingPanel({
@@ -20,8 +23,10 @@ export function FloatingPanel({
   onRestore,
   onClose,
   onPositionChange,
+  onSizeChange,
   compact = false,
   hideMinimize = false,
+  resizable = true,
   children,
 }) {
   const displaySize = useMemo(() => {
@@ -31,11 +36,21 @@ export function FloatingPanel({
     return size
   }, [isMinimized, size])
 
+  const minWidth = compact ? 140 : 280
+  const minHeight = compact ? 100 : 180
+
   const handlePositionChange = useCallback(
     (next) => {
       onPositionChange(id, next)
     },
     [id, onPositionChange],
+  )
+
+  const handleSizeChange = useCallback(
+    (next) => {
+      onSizeChange?.(id, next)
+    },
+    [id, onSizeChange],
   )
 
   const { isDragging, dragHandleProps } = useDraggable({
@@ -46,12 +61,24 @@ export function FloatingPanel({
     panelSize: displaySize,
   })
 
+  const { isResizing, getResizeHandleProps } = useResizable({
+    enabled: Boolean(resizable && onSizeChange && !isMinimized),
+    position,
+    size,
+    onPositionChange: handlePositionChange,
+    onSizeChange: handleSizeChange,
+    boundsRef,
+    minWidth,
+    minHeight,
+  })
+
   const className = [
     'floating-panel',
     compact ? 'floating-panel--compact' : '',
     isMinimized ? 'is-minimized' : '',
     isFocused ? 'is-focused' : '',
     isDragging ? 'is-dragging' : '',
+    isResizing ? 'is-resizing' : '',
   ]
     .filter(Boolean)
     .join(' ')
@@ -109,6 +136,16 @@ export function FloatingPanel({
       <div className="floating-panel__body" aria-hidden={isMinimized}>
         {children}
       </div>
+
+      {resizable && onSizeChange && !isMinimized &&
+        RESIZE_EDGES.map((edge) => (
+          <div
+            key={edge}
+            className={`floating-panel__resize floating-panel__resize--${edge}`}
+            aria-hidden="true"
+            {...getResizeHandleProps(edge)}
+          />
+        ))}
     </section>
   )
 }

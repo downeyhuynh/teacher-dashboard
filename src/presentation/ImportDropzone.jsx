@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { usePresentation } from '../context/PresentationContext'
 
 /**
- * Drag-and-drop + file picker for PDF and image slide imports.
+ * Drag-and-drop + file picker for PPTX, PDF, and image slide imports.
  */
 export function ImportDropzone({ compact = false }) {
   const inputRef = useRef(null)
@@ -37,7 +37,7 @@ export function ImportDropzone({ compact = false }) {
         ref={inputRef}
         type="file"
         className="import-dropzone__input"
-        accept=".pdf,application/pdf,image/png,image/jpeg,image/webp,image/gif"
+        accept=".pptx,.pdf,application/pdf,application/vnd.openxmlformats-officedocument.presentationml.presentation,image/png,image/jpeg,image/webp,image/gif"
         multiple
         onChange={(event) => {
           handleFiles(event.target.files)
@@ -50,8 +50,8 @@ export function ImportDropzone({ compact = false }) {
           <p className="import-dropzone__eyebrow">Lesson materials</p>
           <h2 className="import-dropzone__title">Add a presentation</h2>
           <p className="import-dropzone__copy">
-            Drop a PDF, or image exports from PowerPoint / Google Slides.
-            Each page or image becomes a slide.
+            Drop a PowerPoint (.pptx), PDF, or image exports. Each slide or page
+            becomes a high-quality classroom slide.
           </p>
         </>
       )}
@@ -63,7 +63,7 @@ export function ImportDropzone({ compact = false }) {
           disabled={isImporting}
           onClick={() => inputRef.current?.click()}
         >
-          {isImporting ? 'Importing…' : 'Choose PDF or images'}
+          {isImporting ? 'Importing…' : 'Choose PPTX, PDF, or images'}
         </button>
       </div>
 

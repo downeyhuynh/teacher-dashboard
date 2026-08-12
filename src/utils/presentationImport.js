@@ -1,5 +1,6 @@
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs'
 import { createId } from './id'
+import { slidesFromPptx } from './pptxImport'
 
 // Legacy build includes polyfills for newer JS APIs (e.g. Map.getOrInsertComputed)
 // that the modern pdfjs-dist build requires but many browsers still lack.
@@ -17,7 +18,7 @@ const IMAGE_TYPES = new Set([
 ])
 
 /**
- * @typedef {{ id: string, source: 'pdf' | 'image' | 'whiteboard', name: string, src?: string, pageNumber?: number }} Slide
+ * @typedef {{ id: string, source: 'pdf' | 'image' | 'whiteboard' | 'pptx', name: string, src?: string, pageNumber?: number }} Slide
  */
 
 /**
@@ -36,10 +37,10 @@ export function createWhiteboardSlide(label = 'Whiteboard') {
 }
 
 /**
- * Render every page of a PDF to object-URL slide images.
+ * Render every page of a PDF to high-resolution PNG slide images.
  * @returns {Promise<Slide[]>}
  */
-export async function slidesFromPdf(file, { scale = 1.5, onProgress } = {}) {
+export async function slidesFromPdf(file, { scale = 2.5, onProgress } = {}) {
   const data = await file.arrayBuffer()
   const loadingTask = pdfjs.getDocument({
     data,
@@ -61,6 +62,8 @@ export async function slidesFromPdf(file, { scale = 1.5, onProgress } = {}) {
 
       canvas.width = Math.ceil(viewport.width)
       canvas.height = Math.ceil(viewport.height)
+      context.fillStyle = '#ffffff'
+      context.fillRect(0, 0, canvas.width, canvas.height)
 
       await page.render({
         canvasContext: context,
@@ -74,8 +77,7 @@ export async function slidesFromPdf(file, { scale = 1.5, onProgress } = {}) {
             if (result) resolve(result)
             else reject(new Error('Failed to encode PDF page image'))
           },
-          'image/jpeg',
-          0.92,
+          'image/png',
         )
       })
 
@@ -121,8 +123,17 @@ export async function slideFromImage(file) {
   }
 }
 
+function isPptxFile(file) {
+  const name = file.name?.toLowerCase?.() || ''
+  return (
+    name.endsWith('.pptx') ||
+    file.type ===
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+  )
+}
+
 /**
- * Parse a FileList / File[] into slides (PDF pages + images).
+ * Parse a FileList / File[] into slides (PPTX, PDF pages + images).
  * @returns {Promise<{ slides: Slide[], errors: string[] }>}
  */
 export async function importPresentationFiles(files, { onProgress } = {}) {
@@ -132,15 +143,31 @@ export async function importPresentationFiles(files, { onProgress } = {}) {
 
   for (const file of list) {
     try {
-      if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+      if (isPptxFile(file)) {
+        const pptxSlides = await slidesFromPptx(file, {
+          onProgress: (progress) =>
+            onProgress?.({ fileName: file.name, ...progress }),
+        })
+        slides.push(...pptxSlides)
+      } else if (
+        file.type === 'application/pdf' ||
+        file.name.toLowerCase().endsWith('.pdf')
+      ) {
         const pdfSlides = await slidesFromPdf(file, {
           onProgress: (progress) =>
             onProgress?.({ fileName: file.name, ...progress }),
         })
         slides.push(...pdfSlides)
-      } else if (IMAGE_TYPES.has(file.type) || /\.(png|jpe?g|webp|gif)$/i.test(file.name)) {
+      } else if (
+        IMAGE_TYPES.has(file.type) ||
+        /\.(png|jpe?g|webp|gif)$/i.test(file.name)
+      ) {
         slides.push(await slideFromImage(file))
         onProgress?.({ fileName: file.name, pageNumber: 1, total: 1 })
+      } else if (file.name.toLowerCase().endsWith('.ppt')) {
+        errors.push(
+          `Legacy .ppt is not supported. Save as .pptx or PDF: ${file.name}`,
+        )
       } else {
         errors.push(`Unsupported file: ${file.name}`)
       }

@@ -11,6 +11,8 @@ import { SlideViewControls } from '../../presentation/SlideViewControls'
 export function PresentationStage({
   annotateActive = false,
   onRequestAnnotate,
+  isFullscreen = false,
+  onToggleFullscreen,
 }) {
   const {
     currentSlide,
@@ -31,38 +33,15 @@ export function PresentationStage({
   const [panMode, setPanMode] = useState(false)
   const [spaceHeld, setSpaceHeld] = useState(false)
   const [ctrlHeld, setCtrlHeld] = useState(false)
-  const [isFullscreen, setIsFullscreen] = useState(false)
   const dragRef = useRef(null)
-  const surfaceRef = useRef(null)
 
   const isPanning = panMode || spaceHeld || ctrlHeld
   const drawEnabled = annotateActive && !isPanning
   const frameRef = useRef(null)
 
-  const toggleFullscreen = useCallback(async () => {
-    const surface = surfaceRef.current
-    if (!surface) return
-
-    try {
-      if (document.fullscreenElement) {
-        await document.exitFullscreen()
-      } else {
-        await surface.requestFullscreen()
-      }
-    } catch {
-      // Fullscreen may be blocked by the browser.
-    }
-  }, [])
-
-  useEffect(() => {
-    const onFullscreenChange = () => {
-      setIsFullscreen(document.fullscreenElement === surfaceRef.current)
-    }
-    document.addEventListener('fullscreenchange', onFullscreenChange)
-    return () => {
-      document.removeEventListener('fullscreenchange', onFullscreenChange)
-    }
-  }, [])
+  const toggleFullscreen = useCallback(() => {
+    onToggleFullscreen?.()
+  }, [onToggleFullscreen])
 
   useEffect(() => {
     // Block browser page-zoom (Ctrl/Cmd + wheel) so only the slide scales.
@@ -118,7 +97,6 @@ export function PresentationStage({
       const key = event.key.toLowerCase()
       const withMod = event.ctrlKey || event.metaKey
 
-      // Keep Ctrl/Cmd +/- for slide zoom only (never browser UI zoom).
       if (withMod && (event.key === '+' || event.key === '=' || event.key === '-' || event.key === '_' || key === '0')) {
         event.preventDefault()
         if (key === '0') resetSlideView()
@@ -237,11 +215,11 @@ export function PresentationStage({
   }
 
   return (
-    <main className="presentation-stage" aria-label="Presentation stage">
-      <div
-        ref={surfaceRef}
-        className={`presentation-stage__surface ${isFullscreen ? 'is-fullscreen' : ''}`}
-      >
+    <main
+      className={`presentation-stage ${isFullscreen ? 'is-fullscreen' : ''}`}
+      aria-label="Presentation stage"
+    >
+      <div className="presentation-stage__surface">
         <SlideNav
           viewControls={
             slideCount > 0 ? (
@@ -291,9 +269,11 @@ export function PresentationStage({
               </div>
             </div>
 
-            <div className="slide-viewport__rail">
-              <ImportDropzone compact />
-            </div>
+            {!isFullscreen && (
+              <div className="slide-viewport__rail">
+                <ImportDropzone compact />
+              </div>
+            )}
           </div>
         )}
 
