@@ -9,6 +9,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url,
 ).toString()
 
+// Served from /public/pdfjs (copied from pdfjs-dist). Must end with "/".
+const STANDARD_FONT_DATA_URL = `${import.meta.env.BASE_URL}pdfjs/standard_fonts/`
+const CMAP_URL = `${import.meta.env.BASE_URL}pdfjs/cmaps/`
+
 const IMAGE_TYPES = new Set([
   'image/png',
   'image/jpeg',
@@ -16,6 +20,9 @@ const IMAGE_TYPES = new Set([
   'image/webp',
   'image/gif',
 ])
+
+/** Browsers often fail canvases larger than this on a side. */
+const MAX_CANVAS_SIDE = 8192
 
 /**
  * @typedef {{ id: string, source: 'pdf' | 'image' | 'whiteboard' | 'pptx', name: string, src?: string, pageNumber?: number }} Slide
@@ -36,15 +43,44 @@ export function createWhiteboardSlide(label = 'Whiteboard') {
   }
 }
 
+function fitScaleForViewport(baseViewport, preferredScale) {
+  const width = baseViewport.width * preferredScale
+  const height = baseViewport.height * preferredScale
+  const limit = Math.max(width / MAX_CANVAS_SIDE, height / MAX_CANVAS_SIDE, 1)
+  return preferredScale / limit
+}
+
+function canvasToBlob(canvas, type, quality) {
+  return new Promise((resolve) => {
+    canvas.toBlob((result) => resolve(result), type, quality)
+  })
+}
+
+async function encodeSlideCanvas(canvas) {
+  // Prefer PNG for sharpness; fall back to JPEG if the browser rejects a huge PNG.
+  const png = await canvasToBlob(canvas, 'image/png')
+  if (png) return png
+
+  const jpeg = await canvasToBlob(canvas, 'image/jpeg', 0.92)
+  if (jpeg) return jpeg
+
+  throw new Error('Could not encode slide image (page may be too large)')
+}
+
 /**
- * Render every page of a PDF to high-resolution PNG slide images.
+ * Render every page of a PDF to high-resolution slide images.
  * @returns {Promise<Slide[]>}
  */
-export async function slidesFromPdf(file, { scale = 2.5, onProgress } = {}) {
-  const data = await file.arrayBuffer()
+export async function slidesFromPdf(file, { scale = 2, onProgress } = {}) {
+  // Copy bytes — some environments detach the original ArrayBuffer.
+  const data = new Uint8Array(await file.arrayBuffer())
   const loadingTask = pdfjs.getDocument({
     data,
-    useSystemFonts: true,
+    // Prefer bundled standard fonts over OS fonts (more reliable across machines).
+    useSystemFonts: false,
+    standardFontDataUrl: STANDARD_FONT_DATA_URL,
+    cMapUrl: CMAP_URL,
+    cMapPacked: true,
   })
   const pdf = await loadingTask.promise
   const slides = []
@@ -52,7 +88,9 @@ export async function slidesFromPdf(file, { scale = 2.5, onProgress } = {}) {
   try {
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
       const page = await pdf.getPage(pageNumber)
-      const viewport = page.getViewport({ scale })
+      const baseViewport = page.getViewport({ scale: 1 })
+      const renderScale = fitScaleForViewport(baseViewport, scale)
+      const viewport = page.getViewport({ scale: renderScale })
       const canvas = document.createElement('canvas')
       const context = canvas.getContext('2d', { alpha: false })
 
@@ -60,27 +98,23 @@ export async function slidesFromPdf(file, { scale = 2.5, onProgress } = {}) {
         throw new Error('Could not create canvas for PDF page')
       }
 
-      canvas.width = Math.ceil(viewport.width)
-      canvas.height = Math.ceil(viewport.height)
+      canvas.width = Math.max(1, Math.ceil(viewport.width))
+      canvas.height = Math.max(1, Math.ceil(viewport.height))
       context.fillStyle = '#ffffff'
       context.fillRect(0, 0, canvas.width, canvas.height)
 
-      await page.render({
-        canvasContext: context,
-        viewport,
-        canvas,
-      }).promise
+      try {
+        await page.render({
+          canvasContext: context,
+          viewport,
+          canvas,
+        }).promise
+      } catch (error) {
+        const detail = error?.message || String(error)
+        throw new Error(`Could not render page ${pageNumber}: ${detail}`)
+      }
 
-      const blob = await new Promise((resolve, reject) => {
-        canvas.toBlob(
-          (result) => {
-            if (result) resolve(result)
-            else reject(new Error('Failed to encode PDF page image'))
-          },
-          'image/png',
-        )
-      })
-
+      const blob = await encodeSlideCanvas(canvas)
       const src = URL.createObjectURL(blob)
       slides.push({
         id: createId('slide'),

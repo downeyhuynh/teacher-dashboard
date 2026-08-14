@@ -107,7 +107,7 @@ export function PresentationStage({
 
       if (key === 'h' && !withMod && !event.altKey) {
         event.preventDefault()
-        setPanMode(true)
+        setPanMode((prev) => !prev)
         return
       }
 

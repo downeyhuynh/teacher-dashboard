@@ -32,6 +32,11 @@ function getCornerPosition(corner, size, bounds) {
       return { x: rightX, y: midY }
     case 'bottom-left':
       return { x: CORNER_MARGIN, y: bottomY }
+    case 'bottom-center':
+      return {
+        x: Math.max(CORNER_MARGIN, Math.round((width - size.width) / 2)),
+        y: bottomY,
+      }
     case 'top-left':
       return { x: CORNER_MARGIN, y: CORNER_MARGIN }
     case 'bottom-right':
@@ -264,9 +269,9 @@ export function AppShell() {
   )
 
   const requestAnnotate = useCallback(() => {
+    // Keyboard "P": re-enable drawing without opening the Annotate panel.
     enableAnnotate()
-    openAnnotatePanel()
-  }, [enableAnnotate, openAnnotatePanel])
+  }, [enableAnnotate])
 
   const shellClass = [
     'app-shell',

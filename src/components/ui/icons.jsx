@@ -80,6 +80,17 @@ export function NoiseIcon({ className }) {
   )
 }
 
+export function NoiseMeterIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <path d="M6 20V10" />
+      <path d="M12 20V4" />
+      <path d="M18 20v-7" />
+      <path d="M4 20h16" />
+    </svg>
+  )
+}
+
 export function MusicIcon({ className }) {
   return (
     <svg className={className} {...iconProps}>

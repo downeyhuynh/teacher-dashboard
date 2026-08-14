@@ -55,9 +55,9 @@ export function SlideViewControls({
       <button
         type="button"
         className={`stage-button stage-button--icon ${panMode ? 'is-active' : ''}`}
-        aria-label="Hand tool — or hold Ctrl and drag"
+        aria-label="Hand tool — press H to toggle, or hold Ctrl and drag"
         aria-pressed={panMode}
-        title="Hold Ctrl and drag to pan (or press H)"
+        title="Hand tool (H to toggle) — or hold Ctrl and drag to pan"
         onClick={() => onPanModeChange(!panMode)}
       >
         <HandIcon className="stage-button__icon" />

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { SpinWheel } from '../components/students/SpinWheel'
 import { useTools } from '../context/ToolsContext'
+import { usePortalRoot } from '../hooks/usePortalRoot'
 import { rosterToText } from '../utils/roster'
 import { playSpinWheelSound } from '../utils/spinWheelSound'
 
@@ -33,6 +34,7 @@ export function StudentPickerPanel() {
   const [spinTargetIndex, setSpinTargetIndex] = useState(null)
   const [pendingWinner, setPendingWinner] = useState(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const portalRoot = usePortalRoot()
 
   useEffect(() => {
     setDraftText(rosterToText(activeRoster))
@@ -210,10 +212,10 @@ export function StudentPickerPanel() {
     </div>
   )
 
-  if (isFullscreen) {
+  if (isFullscreen && portalRoot) {
     return createPortal(
       <div className="student-picker-fullscreen-root">{panel}</div>,
-      document.body,
+      portalRoot,
     )
   }
 

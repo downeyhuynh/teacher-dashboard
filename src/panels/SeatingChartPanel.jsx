@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { useSeating } from '../context/SeatingContext'
 import { useTools } from '../context/ToolsContext'
 import { ZoomInIcon, ZoomOutIcon } from '../components/ui/icons'
+import { usePortalRoot } from '../hooks/usePortalRoot'
 import {
   ROOM_WORLD,
   SEAT_SIZE,
@@ -65,6 +66,7 @@ export function SeatingChartPanel() {
 
   const [zoom, setZoom] = useState(1)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const portalRoot = usePortalRoot()
   const [fillOpen, setFillOpen] = useState(false)
   const [fillClassId, setFillClassId] = useState('')
   const [fillShuffle, setFillShuffle] = useState(true)
@@ -817,10 +819,10 @@ export function SeatingChartPanel() {
     </div>
   )
 
-  if (isFullscreen) {
+  if (isFullscreen && portalRoot) {
     return createPortal(
       <div className="seating-fullscreen-root">{panel}</div>,
-      document.body,
+      portalRoot,
     )
   }
 

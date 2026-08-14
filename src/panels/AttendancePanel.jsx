@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useSeating } from '../context/SeatingContext'
+import { usePortalRoot } from '../hooks/usePortalRoot'
 import {
   buildAttendanceList,
   getMarkedIdsForRoom,
@@ -31,6 +32,7 @@ export function AttendancePanel() {
     () => stored.marksBySession || {},
   )
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const portalRoot = usePortalRoot()
 
   const room = useMemo(() => {
     const found = rooms.find((entry) => entry.id === roomId) || rooms[0]
@@ -230,10 +232,10 @@ export function AttendancePanel() {
     </div>
   )
 
-  if (isFullscreen) {
+  if (isFullscreen && portalRoot) {
     return createPortal(
       <div className="attendance-fullscreen-root">{panel}</div>,
-      document.body,
+      portalRoot,
     )
   }
 
