@@ -3,7 +3,6 @@ import {
   AttendanceIcon,
   BathroomIcon,
   CalculatorIcon,
-  NoiseIcon,
   NoiseMeterIcon,
   SeatingIcon,
   StudentsIcon,
@@ -14,7 +13,6 @@ import { AnnotatePanel } from './AnnotatePanel'
 import { AttendancePanel } from './AttendancePanel'
 import { BathroomPanel } from './BathroomPanel'
 import { CalculatorPanel } from './CalculatorPanel'
-import { NoiseLevelPanel } from './NoiseLevelPanel'
 import { NoiseMeterPanel } from './NoiseMeterPanel'
 import { SeatingChartPanel } from './SeatingChartPanel'
 import { StudentPickerPanel } from './StudentPickerPanel'
@@ -62,16 +60,6 @@ export const PANEL_REGISTRY = [
     Icon: AttendanceIcon,
     Component: AttendancePanel,
     dock: 'quick',
-  },
-  {
-    id: PANEL_IDS.NOISE,
-    label: 'Noise',
-    Icon: NoiseIcon,
-    Component: NoiseLevelPanel,
-    dock: 'quick',
-    compact: true,
-    hideMinimize: true,
-    corner: 'top-right',
   },
   {
     id: PANEL_IDS.NOISE_METER,

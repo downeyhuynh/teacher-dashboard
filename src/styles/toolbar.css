@@ -35,15 +35,15 @@
   flex-direction: column;
   align-items: center;
   gap: var(--toolbar-gap);
-  flex: 1;
 }
 
 .tool-toolbar__quick {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: var(--toolbar-gap);
   padding-top: 6px;
-  margin-top: 4px;
+  margin-top: 2px;
   border-top: 1px solid var(--color-border);
 }
 
