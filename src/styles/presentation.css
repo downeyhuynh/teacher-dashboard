@@ -4,7 +4,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   padding: clamp(16px, 3vw, 40px);
 }
 
@@ -27,6 +28,7 @@
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+  flex-shrink: 0;
   padding: 10px 12px;
   border-bottom: 1px solid var(--color-border);
   background: rgba(244, 247, 250, 0.92);
@@ -104,7 +106,8 @@
   position: relative;
   display: grid;
   grid-template-rows: 1fr auto;
-  height: calc(100% - 53px);
+  flex: 1;
+  height: auto;
   min-height: 0;
 }
 

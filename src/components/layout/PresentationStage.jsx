@@ -4,6 +4,7 @@ import { AnnotationLayer } from '../../presentation/AnnotationLayer'
 import { ImportDropzone } from '../../presentation/ImportDropzone'
 import { SlideNav } from '../../presentation/SlideNav'
 import { SlideViewControls } from '../../presentation/SlideViewControls'
+import { LessonChrome } from './LessonChrome'
 
 /**
  * Main presentation viewport: slides, import, on-slide ink overlays.
@@ -257,6 +258,7 @@ export function PresentationStage({
       aria-label="Presentation stage"
     >
       <div className="presentation-stage__surface">
+        <LessonChrome />
         <SlideNav
           viewControls={
             slideCount > 0 ? (

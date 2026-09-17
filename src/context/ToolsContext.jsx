@@ -26,6 +26,12 @@ import {
 import { createId } from '../utils/id'
 import { loadRestroomList, saveRestroomList } from '../utils/restroomList'
 import {
+  loadLessonChrome,
+  saveLessonChrome,
+  nextLessonSubject,
+  prevLessonSubject,
+} from '../utils/lessonChrome'
+import {
   setOvertimeTickVolume,
   startOvertimeTicking,
   stopOvertimeTicking,
@@ -98,6 +104,11 @@ export function ToolsProvider({ children }) {
   // --- Restroom out list (survives panel close + refresh) ---
   const [restroomOut, setRestroomOut] = useState(() => loadRestroomList())
 
+  // --- Lesson objective / agenda (Math ↔ Science) ---
+  const initialLesson = useMemo(() => loadLessonChrome(), [])
+  const [lessonSubject, setLessonSubject] = useState(initialLesson.subject)
+  const [lessonSubjects, setLessonSubjects] = useState(initialLesson.subjects)
+
   // --- Overtime stopwatch (keeps ticking if panel is closed) ---
   const [overtimeElapsedMs, setOvertimeElapsedMs] = useState(0)
   const [overtimeRunning, setOvertimeRunning] = useState(false)
@@ -111,6 +122,10 @@ export function ToolsProvider({ children }) {
   useEffect(() => {
     saveRestroomList(restroomOut)
   }, [restroomOut])
+
+  useEffect(() => {
+    saveLessonChrome({ subject: lessonSubject, subjects: lessonSubjects })
+  }, [lessonSubject, lessonSubjects])
 
   useEffect(() => {
     setFocusMusicVolume(focusMusicVolume)
@@ -413,6 +428,40 @@ export function ToolsProvider({ children }) {
     setRestroomOut([])
   }, [])
 
+  const setLessonObjective = useCallback(
+    (value) => {
+      setLessonSubjects((prev) => ({
+        ...prev,
+        [lessonSubject]: {
+          ...prev[lessonSubject],
+          objective: value,
+        },
+      }))
+    },
+    [lessonSubject],
+  )
+
+  const setLessonAgenda = useCallback(
+    (value) => {
+      setLessonSubjects((prev) => ({
+        ...prev,
+        [lessonSubject]: {
+          ...prev[lessonSubject],
+          agenda: value,
+        },
+      }))
+    },
+    [lessonSubject],
+  )
+
+  const goNextLessonSubject = useCallback(() => {
+    setLessonSubject((prev) => nextLessonSubject(prev))
+  }, [])
+
+  const goPrevLessonSubject = useCallback(() => {
+    setLessonSubject((prev) => prevLessonSubject(prev))
+  }, [])
+
   const startOvertime = useCallback(() => {
     setOvertimeElapsedMs((prev) => {
       if (prev <= 0) setOvertimeMode('accrue')
@@ -500,6 +549,15 @@ export function ToolsProvider({ children }) {
         remove: removeRestroomStudent,
         clear: clearRestroomList,
       },
+      lesson: {
+        subject: lessonSubject,
+        objective: lessonSubjects[lessonSubject]?.objective || '',
+        agenda: lessonSubjects[lessonSubject]?.agenda || '',
+        setObjective: setLessonObjective,
+        setAgenda: setLessonAgenda,
+        nextSubject: goNextLessonSubject,
+        prevSubject: goPrevLessonSubject,
+      },
       overtime: {
         elapsedMs: overtimeElapsedMs,
         running: overtimeRunning,
@@ -552,6 +610,12 @@ export function ToolsProvider({ children }) {
       addRestroomStudent,
       removeRestroomStudent,
       clearRestroomList,
+      lessonSubject,
+      lessonSubjects,
+      setLessonObjective,
+      setLessonAgenda,
+      goNextLessonSubject,
+      goPrevLessonSubject,
       overtimeElapsedMs,
       overtimeRunning,
       overtimeMode,
