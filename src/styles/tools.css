@@ -154,6 +154,36 @@
   width: 100%;
 }
 
+.student-picker-panel__class-manage {
+  width: 100%;
+}
+
+.student-picker-panel__class-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.student-picker-panel__class-input {
+  flex: 1;
+  min-width: 120px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.student-picker-panel__class-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-ring);
+}
+
 .student-picker-panel.is-fullscreen .student-picker-panel__result-name {
   font-size: clamp(1.6rem, 4vw, 2.4rem);
 }

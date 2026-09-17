@@ -1,5 +1,5 @@
 import { createId } from './id'
-import { CLASS_IDS } from './roster'
+import { DEFAULT_CLASS_ID } from './roster'
 
 const STORAGE_KEY = 'teacher-dashboard.seating.v1'
 const DEFAULT_TEMPLATE_KEY = 'teacher-dashboard.seating.default-template.v1'
@@ -14,7 +14,7 @@ export const ZOOM_STEP = 0.1
 
 export function createEmptyRoom(
   name = DEFAULT_ROOM_NAME,
-  classId = CLASS_IDS.HAWAII,
+  classId = DEFAULT_CLASS_ID,
 ) {
   return {
     id: createId('room'),
@@ -64,7 +64,7 @@ export function normalizeRoom(room) {
     tables: Array.isArray(room.tables) ? room.tables : [],
     seats: Array.isArray(room.seats) ? room.seats : [],
     items: Array.isArray(room.items) ? room.items : [],
-    classId: room.classId || CLASS_IDS.HAWAII,
+    classId: room.classId || DEFAULT_CLASS_ID,
     name: room.name || DEFAULT_ROOM_NAME,
   }
 }
@@ -94,7 +94,7 @@ export function roomFromTemplate(template, name = DEFAULT_ROOM_NAME) {
   return {
     id: createId('room'),
     name,
-    classId: template.classId || CLASS_IDS.HAWAII,
+    classId: template.classId || DEFAULT_CLASS_ID,
     tables: (template.tables || []).map((table) => ({
       ...table,
       id: createId('table'),
@@ -140,7 +140,7 @@ export function loadDefaultTemplate() {
     const parsed = JSON.parse(raw)
     if (!parsed || typeof parsed !== 'object') return null
     return {
-      classId: parsed.classId || CLASS_IDS.HAWAII,
+      classId: parsed.classId || DEFAULT_CLASS_ID,
       tables: Array.isArray(parsed.tables) ? parsed.tables : [],
       seats: Array.isArray(parsed.seats) ? parsed.seats : [],
       items: Array.isArray(parsed.items) ? parsed.items : [],
@@ -293,7 +293,7 @@ export function cloneRoomItems(room, selectedIds, offset = DUPLICATE_OFFSET) {
   }
 }
 
-export const SEAT_SIZE = { width: 56, height: 36 }
+export const SEAT_SIZE = { width: 112, height: 52 }
 
 export function getItemBounds(item, type) {
   if (type === 'seat') {

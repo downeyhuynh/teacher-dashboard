@@ -3,9 +3,7 @@ export const PANEL_IDS = {
   ANNOTATE: 'annotate',
   CALCULATOR: 'calculator',
   STUDENTS: 'students',
-  NOISE_METER: 'noise-meter',
   SEATING: 'seating',
-  ATTENDANCE: 'attendance',
   BATHROOM: 'bathroom',
 }
 
@@ -21,9 +19,7 @@ export const PANEL_DEFAULT_ORIGINS = {
   [PANEL_IDS.CALCULATOR]: { x: 168, y: 168 },
   [PANEL_IDS.STUDENTS]: { x: 72, y: 120 },
   // Corner fallbacks; AppShell repositions on open.
-  [PANEL_IDS.NOISE_METER]: { x: 120, y: 64 },
   [PANEL_IDS.SEATING]: { x: 40, y: 40 },
-  [PANEL_IDS.ATTENDANCE]: { x: 56, y: 56 },
   [PANEL_IDS.BATHROOM]: { x: 16, y: 16 },
 }
 
@@ -32,8 +28,6 @@ export const PANEL_DEFAULT_SIZES = {
   [PANEL_IDS.ANNOTATE]: { width: 320, height: 340 },
   [PANEL_IDS.CALCULATOR]: { width: 300, height: 420 },
   [PANEL_IDS.STUDENTS]: { width: 380, height: 620 },
-  [PANEL_IDS.NOISE_METER]: { width: 420, height: 132 },
   [PANEL_IDS.SEATING]: { width: 720, height: 560 },
-  [PANEL_IDS.ATTENDANCE]: { width: 860, height: 580 },
-  [PANEL_IDS.BATHROOM]: { width: 148, height: 118 },
+  [PANEL_IDS.BATHROOM]: { width: 260, height: 280 },
 }

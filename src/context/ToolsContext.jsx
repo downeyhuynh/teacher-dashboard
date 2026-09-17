@@ -16,12 +16,11 @@ import {
   stopFocusMusic,
 } from '../utils/focusMusic'
 import {
-  CLASS_IDS,
-  CLASS_OPTIONS,
-  loadRosters,
+  createClassroom,
+  loadClassState,
   parseRosterText,
   pickRandomStudent,
-  saveRosters,
+  saveClassState,
 } from '../utils/roster'
 
 const ToolsContext = createContext(null)
@@ -42,16 +41,18 @@ export function ToolsProvider({ children }) {
   const [focusTrack, setFocusTrack] = useState(null) // { name, url } | null
   const lastTickRef = useRef(null)
 
-  // --- Random student picker ---
-  const [rosters, setRosters] = useState(() => loadRosters())
-  const [activeClassId, setActiveClassId] = useState(CLASS_IDS.HAWAII)
+  // --- Random student picker / classrooms ---
+  const initialClasses = useMemo(() => loadClassState(), [])
+  const [classOptions, setClassOptions] = useState(initialClasses.classes)
+  const [rosters, setRosters] = useState(initialClasses.rosters)
+  const [activeClassId, setActiveClassId] = useState(initialClasses.activeClassId)
   const [pickedStudent, setPickedStudent] = useState(null)
   const [pickedHistory, setPickedHistory] = useState([])
   const [avoidRepeats, setAvoidRepeats] = useState(true)
 
   useEffect(() => {
-    saveRosters(rosters)
-  }, [rosters])
+    saveClassState({ classes: classOptions, rosters, activeClassId })
+  }, [classOptions, rosters, activeClassId])
 
   useEffect(() => {
     let cancelled = false
@@ -201,6 +202,44 @@ export function ToolsProvider({ children }) {
     setPickedHistory([])
   }, [])
 
+  const addClassroom = useCallback((label) => {
+    const classroom = createClassroom(label)
+    setClassOptions((prev) => [...prev, classroom])
+    setRosters((prev) => ({ ...prev, [classroom.id]: [] }))
+    setActiveClassId(classroom.id)
+    setPickedStudent(null)
+    setPickedHistory([])
+    return classroom.id
+  }, [])
+
+  const renameClassroom = useCallback((classId, label) => {
+    const trimmed = String(label || '').trim()
+    if (!trimmed) return
+    setClassOptions((prev) =>
+      prev.map((entry) =>
+        entry.id === classId ? { ...entry, label: trimmed } : entry,
+      ),
+    )
+  }, [])
+
+  const deleteClassroom = useCallback((classId) => {
+    setClassOptions((prev) => {
+      if (prev.length <= 1) return prev
+      const next = prev.filter((entry) => entry.id !== classId)
+      setActiveClassId((current) =>
+        current === classId ? next[0].id : current,
+      )
+      return next
+    })
+    setRosters((prev) => {
+      const next = { ...prev }
+      delete next[classId]
+      return next
+    })
+    setPickedStudent(null)
+    setPickedHistory([])
+  }, [])
+
   const resolveNextPick = useCallback(() => {
     const students = rosters[activeClassId] || []
     const exclude = avoidRepeats ? pickedHistory : []
@@ -271,7 +310,7 @@ export function ToolsProvider({ children }) {
         removeFocusTrack,
       },
       picker: {
-        classOptions: CLASS_OPTIONS,
+        classOptions,
         activeClassId,
         rosters,
         pickedStudent,
@@ -279,6 +318,9 @@ export function ToolsProvider({ children }) {
         avoidRepeats,
         selectClass,
         setClassRosterText,
+        addClassroom,
+        renameClassroom,
+        deleteClassroom,
         resolveNextPick,
         commitPick,
         pickStudentInstant,
@@ -306,6 +348,7 @@ export function ToolsProvider({ children }) {
       switchTimerMode,
       uploadFocusTrack,
       removeFocusTrack,
+      classOptions,
       activeClassId,
       rosters,
       pickedStudent,
@@ -313,6 +356,9 @@ export function ToolsProvider({ children }) {
       avoidRepeats,
       selectClass,
       setClassRosterText,
+      addClassroom,
+      renameClassroom,
+      deleteClassroom,
       resolveNextPick,
       commitPick,
       pickStudentInstant,

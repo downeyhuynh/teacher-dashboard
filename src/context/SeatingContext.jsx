@@ -24,7 +24,7 @@ import {
   saveSeatingState,
   loadDefaultTemplate,
 } from '../utils/seating'
-import { CLASS_OPTIONS } from '../utils/roster'
+import { useTools } from './ToolsContext'
 
 const SeatingContext = createContext(null)
 const MAX_UNDO = 60
@@ -54,6 +54,9 @@ function cloneSnapshot(rooms, activeRoomId, selectedIds) {
 }
 
 export function SeatingProvider({ children }) {
+  const { picker } = useTools()
+  const classOptions = picker.classOptions
+
   const initial = loadSeatingState()
   const [rooms, setRooms] = useState(initial.rooms)
   const [activeRoomId, setActiveRoomId] = useState(initial.activeRoomId)
@@ -239,7 +242,7 @@ export function SeatingProvider({ children }) {
   const placeSeat = useCallback(
     (x, y) => {
       pushUndo()
-      const seat = createSeat(Math.max(0, x - 28), Math.max(0, y - 18))
+      const seat = createSeat(Math.max(0, x - 56), Math.max(0, y - 26))
       setRooms((prev) =>
         updateActiveRoom(prev, activeRoomId, (room) => ({
           ...room,
@@ -424,7 +427,7 @@ export function SeatingProvider({ children }) {
       selectedIdSet,
       selectedId,
       selectedItem,
-      classOptions: CLASS_OPTIONS,
+      classOptions,
       setTool,
       selectOnly,
       toggleSelected,
@@ -464,6 +467,7 @@ export function SeatingProvider({ children }) {
       selectedIdSet,
       selectedId,
       selectedItem,
+      classOptions,
       selectOnly,
       toggleSelected,
       setSelection,

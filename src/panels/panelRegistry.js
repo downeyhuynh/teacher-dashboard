@@ -1,19 +1,15 @@
 import {
   AnnotateIcon,
-  AttendanceIcon,
   BathroomIcon,
   CalculatorIcon,
-  NoiseMeterIcon,
   SeatingIcon,
   StudentsIcon,
   TimerIcon,
 } from '../components/ui/icons'
 import { PANEL_IDS } from '../utils/panelDefaults'
 import { AnnotatePanel } from './AnnotatePanel'
-import { AttendancePanel } from './AttendancePanel'
 import { BathroomPanel } from './BathroomPanel'
 import { CalculatorPanel } from './CalculatorPanel'
-import { NoiseMeterPanel } from './NoiseMeterPanel'
 import { SeatingChartPanel } from './SeatingChartPanel'
 import { StudentPickerPanel } from './StudentPickerPanel'
 import { TimerPanel } from './TimerPanel'
@@ -55,25 +51,8 @@ export const PANEL_REGISTRY = [
     dock: 'quick',
   },
   {
-    id: PANEL_IDS.ATTENDANCE,
-    label: 'Attendance',
-    Icon: AttendanceIcon,
-    Component: AttendancePanel,
-    dock: 'quick',
-  },
-  {
-    id: PANEL_IDS.NOISE_METER,
-    label: 'Noise Meter',
-    Icon: NoiseMeterIcon,
-    Component: NoiseMeterPanel,
-    dock: 'quick',
-    compact: true,
-    hideMinimize: true,
-    corner: 'bottom-center',
-  },
-  {
     id: PANEL_IDS.BATHROOM,
-    label: 'Bathroom',
+    label: 'Restroom',
     Icon: BathroomIcon,
     Component: BathroomPanel,
     dock: 'quick',

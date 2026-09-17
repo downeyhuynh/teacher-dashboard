@@ -84,13 +84,13 @@ export function SeatingChartPanel() {
   }, [fillOpen, activeRoom])
 
   useEffect(() => {
-    if (!renaming) return undefined
+    if (!renaming?.id) return undefined
     const id = window.requestAnimationFrame(() => {
       renameInputRef.current?.focus()
       renameInputRef.current?.select()
     })
     return () => window.cancelAnimationFrame(id)
-  }, [renaming])
+  }, [renaming?.id])
 
   useEffect(() => {
     const isTypingTarget = (target) => {
@@ -421,10 +421,19 @@ export function SeatingChartPanel() {
             </select>
             <button
               type="button"
+              className="stage-button stage-button--primary"
+              onClick={() => fillSeatsFromRoster(roster, { shuffle: true })}
+              disabled={!activeRoom.seats.length || !roster.length}
+              title="Assign random students from this class to empty seats"
+            >
+              Add random students
+            </button>
+            <button
+              type="button"
               className="stage-button"
               onClick={() => reshuffleNames(roster)}
-              disabled={!activeRoom.seats.length}
-              title="Randomly reassign this class roster to seats"
+              disabled={!activeRoom.seats.length || !roster.length}
+              title="Randomly reassign this class roster to all seats"
             >
               Reshuffle names
             </button>
@@ -451,6 +460,18 @@ export function SeatingChartPanel() {
           type="button"
           className={`tool-chip ${tool === 'seat' ? 'is-active' : ''}`}
           onClick={() => setTool('seat')}
+        >
+          Place seat
+        </button>
+        <button
+          type="button"
+          className="stage-button"
+          onClick={() => {
+            const count = activeRoom.seats.length
+            const col = count % 8
+            const row = Math.floor(count / 8)
+            placeSeat(120 + col * 128, 100 + row * 68)
+          }}
         >
           Add seat
         </button>

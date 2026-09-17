@@ -60,33 +60,12 @@ export function SeatingIcon({ className }) {
   )
 }
 
-export function AttendanceIcon({ className }) {
-  return (
-    <svg className={className} {...iconProps}>
-      <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
-      <rect x="9" y="3" width="6" height="4" rx="1" />
-      <path d="M9 12h6M9 16h4" />
-    </svg>
-  )
-}
-
 export function NoiseIcon({ className }) {
   return (
     <svg className={className} {...iconProps}>
       <path d="M11 5L6 9H3v6h3l5 4V5z" />
       <path d="M15.5 8.5a5 5 0 0 1 0 7" />
       <path d="M18.5 6a8.5 8.5 0 0 1 0 12" />
-    </svg>
-  )
-}
-
-export function NoiseMeterIcon({ className }) {
-  return (
-    <svg className={className} {...iconProps}>
-      <path d="M6 20V10" />
-      <path d="M12 20V4" />
-      <path d="M18 20v-7" />
-      <path d="M4 20h16" />
     </svg>
   )
 }

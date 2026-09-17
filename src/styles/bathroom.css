@@ -1,62 +1,93 @@
 .bathroom-panel {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
+  gap: 8px;
   height: 100%;
-  text-align: center;
+  min-height: 0;
+  text-align: left;
 }
 
-.bathroom-panel__display {
-  font-family: var(--font-display);
-  font-size: 1.65rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  color: var(--color-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.bathroom-panel.is-running .bathroom-panel__display {
-  color: var(--color-accent);
-}
-
-.bathroom-panel.is-finished .bathroom-panel__display {
-  color: #b42318;
-  animation: bathroom-pulse 1s var(--ease-out) infinite;
-}
-
-.bathroom-panel__track {
-  width: 100%;
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(26, 35, 50, 0.08);
-  overflow: hidden;
-}
-
-.bathroom-panel__fill {
-  display: block;
-  width: 100%;
-  height: 100%;
-  transform-origin: left center;
-  border-radius: inherit;
-  background: var(--color-accent);
-  transition: transform 80ms linear;
-}
-
-.bathroom-panel.is-finished .bathroom-panel__fill {
-  background: #b42318;
-}
-
-.bathroom-panel__actions {
+.bathroom-panel__add {
   display: flex;
   gap: 4px;
-  margin-top: auto;
   width: 100%;
 }
 
-.bathroom-panel__actions .stage-button {
+.bathroom-panel__input {
   flex: 1;
+  min-width: 0;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.8rem;
+}
+
+.bathroom-panel__input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-ring);
+}
+
+.bathroom-panel__add .stage-button {
+  flex: 0 0 auto;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+}
+
+.bathroom-panel__list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.bathroom-panel__empty {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.bathroom-panel__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bathroom-panel__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.bathroom-panel__name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bathroom-panel__item .stage-button {
+  padding: 3px 8px;
+  font-size: 0.68rem;
+}
+
+.bathroom-panel__clear {
+  width: 100%;
   padding: 4px 6px;
   font-size: 0.72rem;
 }
@@ -83,14 +114,4 @@
 .floating-panel--compact .floating-panel__action {
   width: 24px;
   height: 24px;
-}
-
-@keyframes bathroom-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.55;
-  }
 }

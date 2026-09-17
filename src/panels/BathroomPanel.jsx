@@ -1,100 +1,86 @@
 import { useEffect, useRef, useState } from 'react'
-import { formatDuration } from '../utils/time'
-
-const BATHROOM_MS = 5 * 60_000
+import { createId } from '../utils/id'
 
 /**
- * Compact 5-minute bathroom pass countdown.
- * Starts automatically when the panel opens.
+ * Simple restroom list: add student names, remove when they return.
  */
 export function BathroomPanel() {
-  const [remainingMs, setRemainingMs] = useState(BATHROOM_MS)
-  const [running, setRunning] = useState(true)
-  const [finished, setFinished] = useState(false)
-  const lastTickRef = useRef(null)
+  const [nameInput, setNameInput] = useState('')
+  const [names, setNames] = useState([])
+  const inputRef = useRef(null)
 
-  useEffect(() => {
-    if (!running) {
-      lastTickRef.current = null
-      return undefined
-    }
-
-    let frameId = 0
-    const tick = (now) => {
-      const last = lastTickRef.current ?? now
-      const delta = now - last
-      lastTickRef.current = now
-
-      setRemainingMs((prev) => {
-        const next = Math.max(0, prev - delta)
-        if (next <= 0) {
-          setRunning(false)
-          setFinished(true)
-        }
-        return next
-      })
-
-      frameId = requestAnimationFrame(tick)
-    }
-
-    frameId = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frameId)
-  }, [running])
-
-  const restart = () => {
-    setRemainingMs(BATHROOM_MS)
-    setFinished(false)
-    setRunning(true)
-    lastTickRef.current = null
+  const addName = () => {
+    const name = nameInput.trim()
+    if (!name) return
+    setNames((prev) => [{ id: createId('restroom'), name }, ...prev])
+    setNameInput('')
+    inputRef.current?.focus()
   }
 
-  const progress = 1 - remainingMs / BATHROOM_MS
+  const removeName = (id) => {
+    setNames((prev) => prev.filter((entry) => entry.id !== id))
+  }
+
+  const clearAll = () => setNames([])
 
   return (
-    <div
-      className={`bathroom-panel ${finished ? 'is-finished' : ''} ${running ? 'is-running' : ''}`}
-    >
-      <div className="bathroom-panel__display" aria-live="polite">
-        {formatDuration(remainingMs)}
-      </div>
-      <div
-        className="bathroom-panel__track"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.round(progress * 100)}
-        aria-label="Bathroom time remaining"
+    <div className="bathroom-panel">
+      <form
+        className="bathroom-panel__add"
+        onSubmit={(event) => {
+          event.preventDefault()
+          addName()
+        }}
       >
-        <span
-          className="bathroom-panel__fill"
-          style={{ transform: `scaleX(${progress})` }}
+        <input
+          ref={inputRef}
+          className="bathroom-panel__input"
+          type="text"
+          value={nameInput}
+          onChange={(event) => setNameInput(event.target.value)}
+          placeholder="Student name"
+          aria-label="Student name"
+          autoComplete="off"
         />
-      </div>
-      <div className="bathroom-panel__actions">
-        {running ? (
-          <button
-            type="button"
-            className="stage-button"
-            onClick={() => setRunning(false)}
-          >
-            Pause
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="stage-button stage-button--primary"
-            onClick={() => {
-              if (finished || remainingMs <= 0) restart()
-              else setRunning(true)
-            }}
-          >
-            {finished ? 'Restart' : 'Resume'}
-          </button>
-        )}
-        <button type="button" className="stage-button" onClick={restart}>
-          Reset
+        <button
+          type="submit"
+          className="stage-button stage-button--primary"
+          disabled={!nameInput.trim()}
+        >
+          Add
         </button>
+      </form>
+
+      <div className="bathroom-panel__list" aria-live="polite">
+        {names.length === 0 ? (
+          <p className="bathroom-panel__empty">No one is out</p>
+        ) : (
+          <ul className="bathroom-panel__items">
+            {names.map((entry) => (
+              <li key={entry.id} className="bathroom-panel__item">
+                <strong className="bathroom-panel__name">{entry.name}</strong>
+                <button
+                  type="button"
+                  className="stage-button"
+                  onClick={() => removeName(entry.id)}
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
+
+      {names.length > 0 && (
+        <button
+          type="button"
+          className="stage-button bathroom-panel__clear"
+          onClick={clearAll}
+        >
+          Clear all
+        </button>
+      )}
     </div>
   )
 }

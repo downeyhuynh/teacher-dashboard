@@ -9,7 +9,7 @@ import { playSpinWheelSound } from '../utils/spinWheelSound'
 const SPIN_DURATION_MS = 4200
 
 /**
- * Random student selector with Hawaii / Caltech class rosters.
+ * Random student selector with custom classroom rosters.
  */
 export function StudentPickerPanel() {
   const { picker } = useTools()
@@ -22,6 +22,9 @@ export function StudentPickerPanel() {
     avoidRepeats,
     selectClass,
     setClassRosterText,
+    addClassroom,
+    renameClassroom,
+    deleteClassroom,
     resolveNextPick,
     commitPick,
     pickStudentInstant,
@@ -30,18 +33,25 @@ export function StudentPickerPanel() {
   } = picker
 
   const [draftText, setDraftText] = useState(() => rosterToText(activeRoster))
+  const [classNameDraft, setClassNameDraft] = useState('')
   const [spinning, setSpinning] = useState(false)
   const [spinTargetIndex, setSpinTargetIndex] = useState(null)
   const [pendingWinner, setPendingWinner] = useState(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const portalRoot = usePortalRoot()
 
+  const activeLabel =
+    classOptions.find((option) => option.id === activeClassId)?.label || 'Class'
+
   useEffect(() => {
     setDraftText(rosterToText(activeRoster))
   }, [activeClassId, activeRoster])
 
   useEffect(() => {
-    // Cancel an in-progress reveal if the class/roster changes.
+    setClassNameDraft(activeLabel)
+  }, [activeClassId, activeLabel])
+
+  useEffect(() => {
     setSpinning(false)
     setSpinTargetIndex(null)
     setPendingWinner(null)
@@ -55,9 +65,6 @@ export function StudentPickerPanel() {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [isFullscreen])
-
-  const activeLabel =
-    classOptions.find((option) => option.id === activeClassId)?.label || 'Class'
 
   const saveRoster = () => {
     setClassRosterText(activeClassId, draftText)
@@ -80,9 +87,7 @@ export function StudentPickerPanel() {
     setPendingWinner(next.name)
     setSpinTargetIndex(next.index)
     setSpinning(true)
-    playSpinWheelSound(SPIN_DURATION_MS).catch(() => {
-      // Ignore audio unlock / unsupported-browser failures.
-    })
+    playSpinWheelSound(SPIN_DURATION_MS).catch(() => {})
   }
 
   const instantChoose = () => {
@@ -117,6 +122,57 @@ export function StudentPickerPanel() {
         >
           {isFullscreen ? 'Exit full screen' : 'Full screen'}
         </button>
+      </div>
+
+      <div className="student-picker-panel__class-manage tool-panel__section">
+        <span className="tool-panel__label">Classroom</span>
+        <div className="student-picker-panel__class-row">
+          <input
+            type="text"
+            className="student-picker-panel__class-input"
+            value={classNameDraft}
+            disabled={busy}
+            aria-label="Classroom name"
+            onChange={(event) => setClassNameDraft(event.target.value)}
+            onBlur={() => renameClassroom(activeClassId, classNameDraft)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault()
+                renameClassroom(activeClassId, classNameDraft)
+                event.currentTarget.blur()
+              }
+            }}
+          />
+          <button
+            type="button"
+            className="stage-button stage-button--primary"
+            disabled={busy}
+            onClick={() => {
+              const label = window.prompt('New classroom name', 'Period 1')
+              if (label == null) return
+              addClassroom(label)
+            }}
+          >
+            New class
+          </button>
+          <button
+            type="button"
+            className="stage-button"
+            disabled={busy || classOptions.length <= 1}
+            onClick={() => {
+              if (
+                !window.confirm(
+                  `Delete classroom “${activeLabel}”? Student names in this class will be removed.`,
+                )
+              ) {
+                return
+              }
+              deleteClassroom(activeClassId)
+            }}
+          >
+            Delete
+          </button>
+        </div>
       </div>
 
       <SpinWheel
