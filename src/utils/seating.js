@@ -293,7 +293,7 @@ export function cloneRoomItems(room, selectedIds, offset = DUPLICATE_OFFSET) {
   }
 }
 
-export const SEAT_SIZE = { width: 112, height: 52 }
+export const SEAT_SIZE = { width: 52, height: 40 }
 
 export function getItemBounds(item, type) {
   if (type === 'seat') {

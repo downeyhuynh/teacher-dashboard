@@ -5,6 +5,7 @@ export const PANEL_IDS = {
   STUDENTS: 'students',
   SEATING: 'seating',
   BATHROOM: 'bathroom',
+  OVERTIME: 'overtime',
 }
 
 export const DEFAULT_PANEL_SIZE = {
@@ -21,6 +22,7 @@ export const PANEL_DEFAULT_ORIGINS = {
   // Corner fallbacks; AppShell repositions on open.
   [PANEL_IDS.SEATING]: { x: 40, y: 40 },
   [PANEL_IDS.BATHROOM]: { x: 16, y: 16 },
+  [PANEL_IDS.OVERTIME]: { x: 16, y: 16 },
 }
 
 export const PANEL_DEFAULT_SIZES = {
@@ -30,4 +32,5 @@ export const PANEL_DEFAULT_SIZES = {
   [PANEL_IDS.STUDENTS]: { width: 380, height: 620 },
   [PANEL_IDS.SEATING]: { width: 720, height: 560 },
   [PANEL_IDS.BATHROOM]: { width: 260, height: 280 },
+  [PANEL_IDS.OVERTIME]: { width: 200, height: 168 },
 }

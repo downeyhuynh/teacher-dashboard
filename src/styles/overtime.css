@@ -1,0 +1,75 @@
+.overtime-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  text-align: center;
+}
+
+.overtime-panel__label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+.overtime-panel__display {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.overtime-panel.is-running .overtime-panel__display {
+  color: #1f6a3a;
+}
+
+.overtime-panel.is-paying .overtime-panel__display {
+  color: #1f6feb;
+}
+
+.overtime-panel.is-paused .overtime-panel__display {
+  color: #9a6b1a;
+}
+
+.overtime-panel__volume {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+  text-align: left;
+}
+
+.overtime-panel__volume input[type='range'] {
+  width: 100%;
+  accent-color: #1f6a3a;
+}
+
+.overtime-panel__actions {
+  display: flex;
+  gap: 4px;
+  margin-top: auto;
+  width: 100%;
+}
+
+.overtime-panel__actions .stage-button.is-active {
+  background: rgba(31, 111, 235, 0.12);
+  border-color: transparent;
+  color: #1f6feb;
+}
+
+.overtime-panel__actions .stage-button {
+  flex: 1;
+  padding: 4px 6px;
+  font-size: 0.72rem;
+}

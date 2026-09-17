@@ -2,19 +2,75 @@ import { useCallback, useEffect, useRef } from 'react'
 import { createId } from '../utils/id'
 import { drawStamp } from '../utils/annotationStamps'
 
+function distance(a, b) {
+  return Math.hypot(a.x - b.x, a.y - b.y)
+}
+
+/** Shortest distance from point p to segment a→b. */
+function pointToSegmentDistance(p, a, b) {
+  const dx = b.x - a.x
+  const dy = b.y - a.y
+  const lengthSq = dx * dx + dy * dy
+  if (lengthSq <= 0.0001) return distance(p, a)
+  let t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / lengthSq
+  t = Math.max(0, Math.min(1, t))
+  return distance(p, { x: a.x + dx * t, y: a.y + dy * t })
+}
+
+/**
+ * True when the eraser brush touches this mark (stroke, stamp, or text).
+ */
+function markHitsEraser(mark, point, radius) {
+  if (mark.type === 'text') {
+    return (
+      point.x >= mark.x - radius &&
+      point.x <= mark.x + mark.width + radius &&
+      point.y >= mark.y - radius &&
+      point.y <= mark.y + mark.height + radius
+    )
+  }
+
+  if (mark.type === 'stamp') {
+    const stampRadius = (mark.size || 24) / 2
+    return distance(point, { x: mark.x, y: mark.y }) <= radius + stampRadius
+  }
+
+  // Ignore leftover destination-out eraser strokes from older sessions.
+  if (mark.mode === 'eraser') return true
+
+  const points = mark.points || []
+  if (!points.length) return false
+
+  const threshold = radius + (mark.width || 2) / 2
+  if (points.length === 1) {
+    return distance(point, points[0]) <= threshold
+  }
+
+  for (let i = 1; i < points.length; i += 1) {
+    if (pointToSegmentDistance(point, points[i - 1], points[i]) <= threshold) {
+      return true
+    }
+  }
+  return false
+}
+
 /**
  * Pointer drawing on a canvas. Strokes/stamps are stored so they can
  * be redrawn on resize and persisted in context.
+ * Hold Shift while drawing to make a straight line from the start point.
+ * Eraser removes whole strokes/stamps it touches.
  */
 export function useDrawingCanvas({
   strokes,
   onStrokesChange,
   tool,
   enabled = true,
+  onPlaceText,
 }) {
   const canvasRef = useRef(null)
   const strokesRef = useRef(strokes)
   const drawingRef = useRef(null)
+  const erasingRef = useRef(false)
 
   useEffect(() => {
     strokesRef.current = strokes
@@ -29,6 +85,9 @@ export function useDrawingCanvas({
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     for (const mark of strokesRef.current) {
+      // Skip legacy eraser strokes and DOM-rendered text boxes.
+      if (mark.mode === 'eraser' || mark.type === 'text') continue
+
       if (mark.type === 'stamp') {
         drawStamp(ctx, mark)
         continue
@@ -40,8 +99,7 @@ export function useDrawingCanvas({
       ctx.lineJoin = 'round'
       ctx.lineWidth = mark.width
       ctx.strokeStyle = mark.color
-      ctx.globalCompositeOperation =
-        mark.mode === 'eraser' ? 'destination-out' : 'source-over'
+      ctx.globalCompositeOperation = 'source-over'
 
       ctx.beginPath()
       mark.points.forEach((point, index) => {
@@ -65,8 +123,6 @@ export function useDrawingCanvas({
 
     const rect = parent.getBoundingClientRect()
     const dpr = window.devicePixelRatio || 1
-    // Use untransformed layout size from offsetWidth when available so
-    // zoom transforms on ancestors don't skew canvas coordinate space.
     const width = Math.max(1, Math.floor(parent.offsetWidth || rect.width))
     const height = Math.max(1, Math.floor(parent.offsetHeight || rect.height))
 
@@ -105,6 +161,20 @@ export function useDrawingCanvas({
     }
   }, [])
 
+  const eraseAtPoint = useCallback(
+    (point) => {
+      const radius = Math.max(tool.width * 4, 14)
+      const next = strokesRef.current.filter(
+        (mark) => !markHitsEraser(mark, point, radius),
+      )
+      if (next.length !== strokesRef.current.length) {
+        strokesRef.current = next
+        onStrokesChange(next)
+      }
+    },
+    [onStrokesChange, tool.width],
+  )
+
   const onPointerDown = useCallback(
     (event) => {
       if (!enabled) return
@@ -124,7 +194,21 @@ export function useDrawingCanvas({
           x: point.x,
           y: point.y,
         }
-        onStrokesChange([...strokesRef.current, stamp])
+        const next = [...strokesRef.current, stamp]
+        strokesRef.current = next
+        onStrokesChange(next)
+        return
+      }
+
+      if (tool.mode === 'text') {
+        onPlaceText?.(point)
+        return
+      }
+
+      if (tool.mode === 'eraser') {
+        erasingRef.current = true
+        eraseAtPoint(point)
+        event.currentTarget.setPointerCapture(event.pointerId)
         return
       }
 
@@ -133,17 +217,25 @@ export function useDrawingCanvas({
         type: 'stroke',
         mode: tool.mode,
         color: tool.color,
-        width: tool.mode === 'eraser' ? Math.max(tool.width * 4, 12) : tool.width,
+        width: tool.width,
         points: [point],
       }
 
-      drawingRef.current = stroke
-      onStrokesChange([...strokesRef.current, stroke])
+      drawingRef.current = {
+        ...stroke,
+        origin: point,
+        straight: Boolean(event.shiftKey),
+      }
+      const next = [...strokesRef.current, stroke]
+      strokesRef.current = next
+      onStrokesChange(next)
       event.currentTarget.setPointerCapture(event.pointerId)
     },
     [
       enabled,
+      eraseAtPoint,
       getLocalPoint,
+      onPlaceText,
       onStrokesChange,
       tool.color,
       tool.mode,
@@ -154,23 +246,37 @@ export function useDrawingCanvas({
 
   const onPointerMove = useCallback(
     (event) => {
+      if (erasingRef.current) {
+        eraseAtPoint(getLocalPoint(event))
+        return
+      }
+
       if (!drawingRef.current) return
       const point = getLocalPoint(event)
       const current = drawingRef.current
-      current.points.push(point)
+      const useStraight = event.shiftKey || current.straight
+
+      if (useStraight) {
+        current.straight = true
+        current.points = [current.origin, point]
+      } else {
+        current.points.push(point)
+      }
 
       const next = strokesRef.current.map((stroke) =>
         stroke.id === current.id
           ? { ...stroke, points: [...current.points] }
           : stroke,
       )
+      strokesRef.current = next
       onStrokesChange(next)
     },
-    [getLocalPoint, onStrokesChange],
+    [eraseAtPoint, getLocalPoint, onStrokesChange],
   )
 
   const endStroke = useCallback(() => {
     drawingRef.current = null
+    erasingRef.current = false
   }, [])
 
   return {

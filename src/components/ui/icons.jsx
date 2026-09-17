@@ -100,6 +100,24 @@ export function BathroomIcon({ className }) {
   )
 }
 
+export function SoccerBallIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 6.2l2.4 1.7-.9 2.8H10.5l-.9-2.8L12 6.2z" />
+      <path d="M12 6.2V3.2" />
+      <path d="M14.4 7.9l2.8-1.1" />
+      <path d="M13.5 10.7l2.7 1.4" />
+      <path d="M10.5 10.7l-2.7 1.4" />
+      <path d="M9.6 7.9L6.8 6.8" />
+      <path d="M8.2 13.4l-1.2 2.8" />
+      <path d="M15.8 13.4l1.2 2.8" />
+      <path d="M12 14.8v3.5" />
+      <path d="M7 16.2l2.4 1.2L12 15.2l2.6 2.2 2.4-1.2" />
+    </svg>
+  )
+}
+
 export function MinimizeIcon({ className }) {
   return (
     <svg className={className} {...iconProps} strokeWidth={2}>

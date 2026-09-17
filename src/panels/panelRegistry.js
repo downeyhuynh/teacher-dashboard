@@ -3,6 +3,7 @@ import {
   BathroomIcon,
   CalculatorIcon,
   SeatingIcon,
+  SoccerBallIcon,
   StudentsIcon,
   TimerIcon,
 } from '../components/ui/icons'
@@ -10,6 +11,7 @@ import { PANEL_IDS } from '../utils/panelDefaults'
 import { AnnotatePanel } from './AnnotatePanel'
 import { BathroomPanel } from './BathroomPanel'
 import { CalculatorPanel } from './CalculatorPanel'
+import { OvertimePanel } from './OvertimePanel'
 import { SeatingChartPanel } from './SeatingChartPanel'
 import { StudentPickerPanel } from './StudentPickerPanel'
 import { TimerPanel } from './TimerPanel'
@@ -49,6 +51,16 @@ export const PANEL_REGISTRY = [
     Icon: SeatingIcon,
     Component: SeatingChartPanel,
     dock: 'quick',
+  },
+  {
+    id: PANEL_IDS.OVERTIME,
+    label: 'Overtime',
+    Icon: SoccerBallIcon,
+    Component: OvertimePanel,
+    dock: 'quick',
+    compact: true,
+    hideMinimize: true,
+    corner: 'bottom-left',
   },
   {
     id: PANEL_IDS.BATHROOM,

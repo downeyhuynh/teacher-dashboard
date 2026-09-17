@@ -219,6 +219,18 @@ export function SeatingProvider({ children }) {
     setSelectedIds([])
   }, [activeRoomId, pushUndo])
 
+  const deleteRoom = useCallback(() => {
+    if (rooms.length <= 1) return
+    pushUndo()
+    const remaining = rooms.filter((room) => room.id !== activeRoomId)
+    const nextActiveId = remaining[0]?.id
+    if (!nextActiveId) return
+    setRooms(remaining)
+    setActiveRoomId(nextActiveId)
+    setSelectedIds([])
+    setTool('select')
+  }, [activeRoomId, pushUndo, rooms])
+
   const persistNow = useCallback(() => {
     saveSeatingState({ rooms, activeRoomId })
   }, [rooms, activeRoomId])
@@ -242,7 +254,7 @@ export function SeatingProvider({ children }) {
   const placeSeat = useCallback(
     (x, y) => {
       pushUndo()
-      const seat = createSeat(Math.max(0, x - 56), Math.max(0, y - 26))
+      const seat = createSeat(Math.max(0, x - 26), Math.max(0, y - 20))
       setRooms((prev) =>
         updateActiveRoom(prev, activeRoomId, (room) => ({
           ...room,
@@ -442,6 +454,7 @@ export function SeatingProvider({ children }) {
       reshuffleNames,
       setRoomClass,
       clearRoom,
+      deleteRoom,
       persistNow,
       placeTable,
       placeSeat,
@@ -481,6 +494,7 @@ export function SeatingProvider({ children }) {
       reshuffleNames,
       setRoomClass,
       clearRoom,
+      deleteRoom,
       persistNow,
       placeTable,
       placeSeat,

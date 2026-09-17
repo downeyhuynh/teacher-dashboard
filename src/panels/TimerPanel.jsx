@@ -41,6 +41,19 @@ function FocusMusicButton({ timer, fileInputRef, uploading, uploadError, onUploa
       >
         {timer.focusMusicEnabled ? <NoiseIcon /> : <MusicOffIcon />}
       </button>
+      <label className="timer-panel__volume">
+        <span>Volume</span>
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={Math.round((timer.focusMusicVolume ?? 0.55) * 100)}
+          aria-label="Focus music volume"
+          onChange={(event) =>
+            timer.setFocusMusicVolume(Number(event.target.value) / 100)
+          }
+        />
+      </label>
       {uploadError && <p className="timer-panel__upload-error">{uploadError}</p>}
     </div>
   )

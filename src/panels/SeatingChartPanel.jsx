@@ -41,6 +41,7 @@ export function SeatingChartPanel() {
     reshuffleNames,
     setRoomClass,
     clearRoom,
+    deleteRoom,
     placeTable,
     placeSeat,
     placeMisc,
@@ -377,6 +378,29 @@ export function SeatingChartPanel() {
         <button type="button" className="stage-button" onClick={duplicateRoom}>
           Duplicate room
         </button>
+        <button
+          type="button"
+          className="stage-button stage-button--danger"
+          onClick={() => {
+            if (rooms.length <= 1) return
+            if (
+              !window.confirm(
+                `Delete room “${activeRoom.name || 'Untitled'}”? This cannot be undone from here.`,
+              )
+            ) {
+              return
+            }
+            deleteRoom()
+          }}
+          disabled={rooms.length <= 1}
+          title={
+            rooms.length <= 1
+              ? 'Keep at least one room'
+              : 'Delete this room'
+          }
+        >
+          Delete room
+        </button>
         <button type="button" className="stage-button stage-button--primary" onClick={handleSave}>
           Save room
         </button>
@@ -470,7 +494,7 @@ export function SeatingChartPanel() {
             const count = activeRoom.seats.length
             const col = count % 8
             const row = Math.floor(count / 8)
-            placeSeat(120 + col * 128, 100 + row * 68)
+            placeSeat(70 + col * 62, 80 + row * 50)
           }}
         >
           Add seat

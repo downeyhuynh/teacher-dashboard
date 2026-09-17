@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import {
   createWhiteboardSlide,
   importPresentationFiles,
@@ -6,6 +6,18 @@ import {
 } from '../utils/presentationImport'
 import { ANNOTATION_STAMPS } from '../utils/annotationStamps'
 import { clamp } from '../utils/clamp'
+import { createId } from '../utils/id'
+
+const MAX_UNDO = 60
+
+/** True when marks were added/removed (not just stroke points updated). */
+function isStructuralAnnotationChange(prevMarks, nextMarks) {
+  if (prevMarks.length !== nextMarks.length) return true
+  for (let i = 0; i < prevMarks.length; i += 1) {
+    if (prevMarks[i].id !== nextMarks[i].id) return true
+  }
+  return false
+}
 
 const ANNOTATION_COLORS = [
   '#1a2332',
@@ -17,7 +29,7 @@ const ANNOTATION_COLORS = [
 ]
 
 const defaultInkTool = {
-  mode: 'pen', // pen | eraser | stamp
+  mode: 'pen', // pen | eraser | stamp | text
   color: ANNOTATION_COLORS[0],
   width: 3,
   stamp: 'check',
@@ -30,9 +42,13 @@ const PresentationContext = createContext(null)
 export function PresentationProvider({ children }) {
   const [slides, setSlides] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
+  const annotationsRef = useRef({})
+  const annotationUndoRef = useRef({})
   const [annotationsBySlide, setAnnotationsBySlide] = useState({})
+  const [annotationUndoBySlide, setAnnotationUndoBySlide] = useState({})
   const [annotationTool, setAnnotationTool] = useState(defaultInkTool)
   const [annotateEnabled, setAnnotateEnabled] = useState(false)
+  const [focusTextId, setFocusTextId] = useState(null)
   const [slideView, setSlideView] = useState(DEFAULT_VIEW)
   const [isImporting, setIsImporting] = useState(false)
   const [importProgress, setImportProgress] = useState(null)
@@ -68,7 +84,11 @@ export function PresentationProvider({ children }) {
       })
 
       if (!append) {
+        annotationsRef.current = {}
+        annotationUndoRef.current = {}
         setAnnotationsBySlide({})
+        setAnnotationUndoBySlide({})
+        setFocusTextId(null)
         setCurrentIndex(0)
         setSlideView(DEFAULT_VIEW)
       }
@@ -86,7 +106,11 @@ export function PresentationProvider({ children }) {
       revokeSlideUrls(prev)
       return []
     })
+    annotationsRef.current = {}
+    annotationUndoRef.current = {}
     setAnnotationsBySlide({})
+    setAnnotationUndoBySlide({})
+    setFocusTextId(null)
     setCurrentIndex(0)
     setDeckName('')
     setImportErrors([])
@@ -124,34 +148,124 @@ export function PresentationProvider({ children }) {
     setCurrentIndex((prev) => Math.max(prev - 1, 0))
   }, [])
 
-  const setSlideAnnotations = useCallback((slideId, strokes) => {
-    setAnnotationsBySlide((prev) => ({
-      ...prev,
-      [slideId]: strokes,
-    }))
+  const pushAnnotationUndo = useCallback((slideId, marks) => {
+    const stack = annotationUndoRef.current[slideId] || []
+    const next = {
+      ...annotationUndoRef.current,
+      [slideId]: [...stack, marks].slice(-MAX_UNDO),
+    }
+    annotationUndoRef.current = next
+    setAnnotationUndoBySlide(next)
   }, [])
 
-  const clearSlideAnnotations = useCallback((slideId) => {
-    setAnnotationsBySlide((prev) => ({
-      ...prev,
-      [slideId]: [],
-    }))
+  const replaceAnnotations = useCallback((next) => {
+    annotationsRef.current = next
+    setAnnotationsBySlide(next)
   }, [])
 
-  const undoSlideAnnotation = useCallback((slideId) => {
-    if (!slideId) return
-    setAnnotationsBySlide((prev) => {
-      const marks = prev[slideId] || []
-      if (!marks.length) return prev
-      return {
-        ...prev,
-        [slideId]: marks.slice(0, -1),
+  const setSlideAnnotations = useCallback(
+    (slideId, strokes) => {
+      const current = annotationsRef.current[slideId] || []
+      if (isStructuralAnnotationChange(current, strokes)) {
+        pushAnnotationUndo(slideId, current)
       }
-    })
-  }, [])
+      replaceAnnotations({
+        ...annotationsRef.current,
+        [slideId]: strokes,
+      })
+    },
+    [pushAnnotationUndo, replaceAnnotations],
+  )
+
+  const clearSlideAnnotations = useCallback(
+    (slideId) => {
+      const current = annotationsRef.current[slideId] || []
+      if (current.length) {
+        pushAnnotationUndo(slideId, current)
+      }
+      replaceAnnotations({
+        ...annotationsRef.current,
+        [slideId]: [],
+      })
+      setFocusTextId(null)
+    },
+    [pushAnnotationUndo, replaceAnnotations],
+  )
+
+  const undoSlideAnnotation = useCallback(
+    (slideId) => {
+      if (!slideId) return
+      const stack = annotationUndoRef.current[slideId] || []
+      if (!stack.length) return
+
+      const previous = stack[stack.length - 1]
+      const nextUndo = {
+        ...annotationUndoRef.current,
+        [slideId]: stack.slice(0, -1),
+      }
+      annotationUndoRef.current = nextUndo
+      setAnnotationUndoBySlide(nextUndo)
+      replaceAnnotations({
+        ...annotationsRef.current,
+        [slideId]: previous,
+      })
+      setFocusTextId(null)
+    },
+    [replaceAnnotations],
+  )
+
+  const addTextAnnotation = useCallback(
+    (slideId, point = null) => {
+      if (!slideId) return null
+      const box = {
+        id: createId('text'),
+        type: 'text',
+        text: '',
+        x: point?.x ?? 72,
+        y: point?.y ?? 72,
+        width: 240,
+        height: 100,
+        color: annotationTool.color,
+        fontSize: Math.max(18, annotationTool.width * 6),
+        bold: false,
+        italic: false,
+        underline: false,
+      }
+
+      const current = annotationsRef.current[slideId] || []
+      pushAnnotationUndo(slideId, current)
+      replaceAnnotations({
+        ...annotationsRef.current,
+        [slideId]: [...current, box],
+      })
+      setFocusTextId(box.id)
+      setAnnotationTool((prev) => ({ ...prev, mode: 'text' }))
+      setAnnotateEnabled(true)
+      return box.id
+    },
+    [annotationTool.color, annotationTool.width, pushAnnotationUndo, replaceAnnotations],
+  )
+
+  const updateTextAnnotation = useCallback(
+    (slideId, textId, patch) => {
+      if (!slideId || !textId) return
+      const current = annotationsRef.current[slideId] || []
+      replaceAnnotations({
+        ...annotationsRef.current,
+        [slideId]: current.map((mark) =>
+          mark.id === textId ? { ...mark, ...patch } : mark,
+        ),
+      })
+    },
+    [replaceAnnotations],
+  )
 
   const clearAllAnnotations = useCallback(() => {
+    annotationsRef.current = {}
+    annotationUndoRef.current = {}
     setAnnotationsBySlide({})
+    setAnnotationUndoBySlide({})
+    setFocusTextId(null)
   }, [])
 
   const updateAnnotationTool = useCallback((patch) => {
@@ -171,7 +285,11 @@ export function PresentationProvider({ children }) {
   }, [])
 
   const clearAllMarks = useCallback(() => {
+    annotationsRef.current = {}
+    annotationUndoRef.current = {}
     setAnnotationsBySlide({})
+    setAnnotationUndoBySlide({})
+    setFocusTextId(null)
   }, [])
 
   const zoomAt = useCallback((factor, origin = null) => {
@@ -232,6 +350,10 @@ export function PresentationProvider({ children }) {
       setSlideAnnotations,
       clearSlideAnnotations,
       undoSlideAnnotation,
+      addTextAnnotation,
+      updateTextAnnotation,
+      focusTextId,
+      setFocusTextId,
       clearAllAnnotations,
       updateAnnotationTool,
       toggleAnnotateEnabled,
@@ -245,7 +367,7 @@ export function PresentationProvider({ children }) {
       panSlideView,
       slideCount: slides.length,
       canUndoAnnotation: Boolean(
-        currentSlide && (annotationsBySlide[currentSlide.id] || []).length,
+        currentSlide && (annotationUndoBySlide[currentSlide.id] || []).length,
       ),
     }),
     [
@@ -254,8 +376,10 @@ export function PresentationProvider({ children }) {
       currentSlide,
       deckName,
       annotationsBySlide,
+      annotationUndoBySlide,
       annotationTool,
       annotateEnabled,
+      focusTextId,
       slideView,
       isImporting,
       importProgress,
@@ -269,6 +393,8 @@ export function PresentationProvider({ children }) {
       setSlideAnnotations,
       clearSlideAnnotations,
       undoSlideAnnotation,
+      addTextAnnotation,
+      updateTextAnnotation,
       clearAllAnnotations,
       updateAnnotationTool,
       toggleAnnotateEnabled,

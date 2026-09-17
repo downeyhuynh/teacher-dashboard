@@ -63,6 +63,7 @@ export function AnnotatePanel() {
     currentSlide,
     clearSlideAnnotations,
     undoSlideAnnotation,
+    addTextAnnotation,
     canUndoAnnotation,
     slideCount,
   } = usePresentation()
@@ -72,7 +73,7 @@ export function AnnotatePanel() {
       <p className="tool-panel__hint">
         {slideCount === 0
           ? 'Import a presentation first, then draw on slides from this panel.'
-          : 'Draw on the slide while Annotate is toggled on in the toolbar. Closing this panel keeps drawing on until you toggle Annotate off.'}
+          : 'Draw on the slide while Annotate is on. P = pen, E = eraser, T = text. In text: Ctrl+B bold, Ctrl+I italic, Ctrl+U underline. Hold Shift for a straight line. Ctrl+Z undoes draws and erases.'}
       </p>
 
       <div className="tool-panel__row">
@@ -110,6 +111,16 @@ export function AnnotatePanel() {
             onClick={() => updateAnnotationTool({ mode: 'eraser' })}
           >
             Eraser
+          </button>
+          <button
+            type="button"
+            className={`tool-chip ${annotationTool.mode === 'text' ? 'is-active' : ''}`}
+            onClick={() => {
+              if (currentSlide) addTextAnnotation(currentSlide.id)
+              else updateAnnotationTool({ mode: 'text' })
+            }}
+          >
+            Text
           </button>
         </div>
       </div>
@@ -166,7 +177,11 @@ export function AnnotatePanel() {
 
       <div className="tool-panel__section">
         <label className="tool-panel__label" htmlFor="annotate-width">
-          {annotationTool.mode === 'stamp' ? 'Symbol size' : 'Thickness'}
+          {annotationTool.mode === 'stamp'
+            ? 'Symbol size'
+            : annotationTool.mode === 'text'
+              ? 'Text size'
+              : 'Thickness'}
         </label>
         <input
           id="annotate-width"

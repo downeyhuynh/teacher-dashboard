@@ -8,6 +8,26 @@ let masterGain = null
 let playing = false
 let timers = []
 let nodes = []
+let jazzVolume = 0.22
+
+export function setFocusJazzVolume(volume) {
+  jazzVolume = Math.min(1, Math.max(0, Number(volume) || 0))
+  if (!sharedContext || !masterGain || !playing) return
+  const now = sharedContext.currentTime
+  try {
+    // Scale jazz bed so full slider still stays soft.
+    const target = Math.max(0.0001, jazzVolume * 0.95)
+    masterGain.gain.cancelScheduledValues(now)
+    masterGain.gain.setValueAtTime(masterGain.gain.value, now)
+    masterGain.gain.linearRampToValueAtTime(target, now + 0.08)
+  } catch {
+    // ignore
+  }
+}
+
+export function getFocusJazzVolume() {
+  return jazzVolume
+}
 
 function getAudioContext() {
   const AudioCtx = window.AudioContext || window.webkitAudioContext
@@ -180,7 +200,8 @@ function loopBars() {
  * Start soft focus jazz.
  * Always restarts so each timer Start can begin on a new random chord.
  */
-export async function startFocusJazz({ volume = 0.22 } = {}) {
+export async function startFocusJazz({ volume = jazzVolume } = {}) {
+  jazzVolume = Math.min(1, Math.max(0, Number(volume) || 0))
   const ctx = getAudioContext()
   if (ctx.state === 'suspended') {
     await ctx.resume()
@@ -205,8 +226,9 @@ export async function startFocusJazz({ volume = 0.22 } = {}) {
   compressor.knee.setValueAtTime(20, ctx.currentTime)
   compressor.ratio.setValueAtTime(2.5, ctx.currentTime)
 
+  const target = Math.max(0.0001, jazzVolume * 0.95)
   masterGain.gain.setValueAtTime(0.0001, ctx.currentTime)
-  masterGain.gain.linearRampToValueAtTime(volume, ctx.currentTime + 1.2)
+  masterGain.gain.linearRampToValueAtTime(target, ctx.currentTime + 1.2)
   masterGain.connect(compressor)
   compressor.connect(ctx.destination)
 

@@ -7,6 +7,7 @@ export function SlideInkLayer({
   enabled = false,
   strokes = [],
   onStrokesChange,
+  onPlaceText,
   tool,
   className = '',
   label = 'Slide drawing',
@@ -14,6 +15,7 @@ export function SlideInkLayer({
   const { canvasRef, canvasProps } = useDrawingCanvas({
     strokes,
     onStrokesChange,
+    onPlaceText,
     tool,
     enabled,
   })

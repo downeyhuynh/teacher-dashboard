@@ -12,6 +12,7 @@ import {
   clearFocusTrack,
   loadStoredFocusTrack,
   saveFocusTrack,
+  setFocusMusicVolume,
   startFocusMusic,
   stopFocusMusic,
 } from '../utils/focusMusic'
@@ -24,6 +25,41 @@ import {
 } from '../utils/roster'
 import { createId } from '../utils/id'
 import { loadRestroomList, saveRestroomList } from '../utils/restroomList'
+import {
+  setOvertimeTickVolume,
+  startOvertimeTicking,
+  stopOvertimeTicking,
+} from '../utils/overtimeTick'
+
+const VOLUME_STORAGE_KEY = 'teacher-dashboard.audio-volumes.v1'
+
+function loadVolumes() {
+  try {
+    const raw = localStorage.getItem(VOLUME_STORAGE_KEY)
+    if (!raw) return { focusMusic: 0.55, overtime: 0.55 }
+    const parsed = JSON.parse(raw)
+    return {
+      focusMusic: clampVolume(parsed?.focusMusic, 0.55),
+      overtime: clampVolume(parsed?.overtime, 0.55),
+    }
+  } catch {
+    return { focusMusic: 0.55, overtime: 0.55 }
+  }
+}
+
+function clampVolume(value, fallback) {
+  const next = Number(value)
+  if (!Number.isFinite(next)) return fallback
+  return Math.min(1, Math.max(0, next))
+}
+
+function saveVolumes(volumes) {
+  try {
+    localStorage.setItem(VOLUME_STORAGE_KEY, JSON.stringify(volumes))
+  } catch {
+    // Ignore quota / private mode failures.
+  }
+}
 
 const ToolsContext = createContext(null)
 
@@ -41,6 +77,13 @@ export function ToolsProvider({ children }) {
   const [musicSession, setMusicSession] = useState(0)
   const [focusMusicEnabled, setFocusMusicEnabled] = useState(true)
   const [focusTrack, setFocusTrack] = useState(null) // { name, url } | null
+  const initialVolumes = useMemo(() => loadVolumes(), [])
+  const [focusMusicVolume, setFocusMusicVolumeState] = useState(
+    initialVolumes.focusMusic,
+  )
+  const [overtimeVolume, setOvertimeVolumeState] = useState(
+    initialVolumes.overtime,
+  )
   const lastTickRef = useRef(null)
 
   // --- Random student picker / classrooms ---
@@ -55,6 +98,12 @@ export function ToolsProvider({ children }) {
   // --- Restroom out list (survives panel close + refresh) ---
   const [restroomOut, setRestroomOut] = useState(() => loadRestroomList())
 
+  // --- Overtime stopwatch (keeps ticking if panel is closed) ---
+  const [overtimeElapsedMs, setOvertimeElapsedMs] = useState(0)
+  const [overtimeRunning, setOvertimeRunning] = useState(false)
+  const [overtimeMode, setOvertimeMode] = useState('accrue') // accrue | pay
+  const overtimeTickRef = useRef(null)
+
   useEffect(() => {
     saveClassState({ classes: classOptions, rosters, activeClassId })
   }, [classOptions, rosters, activeClassId])
@@ -62,6 +111,56 @@ export function ToolsProvider({ children }) {
   useEffect(() => {
     saveRestroomList(restroomOut)
   }, [restroomOut])
+
+  useEffect(() => {
+    setFocusMusicVolume(focusMusicVolume)
+    setOvertimeTickVolume(overtimeVolume)
+    saveVolumes({ focusMusic: focusMusicVolume, overtime: overtimeVolume })
+  }, [focusMusicVolume, overtimeVolume])
+
+  useEffect(() => {
+    if (!overtimeRunning) {
+      overtimeTickRef.current = null
+      return undefined
+    }
+
+    overtimeTickRef.current = performance.now()
+    let frameId = 0
+    const tick = (now) => {
+      const last = overtimeTickRef.current ?? now
+      const delta = now - last
+      overtimeTickRef.current = now
+
+      if (overtimeMode === 'pay') {
+        setOvertimeElapsedMs((prev) => {
+          const next = Math.max(0, prev - delta)
+          if (next <= 0) {
+            setOvertimeRunning(false)
+            setOvertimeMode('accrue')
+          }
+          return next
+        })
+      } else {
+        setOvertimeElapsedMs((prev) => prev + delta)
+      }
+
+      frameId = requestAnimationFrame(tick)
+    }
+    frameId = requestAnimationFrame(tick)
+
+    return () => {
+      cancelAnimationFrame(frameId)
+    }
+  }, [overtimeRunning, overtimeMode])
+
+  useEffect(() => {
+    if (!overtimeRunning) {
+      stopOvertimeTicking()
+      return undefined
+    }
+    startOvertimeTicking({ volume: overtimeVolume }).catch(() => {})
+    return () => stopOvertimeTicking()
+  }, [overtimeRunning, overtimeVolume])
 
   useEffect(() => {
     let cancelled = false
@@ -115,7 +214,10 @@ export function ToolsProvider({ children }) {
     const syncMusic = async () => {
       if (timerRunning && focusMusicEnabled) {
         try {
-          await startFocusMusic({ trackUrl: focusTrack?.url || null })
+          await startFocusMusic({
+            trackUrl: focusTrack?.url || null,
+            volume: focusMusicVolume,
+          })
           if (cancelled) stopFocusMusic()
         } catch {
           // Autoplay / audio restrictions — ignore quietly.
@@ -311,6 +413,42 @@ export function ToolsProvider({ children }) {
     setRestroomOut([])
   }, [])
 
+  const startOvertime = useCallback(() => {
+    setOvertimeElapsedMs((prev) => {
+      if (prev <= 0) setOvertimeMode('accrue')
+      return prev
+    })
+    setOvertimeRunning(true)
+  }, [])
+
+  const payOvertime = useCallback(() => {
+    setOvertimeElapsedMs((prev) => {
+      if (prev <= 0) return prev
+      setOvertimeMode('pay')
+      setOvertimeRunning(true)
+      return prev
+    })
+  }, [])
+
+  const pauseOvertime = useCallback(() => {
+    setOvertimeRunning(false)
+  }, [])
+
+  const resetOvertime = useCallback(() => {
+    setOvertimeRunning(false)
+    setOvertimeMode('accrue')
+    setOvertimeElapsedMs(0)
+    stopOvertimeTicking()
+  }, [])
+
+  const setFocusMusicVolumeLevel = useCallback((value) => {
+    setFocusMusicVolumeState(clampVolume(value, 0.55))
+  }, [])
+
+  const setOvertimeVolumeLevel = useCallback((value) => {
+    setOvertimeVolumeState(clampVolume(value, 0.55))
+  }, [])
+
   const value = useMemo(
     () => ({
       timer: {
@@ -332,6 +470,8 @@ export function ToolsProvider({ children }) {
         setCustomDurationMinutes,
         switchMode: switchTimerMode,
         setFocusMusicEnabled,
+        focusMusicVolume,
+        setFocusMusicVolume: setFocusMusicVolumeLevel,
         uploadFocusTrack,
         removeFocusTrack,
       },
@@ -360,6 +500,17 @@ export function ToolsProvider({ children }) {
         remove: removeRestroomStudent,
         clear: clearRestroomList,
       },
+      overtime: {
+        elapsedMs: overtimeElapsedMs,
+        running: overtimeRunning,
+        mode: overtimeMode,
+        volume: overtimeVolume,
+        start: startOvertime,
+        pay: payOvertime,
+        pause: pauseOvertime,
+        reset: resetOvertime,
+        setVolume: setOvertimeVolumeLevel,
+      },
     }),
     [
       timerMode,
@@ -371,6 +522,7 @@ export function ToolsProvider({ children }) {
       timerCompact,
       focusMusicEnabled,
       focusTrack,
+      focusMusicVolume,
       startTimer,
       pauseTimer,
       resetTimer,
@@ -380,6 +532,7 @@ export function ToolsProvider({ children }) {
       switchTimerMode,
       uploadFocusTrack,
       removeFocusTrack,
+      setFocusMusicVolumeLevel,
       classOptions,
       activeClassId,
       rosters,
@@ -399,6 +552,15 @@ export function ToolsProvider({ children }) {
       addRestroomStudent,
       removeRestroomStudent,
       clearRestroomList,
+      overtimeElapsedMs,
+      overtimeRunning,
+      overtimeMode,
+      overtimeVolume,
+      startOvertime,
+      payOvertime,
+      pauseOvertime,
+      resetOvertime,
+      setOvertimeVolumeLevel,
     ],
   )
 

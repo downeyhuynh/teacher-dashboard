@@ -1,4 +1,4 @@
-import { startFocusJazz, stopFocusJazz } from './focusJazz'
+import { setFocusJazzVolume, startFocusJazz, stopFocusJazz } from './focusJazz'
 
 const DB_NAME = 'teacher-dashboard-focus-audio'
 const DB_STORE = 'tracks'
@@ -7,6 +7,22 @@ const DB_KEY = 'focus-track'
 let customAudio = null
 let customObjectUrl = null
 let startToken = 0
+let musicVolume = 0.55
+
+/**
+ * Set focus music volume (0–1) for uploaded tracks and soft jazz.
+ */
+export function setFocusMusicVolume(volume) {
+  musicVolume = Math.min(1, Math.max(0, Number(volume) || 0))
+  if (customAudio) {
+    customAudio.volume = musicVolume
+  }
+  setFocusJazzVolume(musicVolume)
+}
+
+export function getFocusMusicVolume() {
+  return musicVolume
+}
 
 function openDb() {
   return new Promise((resolve, reject) => {
@@ -201,14 +217,14 @@ async function seekTo(audio, seconds) {
   })
 }
 
-async function startCustomAudio(url, { volume = 0.45, token } = {}) {
+async function startCustomAudio(url, { volume = musicVolume, token } = {}) {
   stopFocusJazz()
   stopCustomAudio()
 
   const audio = new Audio()
   audio.preload = 'auto'
   audio.loop = true
-  audio.volume = volume
+  audio.volume = Math.min(1, Math.max(0, volume))
   audio.src = url
   customAudio = audio
 
@@ -241,20 +257,21 @@ async function startCustomAudio(url, { volume = 0.45, token } = {}) {
  * Start focus music: uploaded MP3 if available, otherwise soft jazz.
  * Always restarts from a fresh random position.
  */
-export async function startFocusMusic({ trackUrl = null } = {}) {
+export async function startFocusMusic({ trackUrl = null, volume = musicVolume } = {}) {
   const token = ++startToken
+  musicVolume = Math.min(1, Math.max(0, Number(volume) || 0))
 
   // Always tear down first so every timer Start gets a new random spot.
   stopCustomAudio()
   stopFocusJazz()
 
   if (trackUrl) {
-    await startCustomAudio(trackUrl, { token })
+    await startCustomAudio(trackUrl, { volume: musicVolume, token })
     return { source: 'upload' }
   }
 
   if (token !== startToken) return { source: 'jazz' }
-  await startFocusJazz()
+  await startFocusJazz({ volume: musicVolume })
   return { source: 'jazz' }
 }
 

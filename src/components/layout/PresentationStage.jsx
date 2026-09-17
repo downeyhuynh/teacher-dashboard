@@ -28,6 +28,10 @@ export function PresentationStage({
     resetSlideView,
     undoSlideAnnotation,
     canUndoAnnotation,
+    updateAnnotationTool,
+    enableAnnotate,
+    addTextAnnotation,
+    setFocusTextId,
   } = usePresentation()
 
   const [panMode, setPanMode] = useState(false)
@@ -107,7 +111,11 @@ export function PresentationStage({
 
       if (key === 'h' && !withMod && !event.altKey) {
         event.preventDefault()
-        setPanMode((prev) => !prev)
+        setPanMode((prev) => {
+          const next = !prev
+          if (next) setFocusTextId(null)
+          return next
+        })
         return
       }
 
@@ -115,6 +123,31 @@ export function PresentationStage({
         event.preventDefault()
         setPanMode(false)
         onRequestAnnotate?.()
+        updateAnnotationTool({ mode: 'pen' })
+        setFocusTextId(null)
+        return
+      }
+
+      if (key === 'e' && !withMod && !event.altKey) {
+        event.preventDefault()
+        setPanMode(false)
+        enableAnnotate()
+        onRequestAnnotate?.()
+        updateAnnotationTool({ mode: 'eraser' })
+        setFocusTextId(null)
+        return
+      }
+
+      if (key === 't' && !withMod && !event.altKey) {
+        event.preventDefault()
+        setPanMode(false)
+        onRequestAnnotate?.()
+        if (currentSlide) {
+          addTextAnnotation(currentSlide.id)
+        } else {
+          enableAnnotate()
+          updateAnnotationTool({ mode: 'text' })
+        }
         return
       }
 
@@ -173,15 +206,19 @@ export function PresentationStage({
       window.removeEventListener('blur', onBlur)
     }
   }, [
+    addTextAnnotation,
     canUndoAnnotation,
     currentSlide,
+    enableAnnotate,
     nextSlide,
     onRequestAnnotate,
     panMode,
     prevSlide,
+    setFocusTextId,
     spaceHeld,
     toggleFullscreen,
     undoSlideAnnotation,
+    updateAnnotationTool,
     zoomIn,
     zoomOut,
     resetSlideView,
@@ -225,7 +262,10 @@ export function PresentationStage({
             slideCount > 0 ? (
               <SlideViewControls
                 panMode={panMode}
-                onPanModeChange={setPanMode}
+                onPanModeChange={(next) => {
+                  setPanMode(next)
+                  if (next) setFocusTextId(null)
+                }}
                 isFullscreen={isFullscreen}
                 onToggleFullscreen={toggleFullscreen}
               />

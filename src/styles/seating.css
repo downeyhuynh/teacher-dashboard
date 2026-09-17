@@ -79,9 +79,9 @@
 }
 
 .seating-rename--seat {
-  width: calc(100% - 6px);
-  font-size: 0.72rem;
-  padding: 2px 4px;
+  width: calc(100% - 4px);
+  font-size: 0.58rem;
+  padding: 1px 2px;
 }
 
 .seating-panel__fields,
@@ -265,18 +265,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 112px;
-  height: 52px;
-  padding: 4px 6px;
-  border: 1.5px solid var(--color-accent);
-  border-radius: 8px;
+  width: 52px;
+  height: 40px;
+  padding: 1px 2px;
+  border: 1px solid var(--color-accent);
+  border-radius: 6px;
   background: #fff;
-  box-shadow: 0 1px 3px rgba(26, 35, 50, 0.1);
+  box-shadow: 0 1px 2px rgba(26, 35, 50, 0.08);
   cursor: grab;
   color: var(--color-text);
-  font-size: 0.72rem;
+  font-size: 0.52rem;
   font-weight: 600;
-  line-height: 1.15;
+  line-height: 1.05;
   text-align: center;
 }
 
