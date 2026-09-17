@@ -22,6 +22,8 @@ import {
   pickRandomStudent,
   saveClassState,
 } from '../utils/roster'
+import { createId } from '../utils/id'
+import { loadRestroomList, saveRestroomList } from '../utils/restroomList'
 
 const ToolsContext = createContext(null)
 
@@ -50,9 +52,16 @@ export function ToolsProvider({ children }) {
   const [pickedHistory, setPickedHistory] = useState([])
   const [avoidRepeats, setAvoidRepeats] = useState(true)
 
+  // --- Restroom out list (survives panel close + refresh) ---
+  const [restroomOut, setRestroomOut] = useState(() => loadRestroomList())
+
   useEffect(() => {
     saveClassState({ classes: classOptions, rosters, activeClassId })
   }, [classOptions, rosters, activeClassId])
+
+  useEffect(() => {
+    saveRestroomList(restroomOut)
+  }, [restroomOut])
 
   useEffect(() => {
     let cancelled = false
@@ -285,6 +294,23 @@ export function ToolsProvider({ children }) {
     setPickedHistory([])
   }, [])
 
+  const addRestroomStudent = useCallback((name) => {
+    const trimmed = String(name || '').trim()
+    if (!trimmed) return
+    setRestroomOut((prev) => [
+      { id: createId('restroom'), name: trimmed },
+      ...prev,
+    ])
+  }, [])
+
+  const removeRestroomStudent = useCallback((id) => {
+    setRestroomOut((prev) => prev.filter((entry) => entry.id !== id))
+  }, [])
+
+  const clearRestroomList = useCallback(() => {
+    setRestroomOut([])
+  }, [])
+
   const value = useMemo(
     () => ({
       timer: {
@@ -328,6 +354,12 @@ export function ToolsProvider({ children }) {
         setAvoidRepeats,
         activeRoster: rosters[activeClassId] || [],
       },
+      restroom: {
+        out: restroomOut,
+        add: addRestroomStudent,
+        remove: removeRestroomStudent,
+        clear: clearRestroomList,
+      },
     }),
     [
       timerMode,
@@ -363,6 +395,10 @@ export function ToolsProvider({ children }) {
       commitPick,
       pickStudentInstant,
       resetPicks,
+      restroomOut,
+      addRestroomStudent,
+      removeRestroomStudent,
+      clearRestroomList,
     ],
   )
 

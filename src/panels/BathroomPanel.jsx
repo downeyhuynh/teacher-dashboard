@@ -1,27 +1,23 @@
-import { useEffect, useRef, useState } from 'react'
-import { createId } from '../utils/id'
+import { useRef, useState } from 'react'
+import { useTools } from '../context/ToolsContext'
 
 /**
- * Simple restroom list: add student names, remove when they return.
+ * Restroom out list — state lives in ToolsContext + localStorage
+ * so it survives closing the panel and refreshing the page.
  */
 export function BathroomPanel() {
+  const { restroom } = useTools()
+  const { out: names, add, remove, clear } = restroom
   const [nameInput, setNameInput] = useState('')
-  const [names, setNames] = useState([])
   const inputRef = useRef(null)
 
   const addName = () => {
     const name = nameInput.trim()
     if (!name) return
-    setNames((prev) => [{ id: createId('restroom'), name }, ...prev])
+    add(name)
     setNameInput('')
     inputRef.current?.focus()
   }
-
-  const removeName = (id) => {
-    setNames((prev) => prev.filter((entry) => entry.id !== id))
-  }
-
-  const clearAll = () => setNames([])
 
   return (
     <div className="bathroom-panel">
@@ -62,7 +58,7 @@ export function BathroomPanel() {
                 <button
                   type="button"
                   className="stage-button"
-                  onClick={() => removeName(entry.id)}
+                  onClick={() => remove(entry.id)}
                 >
                   Remove
                 </button>
@@ -76,7 +72,7 @@ export function BathroomPanel() {
         <button
           type="button"
           className="stage-button bathroom-panel__clear"
-          onClick={clearAll}
+          onClick={clear}
         >
           Clear all
         </button>
