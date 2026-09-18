@@ -3,8 +3,8 @@ import { createId } from './id'
 const STORAGE_KEY = 'teacher-dashboard.restroom-list.v1'
 
 /**
- * Load students currently marked out for the restroom.
- * @returns {{ id: string, name: string }[]}
+ * Load restroom list entries.
+ * @returns {{ id: string, name: string, out: boolean }[]}
  */
 export function loadRestroomList() {
   try {
@@ -16,6 +16,7 @@ export function loadRestroomList() {
       .map((entry) => ({
         id: String(entry?.id || createId('restroom')),
         name: String(entry?.name || '').trim(),
+        out: Boolean(entry?.out),
       }))
       .filter((entry) => entry.name)
   } catch {

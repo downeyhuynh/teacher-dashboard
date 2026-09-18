@@ -415,13 +415,21 @@ export function ToolsProvider({ children }) {
     const trimmed = String(name || '').trim()
     if (!trimmed) return
     setRestroomOut((prev) => [
-      { id: createId('restroom'), name: trimmed },
+      { id: createId('restroom'), name: trimmed, out: false },
       ...prev,
     ])
   }, [])
 
   const removeRestroomStudent = useCallback((id) => {
     setRestroomOut((prev) => prev.filter((entry) => entry.id !== id))
+  }, [])
+
+  const toggleRestroomStudent = useCallback((id) => {
+    setRestroomOut((prev) =>
+      prev.map((entry) =>
+        entry.id === id ? { ...entry, out: !entry.out } : entry,
+      ),
+    )
   }, [])
 
   const clearRestroomList = useCallback(() => {
@@ -547,6 +555,7 @@ export function ToolsProvider({ children }) {
         out: restroomOut,
         add: addRestroomStudent,
         remove: removeRestroomStudent,
+        toggle: toggleRestroomStudent,
         clear: clearRestroomList,
       },
       lesson: {
@@ -609,6 +618,7 @@ export function ToolsProvider({ children }) {
       restroomOut,
       addRestroomStudent,
       removeRestroomStudent,
+      toggleRestroomStudent,
       clearRestroomList,
       lessonSubject,
       lessonSubjects,
