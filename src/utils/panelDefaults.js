@@ -26,11 +26,11 @@ export const PANEL_DEFAULT_ORIGINS = {
 }
 
 export const PANEL_DEFAULT_SIZES = {
-  [PANEL_IDS.TIMER]: { width: 340, height: 480 },
+  [PANEL_IDS.TIMER]: { width: 400, height: 620 },
   [PANEL_IDS.ANNOTATE]: { width: 320, height: 340 },
   [PANEL_IDS.CALCULATOR]: { width: 300, height: 420 },
   [PANEL_IDS.STUDENTS]: { width: 380, height: 620 },
   [PANEL_IDS.SEATING]: { width: 720, height: 560 },
   [PANEL_IDS.BATHROOM]: { width: 260, height: 280 },
-  [PANEL_IDS.OVERTIME]: { width: 200, height: 168 },
+  [PANEL_IDS.OVERTIME]: { width: 240, height: 268 },
 }

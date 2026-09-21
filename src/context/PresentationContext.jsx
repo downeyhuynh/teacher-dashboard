@@ -37,25 +37,78 @@ const defaultInkTool = {
 
 const DEFAULT_VIEW = { scale: 1, x: 0, y: 0 }
 
+function createDeck({ name = 'Lesson', slides = [] } = {}) {
+  return {
+    id: createId('deck'),
+    name,
+    slides,
+    currentIndex: 0,
+    annotationsBySlide: {},
+    annotationUndoBySlide: {},
+    slideView: { ...DEFAULT_VIEW },
+  }
+}
+
 const PresentationContext = createContext(null)
 
 export function PresentationProvider({ children }) {
-  const [slides, setSlides] = useState([])
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [decks, setDecks] = useState([])
+  const [activeDeckId, setActiveDeckId] = useState(null)
   const annotationsRef = useRef({})
   const annotationUndoRef = useRef({})
-  const [annotationsBySlide, setAnnotationsBySlide] = useState({})
-  const [annotationUndoBySlide, setAnnotationUndoBySlide] = useState({})
+  const activeDeckIdRef = useRef(null)
   const [annotationTool, setAnnotationTool] = useState(defaultInkTool)
   const [annotateEnabled, setAnnotateEnabled] = useState(false)
   const [focusTextId, setFocusTextId] = useState(null)
-  const [slideView, setSlideView] = useState(DEFAULT_VIEW)
   const [isImporting, setIsImporting] = useState(false)
   const [importProgress, setImportProgress] = useState(null)
   const [importErrors, setImportErrors] = useState([])
-  const [deckName, setDeckName] = useState('')
 
+  const activeDeck = decks.find((deck) => deck.id === activeDeckId) ?? null
+  activeDeckIdRef.current = activeDeck?.id ?? null
+
+  const slides = activeDeck?.slides ?? []
+  const currentIndex = activeDeck?.currentIndex ?? 0
+  const deckName = activeDeck?.name ?? ''
+  const annotationsBySlide = activeDeck?.annotationsBySlide ?? {}
+  const annotationUndoBySlide = activeDeck?.annotationUndoBySlide ?? {}
+  const slideView = activeDeck?.slideView ?? DEFAULT_VIEW
   const currentSlide = slides[currentIndex] ?? null
+
+  // Keep annotation refs aligned with the active deck for drawing helpers.
+  annotationsRef.current = annotationsBySlide
+  annotationUndoRef.current = annotationUndoBySlide
+
+  const patchActiveDeck = useCallback((patch) => {
+    const id = activeDeckIdRef.current
+    if (!id) return
+    setDecks((prev) =>
+      prev.map((deck) => {
+        if (deck.id !== id) return deck
+        const nextPatch = typeof patch === 'function' ? patch(deck) : patch
+        return { ...deck, ...nextPatch }
+      }),
+    )
+  }, [])
+
+  const selectDeck = useCallback((deckId) => {
+    setActiveDeckId(deckId)
+    setFocusTextId(null)
+  }, [])
+
+  const closeDeck = useCallback((deckId) => {
+    setDecks((prev) => {
+      const target = prev.find((deck) => deck.id === deckId)
+      if (target) revokeSlideUrls(target.slides)
+      const next = prev.filter((deck) => deck.id !== deckId)
+      setActiveDeckId((current) => {
+        if (current !== deckId) return current
+        return next[0]?.id ?? null
+      })
+      return next
+    })
+    setFocusTextId(null)
+  }, [])
 
   const importFiles = useCallback(async (fileList, { append = true } = {}) => {
     if (!fileList?.length) return
@@ -65,36 +118,40 @@ export function PresentationProvider({ children }) {
     setImportProgress({ fileName: '', pageNumber: 0, total: 0 })
 
     try {
-      const { slides: nextSlides, errors } = await importPresentationFiles(fileList, {
-        onProgress: setImportProgress,
-      })
+      const files = Array.from(fileList)
+      const createdDecks = []
+      const errors = []
+
+      for (const file of files) {
+        const result = await importPresentationFiles([file], {
+          onProgress: setImportProgress,
+        })
+        if (result.errors.length) {
+          errors.push(...result.errors)
+        }
+        if (!result.slides.length) continue
+        createdDecks.push(
+          createDeck({
+            name: file.name.replace(/\.[^.]+$/, '') || 'Lesson',
+            slides: result.slides,
+          }),
+        )
+      }
 
       if (errors.length) {
         setImportErrors(errors)
       }
+      if (!createdDecks.length) return
 
-      if (!nextSlides.length) return
-
-      setSlides((prev) => {
+      setDecks((prev) => {
         if (!append && prev.length) {
-          revokeSlideUrls(prev)
+          for (const deck of prev) revokeSlideUrls(deck.slides)
+          return createdDecks
         }
-        const merged = append ? [...prev, ...nextSlides] : nextSlides
-        return merged
+        return [...prev, ...createdDecks]
       })
-
-      if (!append) {
-        annotationsRef.current = {}
-        annotationUndoRef.current = {}
-        setAnnotationsBySlide({})
-        setAnnotationUndoBySlide({})
-        setFocusTextId(null)
-        setCurrentIndex(0)
-        setSlideView(DEFAULT_VIEW)
-      }
-
-      const firstName = fileList[0]?.name?.replace(/\.[^.]+$/, '') || 'Lesson'
-      setDeckName((prev) => prev || firstName)
+      setActiveDeckId(createdDecks[createdDecks.length - 1].id)
+      setFocusTextId(null)
     } finally {
       setIsImporting(false)
       setImportProgress(null)
@@ -102,65 +159,103 @@ export function PresentationProvider({ children }) {
   }, [])
 
   const clearDeck = useCallback(() => {
-    setSlides((prev) => {
-      revokeSlideUrls(prev)
-      return []
-    })
-    annotationsRef.current = {}
-    annotationUndoRef.current = {}
-    setAnnotationsBySlide({})
-    setAnnotationUndoBySlide({})
-    setFocusTextId(null)
-    setCurrentIndex(0)
-    setDeckName('')
+    const id = activeDeckIdRef.current
+    if (!id) {
+      setDecks((prev) => {
+        for (const deck of prev) revokeSlideUrls(deck.slides)
+        return []
+      })
+      setActiveDeckId(null)
+      setImportErrors([])
+      setFocusTextId(null)
+      return
+    }
+    closeDeck(id)
     setImportErrors([])
-    setSlideView(DEFAULT_VIEW)
-  }, [])
+  }, [closeDeck])
 
   /** Insert a blank whiteboard after the current slide and jump to it. */
   const addWhiteboardSlide = useCallback(() => {
     const board = createWhiteboardSlide()
-    setSlides((prev) => {
-      if (!prev.length) return [board]
-      const insertAt = currentIndex + 1
-      return [...prev.slice(0, insertAt), board, ...prev.slice(insertAt)]
+    const id = activeDeckIdRef.current
+
+    if (!id) {
+      const deck = createDeck({ name: 'Lesson', slides: [board] })
+      setDecks([deck])
+      setActiveDeckId(deck.id)
+      setFocusTextId(null)
+      return
+    }
+
+    patchActiveDeck((deck) => {
+      const insertAt = Math.min(deck.currentIndex + 1, deck.slides.length)
+      const slidesNext = [
+        ...deck.slides.slice(0, insertAt),
+        board,
+        ...deck.slides.slice(insertAt),
+      ]
+      return {
+        slides: slidesNext,
+        currentIndex: insertAt,
+        slideView: { ...DEFAULT_VIEW },
+        name: deck.name || 'Lesson',
+      }
     })
-    setCurrentIndex((prev) => (slides.length === 0 ? 0 : prev + 1))
-    setSlideView(DEFAULT_VIEW)
-    setDeckName((prev) => prev || 'Lesson')
-  }, [currentIndex, slides.length])
+  }, [patchActiveDeck])
 
   const goToSlide = useCallback(
     (index) => {
-      setCurrentIndex(() => {
-        if (!slides.length) return 0
-        return Math.min(Math.max(0, index), slides.length - 1)
-      })
+      patchActiveDeck((deck) => ({
+        currentIndex: Math.min(
+          Math.max(0, index),
+          Math.max(0, deck.slides.length - 1),
+        ),
+      }))
     },
-    [slides.length],
+    [patchActiveDeck],
   )
 
   const nextSlide = useCallback(() => {
-    setCurrentIndex((prev) => Math.min(prev + 1, Math.max(0, slides.length - 1)))
-  }, [slides.length])
+    patchActiveDeck((deck) => ({
+      currentIndex: Math.min(
+        deck.currentIndex + 1,
+        Math.max(0, deck.slides.length - 1),
+      ),
+    }))
+  }, [patchActiveDeck])
 
   const prevSlide = useCallback(() => {
-    setCurrentIndex((prev) => Math.max(prev - 1, 0))
-  }, [])
+    patchActiveDeck((deck) => ({
+      currentIndex: Math.max(deck.currentIndex - 1, 0),
+    }))
+  }, [patchActiveDeck])
 
   const pushAnnotationUndo = useCallback((slideId, marks) => {
-    const stack = annotationUndoRef.current[slideId] || []
-    const next = {
-      ...annotationUndoRef.current,
-      [slideId]: [...stack, marks].slice(-MAX_UNDO),
-    }
-    annotationUndoRef.current = next
-    setAnnotationUndoBySlide(next)
+    const id = activeDeckIdRef.current
+    if (!id) return
+    setDecks((prev) =>
+      prev.map((deck) => {
+        if (deck.id !== id) return deck
+        const stack = deck.annotationUndoBySlide[slideId] || []
+        const annotationUndoBySlide = {
+          ...deck.annotationUndoBySlide,
+          [slideId]: [...stack, marks].slice(-MAX_UNDO),
+        }
+        annotationUndoRef.current = annotationUndoBySlide
+        return { ...deck, annotationUndoBySlide }
+      }),
+    )
   }, [])
 
   const replaceAnnotations = useCallback((next) => {
     annotationsRef.current = next
-    setAnnotationsBySlide(next)
+    const id = activeDeckIdRef.current
+    if (!id) return
+    setDecks((prev) =>
+      prev.map((deck) =>
+        deck.id === id ? { ...deck, annotationsBySlide: next } : deck,
+      ),
+    )
   }, [])
 
   const setSlideAnnotations = useCallback(
@@ -195,23 +290,31 @@ export function PresentationProvider({ children }) {
   const undoSlideAnnotation = useCallback(
     (slideId) => {
       if (!slideId) return
-      const stack = annotationUndoRef.current[slideId] || []
-      if (!stack.length) return
+      const id = activeDeckIdRef.current
+      if (!id) return
 
-      const previous = stack[stack.length - 1]
-      const nextUndo = {
-        ...annotationUndoRef.current,
-        [slideId]: stack.slice(0, -1),
-      }
-      annotationUndoRef.current = nextUndo
-      setAnnotationUndoBySlide(nextUndo)
-      replaceAnnotations({
-        ...annotationsRef.current,
-        [slideId]: previous,
-      })
+      setDecks((prev) =>
+        prev.map((deck) => {
+          if (deck.id !== id) return deck
+          const stack = deck.annotationUndoBySlide[slideId] || []
+          if (!stack.length) return deck
+          const previous = stack[stack.length - 1]
+          const annotationUndoBySlide = {
+            ...deck.annotationUndoBySlide,
+            [slideId]: stack.slice(0, -1),
+          }
+          const annotationsBySlide = {
+            ...deck.annotationsBySlide,
+            [slideId]: previous,
+          }
+          annotationUndoRef.current = annotationUndoBySlide
+          annotationsRef.current = annotationsBySlide
+          return { ...deck, annotationUndoBySlide, annotationsBySlide }
+        }),
+      )
       setFocusTextId(null)
     },
-    [replaceAnnotations],
+    [],
   )
 
   const addTextAnnotation = useCallback(
@@ -263,10 +366,12 @@ export function PresentationProvider({ children }) {
   const clearAllAnnotations = useCallback(() => {
     annotationsRef.current = {}
     annotationUndoRef.current = {}
-    setAnnotationsBySlide({})
-    setAnnotationUndoBySlide({})
+    patchActiveDeck({
+      annotationsBySlide: {},
+      annotationUndoBySlide: {},
+    })
     setFocusTextId(null)
-  }, [])
+  }, [patchActiveDeck])
 
   const updateAnnotationTool = useCallback((patch) => {
     setAnnotationTool((prev) => ({ ...prev, ...patch }))
@@ -285,49 +390,60 @@ export function PresentationProvider({ children }) {
   }, [])
 
   const clearAllMarks = useCallback(() => {
-    annotationsRef.current = {}
-    annotationUndoRef.current = {}
-    setAnnotationsBySlide({})
-    setAnnotationUndoBySlide({})
-    setFocusTextId(null)
-  }, [])
+    clearAllAnnotations()
+  }, [clearAllAnnotations])
 
-  const zoomAt = useCallback((factor, origin = null) => {
-    setSlideView((prev) => {
-      const nextScale = clamp(Number((prev.scale * factor).toFixed(3)), 0.4, 4)
-      if (!origin || nextScale === prev.scale) {
-        return { ...prev, scale: nextScale }
-      }
-
-      // Keep the point under the cursor fixed while scaling around center origin.
-      const ratio = nextScale / prev.scale
-      return {
-        scale: nextScale,
-        x: origin.x * (1 - ratio) + prev.x * ratio,
-        y: origin.y * (1 - ratio) + prev.y * ratio,
-      }
-    })
-  }, [])
+  const zoomAt = useCallback(
+    (factor, origin = null) => {
+      patchActiveDeck((deck) => {
+        const prev = deck.slideView || DEFAULT_VIEW
+        const nextScale = clamp(Number((prev.scale * factor).toFixed(3)), 0.4, 4)
+        if (!origin || nextScale === prev.scale) {
+          return { slideView: { ...prev, scale: nextScale } }
+        }
+        const ratio = nextScale / prev.scale
+        return {
+          slideView: {
+            scale: nextScale,
+            x: origin.x * (1 - ratio) + prev.x * ratio,
+            y: origin.y * (1 - ratio) + prev.y * ratio,
+          },
+        }
+      })
+    },
+    [patchActiveDeck],
+  )
 
   const zoomBy = useCallback((factor) => zoomAt(factor, null), [zoomAt])
-
   const zoomIn = useCallback(() => zoomBy(1.2), [zoomBy])
   const zoomOut = useCallback(() => zoomBy(1 / 1.2), [zoomBy])
 
   const resetSlideView = useCallback(() => {
-    setSlideView(DEFAULT_VIEW)
-  }, [])
+    patchActiveDeck({ slideView: { ...DEFAULT_VIEW } })
+  }, [patchActiveDeck])
 
-  const panSlideView = useCallback((dx, dy) => {
-    setSlideView((prev) => ({
-      ...prev,
-      x: prev.x + dx,
-      y: prev.y + dy,
-    }))
-  }, [])
+  const panSlideView = useCallback(
+    (dx, dy) => {
+      patchActiveDeck((deck) => {
+        const prev = deck.slideView || DEFAULT_VIEW
+        return {
+          slideView: {
+            ...prev,
+            x: prev.x + dx,
+            y: prev.y + dy,
+          },
+        }
+      })
+    },
+    [patchActiveDeck],
+  )
 
   const value = useMemo(
     () => ({
+      decks,
+      activeDeckId,
+      selectDeck,
+      closeDeck,
       slides,
       currentIndex,
       currentSlide,
@@ -371,6 +487,10 @@ export function PresentationProvider({ children }) {
       ),
     }),
     [
+      decks,
+      activeDeckId,
+      selectDeck,
+      closeDeck,
       slides,
       currentIndex,
       currentSlide,

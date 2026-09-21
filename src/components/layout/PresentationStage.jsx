@@ -5,6 +5,7 @@ import { ImportDropzone } from '../../presentation/ImportDropzone'
 import { SlideNav } from '../../presentation/SlideNav'
 import { SlideViewControls } from '../../presentation/SlideViewControls'
 import { LessonChrome } from './LessonChrome'
+import { DeckTabs } from './DeckTabs'
 
 /**
  * Main presentation viewport: slides, import, on-slide ink overlays.
@@ -258,6 +259,7 @@ export function PresentationStage({
       aria-label="Presentation stage"
     >
       <div className="presentation-stage__surface">
+        <DeckTabs />
         <LessonChrome />
         <SlideNav
           viewControls={

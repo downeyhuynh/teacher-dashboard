@@ -35,21 +35,30 @@ import {
   setOvertimeTickVolume,
   startOvertimeTicking,
   stopOvertimeTicking,
+  maybePlayOvertimeProgressCues,
+  resetOvertimeProgressCueMarks,
+  playPositiveAdjustBuzz,
+  playNegativeAdjustBuzz,
 } from '../utils/overtimeTick'
+import {
+  OVERTIME_CLOCK_IDS,
+  createEmptyOvertimeClock,
+  createEmptyOvertimeState,
+} from '../utils/overtimeClocks'
 
 const VOLUME_STORAGE_KEY = 'teacher-dashboard.audio-volumes.v1'
 
 function loadVolumes() {
   try {
     const raw = localStorage.getItem(VOLUME_STORAGE_KEY)
-    if (!raw) return { focusMusic: 0.55, overtime: 0.55 }
+    if (!raw) return { focusMusic: 0.55, overtime: 0.75 }
     const parsed = JSON.parse(raw)
     return {
       focusMusic: clampVolume(parsed?.focusMusic, 0.55),
-      overtime: clampVolume(parsed?.overtime, 0.55),
+      overtime: clampVolume(parsed?.overtime, 0.75),
     }
   } catch {
-    return { focusMusic: 0.55, overtime: 0.55 }
+    return { focusMusic: 0.55, overtime: 0.75 }
   }
 }
 
@@ -109,11 +118,13 @@ export function ToolsProvider({ children }) {
   const [lessonSubject, setLessonSubject] = useState(initialLesson.subject)
   const [lessonSubjects, setLessonSubjects] = useState(initialLesson.subjects)
 
-  // --- Overtime stopwatch (keeps ticking if panel is closed) ---
-  const [overtimeElapsedMs, setOvertimeElapsedMs] = useState(0)
-  const [overtimeRunning, setOvertimeRunning] = useState(false)
-  const [overtimeMode, setOvertimeMode] = useState('accrue') // accrue | pay
-  const overtimeTickRef = useRef(null)
+  // --- Overtime stopwatches (soccer / Tabs Hawaii / Caltech) ---
+  const [overtimeClocks, setOvertimeClocks] = useState(() =>
+    createEmptyOvertimeState(),
+  )
+  const overtimeFrameRef = useRef(null)
+  const overtimeVolumeRef = useRef(overtimeVolume)
+  overtimeVolumeRef.current = overtimeVolume
 
   useEffect(() => {
     saveClassState({ classes: classOptions, rosters, activeClassId })
@@ -133,49 +144,66 @@ export function ToolsProvider({ children }) {
     saveVolumes({ focusMusic: focusMusicVolume, overtime: overtimeVolume })
   }, [focusMusicVolume, overtimeVolume])
 
+  const anyOvertimeRunning = OVERTIME_CLOCK_IDS.some(
+    (id) => overtimeClocks[id]?.running,
+  )
+
   useEffect(() => {
-    if (!overtimeRunning) {
-      overtimeTickRef.current = null
+    if (!anyOvertimeRunning) {
+      overtimeFrameRef.current = null
+      stopOvertimeTicking()
       return undefined
     }
 
-    overtimeTickRef.current = performance.now()
+    overtimeFrameRef.current = performance.now()
     let frameId = 0
     const tick = (now) => {
-      const last = overtimeTickRef.current ?? now
+      const last = overtimeFrameRef.current ?? now
       const delta = now - last
-      overtimeTickRef.current = now
+      overtimeFrameRef.current = now
 
-      if (overtimeMode === 'pay') {
-        setOvertimeElapsedMs((prev) => {
-          const next = Math.max(0, prev - delta)
-          if (next <= 0) {
-            setOvertimeRunning(false)
-            setOvertimeMode('accrue')
+      const pendingCues = []
+      setOvertimeClocks((prev) => {
+        let changed = false
+        const nextState = { ...prev }
+        for (const id of OVERTIME_CLOCK_IDS) {
+          const clock = prev[id]
+          if (!clock?.running) continue
+          changed = true
+          if (clock.mode === 'pay') {
+            const elapsedMs = Math.max(0, clock.elapsedMs - delta)
+            nextState[id] = {
+              ...clock,
+              elapsedMs,
+              running: elapsedMs > 0,
+              mode: elapsedMs > 0 ? 'pay' : 'accrue',
+            }
+          } else {
+            const elapsedMs = clock.elapsedMs + delta
+            nextState[id] = { ...clock, elapsedMs }
+            pendingCues.push({ id, elapsedMs })
           }
-          return next
-        })
-      } else {
-        setOvertimeElapsedMs((prev) => prev + delta)
+        }
+        return changed ? nextState : prev
+      })
+      for (const cue of pendingCues) {
+        maybePlayOvertimeProgressCues(
+          cue.elapsedMs,
+          overtimeVolumeRef.current,
+          cue.id,
+        )
       }
 
       frameId = requestAnimationFrame(tick)
     }
     frameId = requestAnimationFrame(tick)
+    startOvertimeTicking({ volume: overtimeVolume }).catch(() => {})
 
     return () => {
       cancelAnimationFrame(frameId)
-    }
-  }, [overtimeRunning, overtimeMode])
-
-  useEffect(() => {
-    if (!overtimeRunning) {
       stopOvertimeTicking()
-      return undefined
     }
-    startOvertimeTicking({ volume: overtimeVolume }).catch(() => {})
-    return () => stopOvertimeTicking()
-  }, [overtimeRunning, overtimeVolume])
+  }, [anyOvertimeRunning, overtimeVolume])
 
   useEffect(() => {
     let cancelled = false
@@ -470,32 +498,71 @@ export function ToolsProvider({ children }) {
     setLessonSubject((prev) => prevLessonSubject(prev))
   }, [])
 
-  const startOvertime = useCallback(() => {
-    setOvertimeElapsedMs((prev) => {
-      if (prev <= 0) setOvertimeMode('accrue')
-      return prev
-    })
-    setOvertimeRunning(true)
-  }, [])
-
-  const payOvertime = useCallback(() => {
-    setOvertimeElapsedMs((prev) => {
-      if (prev <= 0) return prev
-      setOvertimeMode('pay')
-      setOvertimeRunning(true)
-      return prev
+  const startOvertime = useCallback((clockId = 'overtime') => {
+    setOvertimeClocks((prev) => {
+      const clock = prev[clockId] || createEmptyOvertimeClock()
+      return {
+        ...prev,
+        [clockId]: {
+          ...clock,
+          mode: clock.elapsedMs <= 0 ? 'accrue' : clock.mode,
+          running: true,
+        },
+      }
     })
   }, [])
 
-  const pauseOvertime = useCallback(() => {
-    setOvertimeRunning(false)
+  const payOvertime = useCallback((clockId = 'overtime') => {
+    setOvertimeClocks((prev) => {
+      const clock = prev[clockId] || createEmptyOvertimeClock()
+      if (clock.elapsedMs <= 0) return prev
+      return {
+        ...prev,
+        [clockId]: {
+          ...clock,
+          mode: 'pay',
+          running: true,
+        },
+      }
+    })
   }, [])
 
-  const resetOvertime = useCallback(() => {
-    setOvertimeRunning(false)
-    setOvertimeMode('accrue')
-    setOvertimeElapsedMs(0)
-    stopOvertimeTicking()
+  const pauseOvertime = useCallback((clockId = 'overtime') => {
+    setOvertimeClocks((prev) => {
+      const clock = prev[clockId] || createEmptyOvertimeClock()
+      return {
+        ...prev,
+        [clockId]: { ...clock, running: false },
+      }
+    })
+  }, [])
+
+  const resetOvertime = useCallback((clockId = 'overtime') => {
+    resetOvertimeProgressCueMarks(clockId)
+    setOvertimeClocks((prev) => ({
+      ...prev,
+      [clockId]: createEmptyOvertimeClock(),
+    }))
+  }, [])
+
+  const adjustOvertimeSeconds = useCallback((clockId, deltaSeconds) => {
+    const deltaMs = Math.round(Number(deltaSeconds) || 0) * 1000
+    if (!deltaMs) return
+    setOvertimeClocks((prev) => {
+      const clock = prev[clockId] || createEmptyOvertimeClock()
+      return {
+        ...prev,
+        [clockId]: {
+          ...clock,
+          elapsedMs: Math.max(0, clock.elapsedMs + deltaMs),
+        },
+      }
+    })
+    if (deltaSeconds > 0) {
+      playPositiveAdjustBuzz(overtimeVolumeRef.current).catch(() => {})
+    } else {
+      playNegativeAdjustBuzz(overtimeVolumeRef.current).catch(() => {})
+    }
   }, [])
 
   const setFocusMusicVolumeLevel = useCallback((value) => {
@@ -503,7 +570,7 @@ export function ToolsProvider({ children }) {
   }, [])
 
   const setOvertimeVolumeLevel = useCallback((value) => {
-    setOvertimeVolumeState(clampVolume(value, 0.55))
+    setOvertimeVolumeState(clampVolume(value, 0.75))
   }, [])
 
   const value = useMemo(
@@ -568,15 +635,14 @@ export function ToolsProvider({ children }) {
         prevSubject: goPrevLessonSubject,
       },
       overtime: {
-        elapsedMs: overtimeElapsedMs,
-        running: overtimeRunning,
-        mode: overtimeMode,
+        clocks: overtimeClocks,
         volume: overtimeVolume,
+        setVolume: setOvertimeVolumeLevel,
         start: startOvertime,
         pay: payOvertime,
         pause: pauseOvertime,
         reset: resetOvertime,
-        setVolume: setOvertimeVolumeLevel,
+        adjustSeconds: adjustOvertimeSeconds,
       },
     }),
     [
@@ -626,14 +692,13 @@ export function ToolsProvider({ children }) {
       setLessonAgenda,
       goNextLessonSubject,
       goPrevLessonSubject,
-      overtimeElapsedMs,
-      overtimeRunning,
-      overtimeMode,
+      overtimeClocks,
       overtimeVolume,
       startOvertime,
       payOvertime,
       pauseOvertime,
       resetOvertime,
+      adjustOvertimeSeconds,
       setOvertimeVolumeLevel,
     ],
   )

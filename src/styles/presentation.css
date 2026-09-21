@@ -35,6 +35,106 @@
   backdrop-filter: blur(8px);
 }
 
+.deck-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  flex-shrink: 0;
+  padding: 6px 8px 0;
+  overflow-x: auto;
+  background: rgba(232, 237, 242, 0.95);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.deck-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  max-width: 200px;
+  min-width: 72px;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.deck-tabs__tab.is-active {
+  background: #fff;
+  border-color: var(--color-border);
+  box-shadow: 0 -1px 0 #fff;
+}
+
+.deck-tabs__button {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 8px 8px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.deck-tabs__tab.is-active .deck-tabs__button {
+  color: var(--color-text);
+}
+
+.deck-tabs__close {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin-right: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--color-text-subtle);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.deck-tabs__close:hover {
+  background: rgba(26, 35, 50, 0.08);
+  color: var(--color-text);
+}
+
+.app-shell.is-fullscreen .deck-tabs {
+  background: rgba(18, 24, 32, 0.94);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.app-shell.is-fullscreen .deck-tabs__tab {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.app-shell.is-fullscreen .deck-tabs__tab.is-active {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.app-shell.is-fullscreen .deck-tabs__button {
+  color: rgba(242, 245, 248, 0.7);
+}
+
+.app-shell.is-fullscreen .deck-tabs__tab.is-active .deck-tabs__button {
+  color: #f2f5f8;
+}
+
+.app-shell.is-fullscreen .deck-tabs__close {
+  color: rgba(242, 245, 248, 0.55);
+}
+
+.app-shell.is-fullscreen .deck-tabs__close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
 .slide-nav__meta {
   display: flex;
   align-items: baseline;
