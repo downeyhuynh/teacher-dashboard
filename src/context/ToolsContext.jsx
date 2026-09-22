@@ -41,6 +41,7 @@ import {
   resetOvertimeProgressCueMarks,
   playPositiveAdjustBuzz,
   playNegativeAdjustBuzz,
+  unlockOvertimeAudio,
 } from '../utils/overtimeTick'
 import {
   OVERTIME_CLOCK_IDS,
@@ -207,13 +208,18 @@ export function ToolsProvider({ children }) {
       frameId = requestAnimationFrame(tick)
     }
     frameId = requestAnimationFrame(tick)
-    startOvertimeTicking({ volume: overtimeVolume }).catch(() => {})
+    // Volume updates alone should not restart the scheduler (that caused gaps).
+    startOvertimeTicking({ volume: overtimeVolumeRef.current }).catch(() => {})
 
     return () => {
       cancelAnimationFrame(frameId)
       stopOvertimeTicking()
     }
-  }, [anyOvertimeRunning, overtimeVolume])
+  }, [anyOvertimeRunning])
+
+  useEffect(() => {
+    setOvertimeTickVolume(overtimeVolume)
+  }, [overtimeVolume])
 
   // Persist when clocks settle (paused/reset/adjust). Skip while RAF is updating every frame.
   useEffect(() => {
@@ -563,6 +569,9 @@ export function ToolsProvider({ children }) {
   )
 
   const startOvertime = useCallback((clockId = 'overtime') => {
+    // Unlock + first tick inside the click gesture so browsers allow audio.
+    unlockOvertimeAudio(overtimeVolumeRef.current)
+    startOvertimeTicking({ volume: overtimeVolumeRef.current }).catch(() => {})
     setOvertimeClocks((prev) => {
       const clock = prev[clockId] || createEmptyOvertimeClock()
       return {
@@ -577,6 +586,8 @@ export function ToolsProvider({ children }) {
   }, [])
 
   const payOvertime = useCallback((clockId = 'overtime') => {
+    unlockOvertimeAudio(overtimeVolumeRef.current)
+    startOvertimeTicking({ volume: overtimeVolumeRef.current }).catch(() => {})
     setOvertimeClocks((prev) => {
       const clock = prev[clockId] || createEmptyOvertimeClock()
       if (clock.elapsedMs <= 0) return prev
@@ -612,6 +623,7 @@ export function ToolsProvider({ children }) {
   const adjustOvertimeSeconds = useCallback((clockId, deltaSeconds) => {
     const deltaMs = Math.round(Number(deltaSeconds) || 0) * 1000
     if (!deltaMs) return
+    unlockOvertimeAudio(overtimeVolumeRef.current)
     setOvertimeClocks((prev) => {
       const clock = prev[clockId] || createEmptyOvertimeClock()
       return {

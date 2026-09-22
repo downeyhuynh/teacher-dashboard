@@ -1,11 +1,20 @@
 /**
  * Overtime stopwatch SFX: loud ticks + super-short positive/negative buzzes.
+ *
+ * Ticks are scheduled on the AudioContext clock (not setInterval) so timing
+ * stays steady. Audio is unlocked on user gestures so the first tick plays.
  */
 
 let sharedContext = null
-let tickTimerId = null
+let tickSchedulerId = null
+let nextTickTime = 0
 let tickVolume = 0.75
+let tickingActive = false
 const progressMarksByClock = new Map()
+
+const TICK_INTERVAL_SEC = 1
+const SCHEDULE_AHEAD_SEC = 0.12
+const SCHEDULER_POLL_MS = 25
 
 function getAudioContext() {
   const AudioCtx = window.AudioContext || window.webkitAudioContext
@@ -18,6 +27,22 @@ function getAudioContext() {
   return sharedContext
 }
 
+/**
+ * Resume audio during a user gesture so later ticks are allowed to play.
+ * Safe to call repeatedly from Start / Pay / adjust clicks.
+ */
+export function unlockOvertimeAudio(volume = tickVolume) {
+  tickVolume = Math.min(1, Math.max(0, Number(volume) || 0))
+  try {
+    const ctx = getAudioContext()
+    if (ctx.state === 'suspended') {
+      void ctx.resume()
+    }
+  } catch {
+    // Ignore missing Web Audio / transient failures.
+  }
+}
+
 async function ensureRunningContext() {
   const ctx = getAudioContext()
   if (ctx.state === 'suspended') {
@@ -26,13 +51,19 @@ async function ensureRunningContext() {
   return ctx
 }
 
-function playBuzz(ctx, { startFreq, endFreq, duration, peak, type = 'square' }) {
-  const now = ctx.currentTime
+function playBuzz(
+  ctx,
+  { startFreq, endFreq, duration, peak, type = 'square', when = null },
+) {
+  const now = when == null ? ctx.currentTime : when
   const osc = ctx.createOscillator()
   const gain = ctx.createGain()
   osc.type = type
   osc.frequency.setValueAtTime(startFreq, now)
-  osc.frequency.exponentialRampToValueAtTime(endFreq, now + duration)
+  osc.frequency.exponentialRampToValueAtTime(
+    Math.max(0.01, endFreq),
+    now + duration,
+  )
   gain.gain.setValueAtTime(0.0001, now)
   gain.gain.exponentialRampToValueAtTime(peak, now + 0.004)
   gain.gain.exponentialRampToValueAtTime(0.0001, now + duration)
@@ -42,7 +73,7 @@ function playBuzz(ctx, { startFreq, endFreq, duration, peak, type = 'square' }) 
   osc.stop(now + duration + 0.01)
 }
 
-function playClockTick(ctx, volume = tickVolume) {
+function playClockTickAt(ctx, when, volume = tickVolume) {
   const peak = Math.max(0.0001, Math.min(1, volume) * 0.95)
   playBuzz(ctx, {
     startFreq: 1100,
@@ -50,6 +81,7 @@ function playClockTick(ctx, volume = tickVolume) {
     duration: 0.06,
     peak,
     type: 'square',
+    when,
   })
 }
 
@@ -57,6 +89,7 @@ function playClockTick(ctx, volume = tickVolume) {
 export function playPositiveBuzz(volume = tickVolume) {
   try {
     const ctx = getAudioContext()
+    if (ctx.state === 'suspended') void ctx.resume()
     const peak = Math.max(0.0001, Math.min(1, volume) * 0.7)
     playBuzz(ctx, {
       startFreq: 640,
@@ -74,6 +107,7 @@ export function playPositiveBuzz(volume = tickVolume) {
 export function playNegativeBuzz(volume = tickVolume) {
   try {
     const ctx = getAudioContext()
+    if (ctx.state === 'suspended') void ctx.resume()
     const peak = Math.max(0.0001, Math.min(1, volume) * 0.7)
     playBuzz(ctx, {
       startFreq: 280,
@@ -147,30 +181,81 @@ export function getOvertimeTickVolume() {
   return tickVolume
 }
 
+function clearTickScheduler() {
+  if (tickSchedulerId != null) {
+    window.clearTimeout(tickSchedulerId)
+    tickSchedulerId = null
+  }
+}
+
+function pumpTickSchedule() {
+  if (tickSchedulerId == null) return
+
+  try {
+    if (tickVolume <= 0.001) {
+      tickSchedulerId = window.setTimeout(pumpTickSchedule, SCHEDULER_POLL_MS)
+      return
+    }
+
+    const ctx = getAudioContext()
+    if (ctx.state === 'suspended') {
+      void ctx.resume()
+      tickSchedulerId = window.setTimeout(pumpTickSchedule, SCHEDULER_POLL_MS)
+      return
+    }
+
+    // Catch up if the tab was throttled so we don't burst many ticks at once.
+    if (nextTickTime < ctx.currentTime - TICK_INTERVAL_SEC) {
+      nextTickTime = ctx.currentTime
+    }
+
+    while (nextTickTime < ctx.currentTime + SCHEDULE_AHEAD_SEC) {
+      playClockTickAt(ctx, nextTickTime, tickVolume)
+      nextTickTime += TICK_INTERVAL_SEC
+    }
+  } catch {
+    // Ignore transient audio failures; keep the scheduler alive.
+  }
+
+  tickSchedulerId = window.setTimeout(pumpTickSchedule, SCHEDULER_POLL_MS)
+}
+
 /**
- * Start a 1 Hz lock/clock tick while overtime is running.
+ * Start a steady 1 Hz lock/clock tick while overtime is running.
+ * Idempotent — safe to call from both click handlers and effects.
  */
 export async function startOvertimeTicking({ volume = tickVolume } = {}) {
   tickVolume = Math.min(1, Math.max(0, Number(volume) || 0))
-  await ensureRunningContext()
 
-  stopOvertimeTicking()
-  if (tickVolume <= 0.001) return
+  if (tickVolume <= 0.001) {
+    stopOvertimeTicking()
+    return
+  }
 
-  playClockTick(getAudioContext(), tickVolume)
-  tickTimerId = window.setInterval(() => {
-    try {
-      if (tickVolume <= 0.001) return
-      playClockTick(getAudioContext(), tickVolume)
-    } catch {
-      // Ignore transient audio failures.
+  // Already started (or starting) — just make sure the context is unmuted.
+  if (tickingActive) {
+    unlockOvertimeAudio(tickVolume)
+    return
+  }
+  tickingActive = true
+
+  try {
+    const ctx = await ensureRunningContext()
+    if (!tickingActive) return
+
+    // Immediate first tick, then one per second on the audio clock.
+    playClockTickAt(ctx, ctx.currentTime, tickVolume)
+    nextTickTime = ctx.currentTime + TICK_INTERVAL_SEC
+    if (tickSchedulerId == null) {
+      tickSchedulerId = window.setTimeout(pumpTickSchedule, SCHEDULER_POLL_MS)
     }
-  }, 1000)
+  } catch {
+    tickingActive = false
+    clearTickScheduler()
+  }
 }
 
 export function stopOvertimeTicking() {
-  if (tickTimerId != null) {
-    window.clearInterval(tickTimerId)
-    tickTimerId = null
-  }
+  tickingActive = false
+  clearTickScheduler()
 }
