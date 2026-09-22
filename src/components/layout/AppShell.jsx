@@ -154,6 +154,50 @@ export function AppShell() {
     }
   }, [resetSlideView])
 
+  // Blur panel inputs when clicking outside so shortcuts (P, E, …) work again.
+  useEffect(() => {
+    const onPointerDown = (event) => {
+      const active = document.activeElement
+      if (!active || active === document.body) return
+
+      const isEditable =
+        active.tagName === 'INPUT' ||
+        active.tagName === 'TEXTAREA' ||
+        active.isContentEditable
+      if (!isEditable) return
+
+      // Keep editing on-slide annotation text boxes.
+      if (active.closest('.annotation-text-box')) return
+
+      const panel = active.closest('.floating-panel')
+      if (!panel) return
+      if (panel.contains(event.target)) return
+
+      active.blur()
+    }
+
+    const onKeyDown = (event) => {
+      if (event.key !== 'Escape') return
+      const active = document.activeElement
+      if (!active) return
+      const inPanelField =
+        active.closest?.('.floating-panel') &&
+        (active.tagName === 'INPUT' ||
+          active.tagName === 'TEXTAREA' ||
+          active.isContentEditable)
+      if (!inPanelField) return
+      event.preventDefault()
+      active.blur()
+    }
+
+    document.addEventListener('pointerdown', onPointerDown, true)
+    document.addEventListener('keydown', onKeyDown, true)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown, true)
+      document.removeEventListener('keydown', onKeyDown, true)
+    }
+  }, [])
+
   useEffect(() => () => clearHideTimers(), [clearHideTimers])
 
   useEffect(() => {

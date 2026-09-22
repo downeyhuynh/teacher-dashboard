@@ -15,6 +15,7 @@ export function BathroomPanel() {
     if (!name) return
     add(name)
     setNameInput('')
+    // Keep focus for rapid entry; Escape / click-outside blurs so shortcuts work.
     inputRef.current?.focus()
   }
 
@@ -32,10 +33,16 @@ export function BathroomPanel() {
           className="bathroom-panel__input"
           type="text"
           value={nameInput}
-          onChange={(event) => setNameInput(event.target.value)}
           placeholder="Student name"
           aria-label="Student name"
           autoComplete="off"
+          onChange={(event) => setNameInput(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              event.preventDefault()
+              event.currentTarget.blur()
+            }
+          }}
         />
         <button
           type="submit"
