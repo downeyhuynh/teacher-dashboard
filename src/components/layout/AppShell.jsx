@@ -11,23 +11,33 @@ import {
   MAIN_TOOLBAR_TOOLS,
   QUICK_TOOLBAR_TOOLS,
 } from '../../panels/panelRegistry'
-import { PANEL_DEFAULT_SIZES, PANEL_IDS } from '../../utils/panelDefaults'
+import { PANEL_DEFAULT_SIZES, PANEL_IDS, TIMER_HUD_SIZE, OVERTIME_HUD_SIZE } from '../../utils/panelDefaults'
 
-const CORNER_MARGIN = 16
-const TIMER_RUN_SIZE = { width: 168, height: 148 }
+const CORNER_MARGIN = 12
 const EDGE_PX = 28
 const HIDE_DELAY_MS = 420
+
+function getUnderChromeY(boundsTop, margin = CORNER_MARGIN) {
+  const chrome = document.querySelector('.lesson-chrome')
+  if (!chrome) return margin
+  const bottom = chrome.getBoundingClientRect().bottom
+  return Math.max(margin, Math.round(bottom - boundsTop + margin))
+}
 
 function getCornerPosition(corner, size, bounds) {
   const width = bounds?.width ?? window.innerWidth
   const height = bounds?.height ?? window.innerHeight
+  const boundsTop = bounds?.top ?? 0
   const rightX = Math.max(CORNER_MARGIN, width - size.width - CORNER_MARGIN)
   const bottomY = Math.max(CORNER_MARGIN, height - size.height - CORNER_MARGIN)
   const midY = Math.max(CORNER_MARGIN, Math.round((height - size.height) / 2))
+  const underChromeY = getUnderChromeY(boundsTop)
 
   switch (corner) {
     case 'top-right':
-      return { x: rightX, y: CORNER_MARGIN }
+      return { x: rightX, y: underChromeY }
+    case 'top-left':
+      return { x: CORNER_MARGIN, y: underChromeY }
     case 'mid-right':
       return { x: rightX, y: midY }
     case 'bottom-left':
@@ -37,8 +47,6 @@ function getCornerPosition(corner, size, bounds) {
         x: Math.max(CORNER_MARGIN, Math.round((width - size.width) / 2)),
         y: bottomY,
       }
-    case 'top-left':
-      return { x: CORNER_MARGIN, y: CORNER_MARGIN }
     case 'bottom-right':
     default:
       return { x: rightX, y: bottomY }
@@ -163,7 +171,14 @@ export function AppShell() {
       const x = event.clientX - rect.left
       const y = event.clientY - rect.top
 
-      const nearTop = y <= EDGE_PX
+      const surface = shell.querySelector('.presentation-stage__surface')
+      const chromeRaw = surface
+        ? getComputedStyle(surface).getPropertyValue('--lesson-chrome-height')
+        : ''
+      const chromePx = Number.parseFloat(chromeRaw) || 88
+      // Reveal from the very top edge, or just under the objective/agenda bar.
+      const nearTop =
+        y <= EDGE_PX || (y >= chromePx && y <= chromePx + EDGE_PX)
       const nearRight = x >= rect.width - EDGE_PX
 
       if (nearTop) {
@@ -212,22 +227,38 @@ export function AppShell() {
   )
 
   const timerPanelOpen = Boolean(panels[PANEL_IDS.TIMER]?.isOpen)
+  const overtimePanelOpen = Boolean(panels[PANEL_IDS.OVERTIME]?.isOpen)
+
   useEffect(() => {
     if (!timerPanelOpen) return
 
     const bounds = panelLayerRef.current?.getBoundingClientRect()
 
     if (timer.compact) {
-      setPanelSize(PANEL_IDS.TIMER, TIMER_RUN_SIZE)
+      setPanelSize(PANEL_IDS.TIMER, TIMER_HUD_SIZE)
       setPanelPosition(
         PANEL_IDS.TIMER,
-        getCornerPosition('mid-right', TIMER_RUN_SIZE, bounds),
+        getCornerPosition('top-left', TIMER_HUD_SIZE, bounds),
       )
       return
     }
 
     setPanelSize(PANEL_IDS.TIMER, PANEL_DEFAULT_SIZES[PANEL_IDS.TIMER])
+    setPanelPosition(
+      PANEL_IDS.TIMER,
+      getCornerPosition('top-left', PANEL_DEFAULT_SIZES[PANEL_IDS.TIMER], bounds),
+    )
   }, [setPanelPosition, setPanelSize, timer.compact, timerPanelOpen])
+
+  useEffect(() => {
+    if (!overtimePanelOpen) return
+    const bounds = panelLayerRef.current?.getBoundingClientRect()
+    setPanelSize(PANEL_IDS.OVERTIME, OVERTIME_HUD_SIZE)
+    setPanelPosition(
+      PANEL_IDS.OVERTIME,
+      getCornerPosition('top-right', OVERTIME_HUD_SIZE, bounds),
+    )
+  }, [overtimePanelOpen, setPanelPosition, setPanelSize])
 
   const handleToolSelect = useCallback(
     (id) => {
@@ -299,6 +330,7 @@ export function AppShell() {
           const PanelContent = entry.Component
           const timerRunningCompact =
             panel.id === PANEL_IDS.TIMER && timer.compact
+          const isHud = Boolean(entry.hud) || timerRunningCompact
 
           return (
             <FloatingPanel
@@ -318,7 +350,9 @@ export function AppShell() {
               onPositionChange={setPanelPosition}
               onSizeChange={setPanelSize}
               compact={Boolean(entry.compact) || timerRunningCompact}
+              hud={isHud}
               hideMinimize={Boolean(entry.hideMinimize) || timerRunningCompact}
+              resizable={!isHud}
             >
               <PanelContent />
             </FloatingPanel>

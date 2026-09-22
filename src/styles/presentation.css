@@ -105,6 +105,8 @@
 }
 
 .app-shell.is-fullscreen .deck-tabs {
+  position: relative;
+  z-index: var(--z-lesson-chrome);
   background: rgba(18, 24, 32, 0.94);
   border-bottom-color: rgba(255, 255, 255, 0.1);
 }

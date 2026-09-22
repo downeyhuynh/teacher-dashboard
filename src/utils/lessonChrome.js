@@ -17,10 +17,23 @@ export const LESSON_DAYS = [
   { id: 'friday', label: 'Friday', shortLabel: 'Fri' },
 ]
 
+export const LESSON_CLASSES = [
+  { id: 'hawaii', label: 'Hawaii' },
+  { id: 'caltech', label: 'Caltech' },
+]
+
+export const CLASS_TRACKS = [
+  { id: 'science', label: 'Science' },
+  { id: 'history', label: 'History' },
+]
+
 const SUBJECT_IDS = LESSON_SUBJECTS.map((entry) => entry.id)
 const DAY_IDS = LESSON_DAYS.map((entry) => entry.id)
+const CLASS_IDS = LESSON_CLASSES.map((entry) => entry.id)
+const TRACK_IDS = CLASS_TRACKS.map((entry) => entry.id)
 
 const EMPTY_CONTENT = { objective: '', agenda: '' }
+const DEFAULT_TRACK = 'science'
 
 function emptyDayMap() {
   return Object.fromEntries(DAY_IDS.map((id) => [id, { ...EMPTY_CONTENT }]))
@@ -30,12 +43,24 @@ function emptySubjects() {
   return Object.fromEntries(SUBJECT_IDS.map((id) => [id, emptyDayMap()]))
 }
 
+function emptyClassTracksForDay() {
+  return Object.fromEntries(CLASS_IDS.map((id) => [id, DEFAULT_TRACK]))
+}
+
+function emptyClassTracks() {
+  return Object.fromEntries(DAY_IDS.map((id) => [id, emptyClassTracksForDay()]))
+}
+
 function normalizeSubject(value) {
   return SUBJECT_IDS.includes(value) ? value : SUBJECT_IDS[0]
 }
 
 function normalizeDay(value) {
   return DAY_IDS.includes(value) ? value : DAY_IDS[0]
+}
+
+function normalizeTrack(value) {
+  return TRACK_IDS.includes(value) ? value : DEFAULT_TRACK
 }
 
 /** Prefer today's weekday when it is Mon–Fri. */
@@ -57,11 +82,35 @@ function normalizeDayContent(entry) {
   }
 }
 
+function normalizeClassTracks(raw) {
+  const tracks = emptyClassTracks()
+  if (!raw || typeof raw !== 'object') return tracks
+
+  // Flat shape: { hawaii: 'science', caltech: 'history' }
+  if (CLASS_IDS.some((id) => raw[id]) && !DAY_IDS.some((id) => raw[id])) {
+    for (const dayId of DAY_IDS) {
+      for (const classId of CLASS_IDS) {
+        tracks[dayId][classId] = normalizeTrack(raw[classId])
+      }
+    }
+    return tracks
+  }
+
+  for (const dayId of DAY_IDS) {
+    const dayEntry = raw[dayId] || {}
+    for (const classId of CLASS_IDS) {
+      tracks[dayId][classId] = normalizeTrack(dayEntry[classId])
+    }
+  }
+  return tracks
+}
+
 /**
  * @returns {{
  *   subject: string,
  *   day: string,
  *   subjects: Record<string, Record<string, { objective: string, agenda: string }>>,
+ *   classTracks: Record<string, Record<string, string>>,
  * }}
  */
 export function loadLessonChrome() {
@@ -69,6 +118,7 @@ export function loadLessonChrome() {
     subject: SUBJECT_IDS[0],
     day: defaultLessonDay(),
     subjects: emptySubjects(),
+    classTracks: emptyClassTracks(),
   }
 
   try {
@@ -115,6 +165,7 @@ export function loadLessonChrome() {
       subject: normalizeSubject(parsed?.subject),
       day: normalizeDay(parsed?.day || defaultLessonDay()),
       subjects,
+      classTracks: normalizeClassTracks(parsed?.classTracks),
     }
   } catch {
     return fallback
@@ -146,4 +197,8 @@ export function getLessonDayContent(subjects, subjectId, dayId) {
       agenda: '',
     }
   )
+}
+
+export function getClassTrack(classTracks, dayId, classId) {
+  return normalizeTrack(classTracks?.[dayId]?.[classId])
 }

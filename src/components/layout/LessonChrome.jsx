@@ -1,6 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { useTools } from '../../context/ToolsContext'
-import { LESSON_DAYS, LESSON_SUBJECTS } from '../../utils/lessonChrome'
+import {
+  CLASS_TRACKS,
+  LESSON_CLASSES,
+  LESSON_DAYS,
+  LESSON_SUBJECTS,
+} from '../../utils/lessonChrome'
 
 function AutoGrowField({ id, label, value, placeholder, ariaLabel, onChange }) {
   const ref = useRef(null)
@@ -32,8 +37,8 @@ function AutoGrowField({ id, label, value, placeholder, ariaLabel, onChange }) {
 }
 
 /**
- * Persistent top chrome: lesson objective (left) and agenda (right).
- * Cycle subjects; Mon–Thu day tabs for work-ahead plans.
+ * Persistent top chrome: objective, subject/day switcher, agenda,
+ * and Hawaii / Caltech Science|History tracks.
  */
 export function LessonChrome() {
   const { lesson } = useTools()
@@ -52,14 +57,22 @@ export function LessonChrome() {
     }
 
     const syncHeight = () => {
-      surface.style.setProperty('--lesson-chrome-height', `${el.offsetHeight}px`)
+      // Offset from surface top → bottom of chrome (includes deck tabs above).
+      const surfaceRect = surface.getBoundingClientRect()
+      const elRect = el.getBoundingClientRect()
+      const bottom = Math.ceil(elRect.bottom - surfaceRect.top)
+      surface.style.setProperty('--lesson-chrome-height', `${bottom}px`)
     }
 
     syncHeight()
     const observer = new ResizeObserver(syncHeight)
     observer.observe(el)
+    const tabs = surface.querySelector('.deck-tabs')
+    if (tabs) observer.observe(tabs)
+    window.addEventListener('resize', syncHeight)
     return () => {
       observer.disconnect()
+      window.removeEventListener('resize', syncHeight)
       surface.style.removeProperty('--lesson-chrome-height')
     }
   }, [])
@@ -135,6 +148,46 @@ export function LessonChrome() {
         ariaLabel={`${subjectMeta.label} ${dayMeta.label} agenda`}
         onChange={lesson.setAgenda}
       />
+
+      <div
+        className="lesson-chrome__classes"
+        aria-label="Class subject tracks"
+      >
+        {LESSON_CLASSES.map((classroom) => {
+          const track = lesson.classTracks?.[classroom.id] || 'science'
+          return (
+            <div key={classroom.id} className="lesson-chrome__class">
+              <span className="lesson-chrome__class-name">{classroom.label}</span>
+              <div
+                className="lesson-chrome__tracks"
+                role="group"
+                aria-label={`${classroom.label} subject`}
+              >
+                {CLASS_TRACKS.map((option) => {
+                  const active = track === option.id
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      className={
+                        active
+                          ? 'lesson-chrome__track is-active'
+                          : 'lesson-chrome__track'
+                      }
+                      aria-pressed={active}
+                      onClick={() =>
+                        lesson.setClassTrack(classroom.id, option.id)
+                      }
+                    >
+                      {option.label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

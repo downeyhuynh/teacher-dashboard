@@ -31,6 +31,7 @@ import {
   nextLessonSubject,
   prevLessonSubject,
   getLessonDayContent,
+  getClassTrack,
 } from '../utils/lessonChrome'
 import {
   setOvertimeTickVolume,
@@ -115,11 +116,12 @@ export function ToolsProvider({ children }) {
   // --- Restroom out list (survives panel close + refresh) ---
   const [restroomOut, setRestroomOut] = useState(() => loadRestroomList())
 
-  // --- Lesson objective / agenda (per subject × Mon–Thu) ---
+  // --- Lesson objective / agenda (per subject × Mon–Fri) ---
   const initialLesson = useMemo(() => loadLessonChrome(), [])
   const [lessonSubject, setLessonSubject] = useState(initialLesson.subject)
   const [lessonDay, setLessonDay] = useState(initialLesson.day)
   const [lessonSubjects, setLessonSubjects] = useState(initialLesson.subjects)
+  const [classTracks, setClassTracks] = useState(initialLesson.classTracks)
 
   // --- Overtime stopwatches (soccer / Tabs Hawaii / Caltech) ---
   const [overtimeClocks, setOvertimeClocks] = useState(() => loadOvertimeClocks())
@@ -142,8 +144,9 @@ export function ToolsProvider({ children }) {
       subject: lessonSubject,
       day: lessonDay,
       subjects: lessonSubjects,
+      classTracks,
     })
-  }, [lessonSubject, lessonDay, lessonSubjects])
+  }, [lessonSubject, lessonDay, lessonSubjects, classTracks])
 
   useEffect(() => {
     setFocusMusicVolume(focusMusicVolume)
@@ -540,6 +543,19 @@ export function ToolsProvider({ children }) {
     setLessonDay(dayId)
   }, [])
 
+  const setClassTrack = useCallback(
+    (classId, trackId) => {
+      setClassTracks((prev) => ({
+        ...prev,
+        [lessonDay]: {
+          ...(prev[lessonDay] || {}),
+          [classId]: trackId,
+        },
+      }))
+    },
+    [lessonDay],
+  )
+
   const activeLessonContent = getLessonDayContent(
     lessonSubjects,
     lessonSubject,
@@ -678,9 +694,14 @@ export function ToolsProvider({ children }) {
         day: lessonDay,
         objective: activeLessonContent.objective,
         agenda: activeLessonContent.agenda,
+        classTracks: {
+          hawaii: getClassTrack(classTracks, lessonDay, 'hawaii'),
+          caltech: getClassTrack(classTracks, lessonDay, 'caltech'),
+        },
         setObjective: setLessonObjective,
         setAgenda: setLessonAgenda,
         setDay: selectLessonDay,
+        setClassTrack,
         nextSubject: goNextLessonSubject,
         prevSubject: goPrevLessonSubject,
       },
@@ -739,9 +760,11 @@ export function ToolsProvider({ children }) {
       lessonSubject,
       lessonDay,
       lessonSubjects,
+      classTracks,
       setLessonObjective,
       setLessonAgenda,
       selectLessonDay,
+      setClassTrack,
       goNextLessonSubject,
       goPrevLessonSubject,
       overtimeClocks,

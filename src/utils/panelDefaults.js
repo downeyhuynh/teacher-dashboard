@@ -32,5 +32,11 @@ export const PANEL_DEFAULT_SIZES = {
   [PANEL_IDS.STUDENTS]: { width: 380, height: 620 },
   [PANEL_IDS.SEATING]: { width: 720, height: 560 },
   [PANEL_IDS.BATHROOM]: { width: 260, height: 280 },
-  [PANEL_IDS.OVERTIME]: { width: 240, height: 268 },
+  [PANEL_IDS.OVERTIME]: { width: 168, height: 72 },
 }
+
+/** Compact running timer chip (top-left under agenda). */
+export const TIMER_HUD_SIZE = { width: 120, height: 52 }
+
+/** Compact overtime chip (top-right under agenda). */
+export const OVERTIME_HUD_SIZE = { width: 168, height: 72 }

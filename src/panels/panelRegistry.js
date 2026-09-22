@@ -59,8 +59,9 @@ export const PANEL_REGISTRY = [
     Component: OvertimePanel,
     dock: 'quick',
     compact: true,
+    hud: true,
     hideMinimize: true,
-    corner: 'bottom-left',
+    corner: 'top-right',
   },
   {
     id: PANEL_IDS.BATHROOM,

@@ -105,45 +105,47 @@ export function TimerPanel() {
           className="timer-panel__run-display"
           aria-live="polite"
           aria-label="Expand timer settings"
-          title="Expand"
+          title="Expand settings"
           onClick={timer.expand}
         >
           {formatDuration(displayMs)}
         </button>
 
-        <div className="timer-panel__run-actions">
-          <FocusMusicButton
-            timer={timer}
-            fileInputRef={fileInputRef}
-            uploading={uploading}
-            uploadError={uploadError}
-            onUpload={onUpload}
-          />
-          {timer.running ? (
-            <button
-              type="button"
-              className="stage-button stage-button--primary"
-              onClick={timer.pause}
-            >
-              Pause
+        <div className="timer-panel__controls">
+          <div className="timer-panel__run-actions">
+            <FocusMusicButton
+              timer={timer}
+              fileInputRef={fileInputRef}
+              uploading={uploading}
+              uploadError={uploadError}
+              onUpload={onUpload}
+            />
+            {timer.running ? (
+              <button
+                type="button"
+                className="stage-button stage-button--primary"
+                onClick={timer.pause}
+              >
+                Pause
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="stage-button stage-button--primary"
+                onClick={timer.start}
+              >
+                {timer.finished ? 'Restart' : 'Resume'}
+              </button>
+            )}
+            <button type="button" className="stage-button" onClick={timer.reset}>
+              Reset
             </button>
-          ) : (
-            <button
-              type="button"
-              className="stage-button stage-button--primary"
-              onClick={timer.start}
-            >
-              {timer.finished ? 'Restart' : 'Resume'}
-            </button>
-          )}
-          <button type="button" className="stage-button" onClick={timer.reset}>
-            Reset
-          </button>
-        </div>
+          </div>
 
-        {timer.finished && timer.mode === 'countdown' && (
-          <p className="timer-panel__done">Time&apos;s up</p>
-        )}
+          {timer.finished && timer.mode === 'countdown' && (
+            <p className="timer-panel__done">Time&apos;s up</p>
+          )}
+        </div>
       </div>
     )
   }

@@ -165,7 +165,7 @@
   top: var(--lesson-chrome-height, 5.5rem);
   left: 0;
   right: 0;
-  z-index: calc(var(--z-toolbar) - 2);
+  z-index: calc(var(--z-lesson-chrome) - 1);
   transform: translateY(-110%);
   transition: transform 200ms var(--ease-out);
   pointer-events: none;

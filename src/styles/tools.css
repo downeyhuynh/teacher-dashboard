@@ -322,7 +322,7 @@
 }
 
 .timer-panel--run {
-  gap: 8px;
+  gap: 0;
   align-items: stretch;
 }
 
@@ -331,12 +331,12 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 6px 4px;
+  padding: 4px 2px;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(180deg, #f7fafb, #eef3f6);
+  background: transparent;
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: 1.45rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.03em;
@@ -351,6 +351,19 @@
 .timer-panel--run.is-finished .timer-panel__run-display {
   color: #a32828;
   animation: timer-pulse 1s var(--ease-out) infinite;
+}
+
+.timer-panel__controls {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.timer-panel--run:hover .timer-panel__controls,
+.timer-panel--run:focus-within .timer-panel__controls {
+  display: flex;
 }
 
 .timer-panel__run-actions {

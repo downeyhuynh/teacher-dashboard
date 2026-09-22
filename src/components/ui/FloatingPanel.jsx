@@ -25,6 +25,7 @@ export function FloatingPanel({
   onPositionChange,
   onSizeChange,
   compact = false,
+  hud = false,
   hideMinimize = false,
   resizable = true,
   children,
@@ -36,8 +37,8 @@ export function FloatingPanel({
     return size
   }, [isMinimized, size])
 
-  const minWidth = compact ? 140 : 280
-  const minHeight = compact ? 100 : 180
+  const minWidth = hud ? 96 : compact ? 140 : 280
+  const minHeight = hud ? 40 : compact ? 100 : 180
 
   const handlePositionChange = useCallback(
     (next) => {
@@ -61,8 +62,10 @@ export function FloatingPanel({
     panelSize: displaySize,
   })
 
+  const canResize = Boolean(resizable && onSizeChange && !isMinimized && !hud)
+
   const { isResizing, getResizeHandleProps } = useResizable({
-    enabled: Boolean(resizable && onSizeChange && !isMinimized),
+    enabled: canResize,
     position,
     size,
     onPositionChange: handlePositionChange,
@@ -75,6 +78,7 @@ export function FloatingPanel({
   const className = [
     'floating-panel',
     compact ? 'floating-panel--compact' : '',
+    hud ? 'floating-panel--hud' : '',
     isMinimized ? 'is-minimized' : '',
     isFocused ? 'is-focused' : '',
     isDragging ? 'is-dragging' : '',
@@ -90,7 +94,7 @@ export function FloatingPanel({
         left: position.x,
         top: position.y,
         width: isMinimized ? undefined : size.width,
-        height: isMinimized ? undefined : size.height,
+        height: isMinimized || hud ? undefined : size.height,
         zIndex,
       }}
       aria-label={title}
@@ -98,8 +102,11 @@ export function FloatingPanel({
       data-minimized={isMinimized ? 'true' : 'false'}
       onMouseDown={() => onFocus(id)}
     >
-      <header className="floating-panel__header" {...dragHandleProps}>
-        <h2 className="floating-panel__title">{title}</h2>
+      <header
+        className={`floating-panel__header${hud ? ' floating-panel__header--hud' : ''}`}
+        {...dragHandleProps}
+      >
+        {!hud && <h2 className="floating-panel__title">{title}</h2>}
         <div className="floating-panel__actions">
           {!hideMinimize &&
             (isMinimized ? (
@@ -133,11 +140,15 @@ export function FloatingPanel({
       </header>
 
       {/* Keep body mounted while minimized so future tool logic keeps running. */}
-      <div className="floating-panel__body" aria-hidden={isMinimized}>
+      <div
+        className="floating-panel__body"
+        aria-hidden={isMinimized}
+        {...(hud ? dragHandleProps : {})}
+      >
         {children}
       </div>
 
-      {resizable && onSizeChange && !isMinimized &&
+      {canResize &&
         RESIZE_EDGES.map((edge) => (
           <div
             key={edge}
