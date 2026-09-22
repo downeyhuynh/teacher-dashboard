@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useTools } from '../../context/ToolsContext'
-import { LESSON_SUBJECTS } from '../../utils/lessonChrome'
+import { LESSON_DAYS, LESSON_SUBJECTS } from '../../utils/lessonChrome'
 
 function AutoGrowField({ id, label, value, placeholder, ariaLabel, onChange }) {
   const ref = useRef(null)
@@ -32,8 +32,8 @@ function AutoGrowField({ id, label, value, placeholder, ariaLabel, onChange }) {
 }
 
 /**
- * Persistent top chrome: lesson objective (left) and today's agenda (right).
- * Cycle Morning Meeting → ELD → Math → Science → PLG.
+ * Persistent top chrome: lesson objective (left) and agenda (right).
+ * Cycle subjects; Mon–Thu day tabs for work-ahead plans.
  */
 export function LessonChrome() {
   const { lesson } = useTools()
@@ -41,6 +41,8 @@ export function LessonChrome() {
   const subjectMeta =
     LESSON_SUBJECTS.find((entry) => entry.id === lesson.subject) ||
     LESSON_SUBJECTS[0]
+  const dayMeta =
+    LESSON_DAYS.find((entry) => entry.id === lesson.day) || LESSON_DAYS[0]
 
   useEffect(() => {
     const el = rootRef.current
@@ -73,36 +75,64 @@ export function LessonChrome() {
         label="Lesson objective:"
         value={lesson.objective}
         placeholder="What will students learn?"
-        ariaLabel={`${subjectMeta.label} lesson objective`}
+        ariaLabel={`${subjectMeta.label} ${dayMeta.label} lesson objective`}
         onChange={lesson.setObjective}
       />
 
-      <div className="lesson-chrome__switcher" role="group" aria-label="Subject">
-        <button
-          type="button"
-          className="lesson-chrome__arrow"
-          aria-label="Previous subject"
-          onClick={lesson.prevSubject}
+      <div className="lesson-chrome__center">
+        <div className="lesson-chrome__switcher" role="group" aria-label="Subject">
+          <button
+            type="button"
+            className="lesson-chrome__arrow"
+            aria-label="Previous subject"
+            onClick={lesson.prevSubject}
+          >
+            ‹
+          </button>
+          <span className="lesson-chrome__switcher-label">{subjectMeta.label}</span>
+          <button
+            type="button"
+            className="lesson-chrome__arrow"
+            aria-label="Next subject"
+            onClick={lesson.nextSubject}
+          >
+            ›
+          </button>
+        </div>
+
+        <div
+          className="lesson-chrome__days"
+          role="tablist"
+          aria-label="Plan day"
         >
-          ‹
-        </button>
-        <span className="lesson-chrome__switcher-label">{subjectMeta.label}</span>
-        <button
-          type="button"
-          className="lesson-chrome__arrow"
-          aria-label="Next subject"
-          onClick={lesson.nextSubject}
-        >
-          ›
-        </button>
+          {LESSON_DAYS.map((day) => {
+            const active = day.id === lesson.day
+            return (
+              <button
+                key={day.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                className={
+                  active
+                    ? 'lesson-chrome__day is-active'
+                    : 'lesson-chrome__day'
+                }
+                onClick={() => lesson.setDay(day.id)}
+              >
+                {day.shortLabel}
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       <AutoGrowField
         id="lesson-agenda-input"
-        label="Today's agenda:"
+        label={`${dayMeta.label}'s agenda:`}
         value={lesson.agenda}
         placeholder="Warm-up · Lesson · Practice…"
-        ariaLabel={`${subjectMeta.label} today's agenda`}
+        ariaLabel={`${subjectMeta.label} ${dayMeta.label} agenda`}
         onChange={lesson.setAgenda}
       />
     </div>

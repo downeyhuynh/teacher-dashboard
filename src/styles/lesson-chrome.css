@@ -88,12 +88,59 @@
   align-items: center;
   align-self: center;
   gap: 2px;
-  margin-top: 0.55rem;
+  margin-top: 0;
   padding: 5px 6px;
   border: 1.5px solid var(--color-border);
   border-radius: 999px;
   background: #fff;
   box-shadow: 0 2px 8px rgba(26, 35, 50, 0.08);
+}
+
+.lesson-chrome__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.lesson-chrome__days {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 1px 4px rgba(26, 35, 50, 0.06);
+}
+
+.lesson-chrome__day {
+  min-width: 2.4rem;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.lesson-chrome__day:hover {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.lesson-chrome__day.is-active {
+  background: var(--color-accent);
+  color: #fff;
 }
 
 .lesson-chrome__switcher-label {
@@ -173,6 +220,26 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
 
+.app-shell.is-fullscreen .lesson-chrome__days {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.app-shell.is-fullscreen .lesson-chrome__day {
+  color: rgba(242, 245, 248, 0.7);
+}
+
+.app-shell.is-fullscreen .lesson-chrome__day:hover {
+  background: rgba(13, 122, 111, 0.35);
+  color: #fff;
+}
+
+.app-shell.is-fullscreen .lesson-chrome__day.is-active {
+  background: rgba(13, 122, 111, 0.85);
+  color: #fff;
+}
+
 .app-shell.is-fullscreen .lesson-chrome__switcher-label {
   font-size: 0.95rem;
   color: #8fd6cb;
@@ -214,9 +281,12 @@
     padding: 8px;
   }
 
-  .lesson-chrome__switcher {
+  .lesson-chrome__center {
     grid-area: switcher;
     justify-self: center;
+  }
+
+  .lesson-chrome__switcher {
     margin-top: 0;
   }
 
@@ -234,5 +304,11 @@
 
   .lesson-chrome__input {
     font-size: 0.9rem;
+  }
+
+  .lesson-chrome__day {
+    min-width: 2.1rem;
+    padding: 3px 6px;
+    font-size: 0.65rem;
   }
 }

@@ -30,6 +30,7 @@ import {
   saveLessonChrome,
   nextLessonSubject,
   prevLessonSubject,
+  getLessonDayContent,
 } from '../utils/lessonChrome'
 import {
   setOvertimeTickVolume,
@@ -43,7 +44,8 @@ import {
 import {
   OVERTIME_CLOCK_IDS,
   createEmptyOvertimeClock,
-  createEmptyOvertimeState,
+  loadOvertimeClocks,
+  saveOvertimeClocks,
 } from '../utils/overtimeClocks'
 
 const VOLUME_STORAGE_KEY = 'teacher-dashboard.audio-volumes.v1'
@@ -113,16 +115,17 @@ export function ToolsProvider({ children }) {
   // --- Restroom out list (survives panel close + refresh) ---
   const [restroomOut, setRestroomOut] = useState(() => loadRestroomList())
 
-  // --- Lesson objective / agenda (Math ↔ Science) ---
+  // --- Lesson objective / agenda (per subject × Mon–Thu) ---
   const initialLesson = useMemo(() => loadLessonChrome(), [])
   const [lessonSubject, setLessonSubject] = useState(initialLesson.subject)
+  const [lessonDay, setLessonDay] = useState(initialLesson.day)
   const [lessonSubjects, setLessonSubjects] = useState(initialLesson.subjects)
 
   // --- Overtime stopwatches (soccer / Tabs Hawaii / Caltech) ---
-  const [overtimeClocks, setOvertimeClocks] = useState(() =>
-    createEmptyOvertimeState(),
-  )
+  const [overtimeClocks, setOvertimeClocks] = useState(() => loadOvertimeClocks())
   const overtimeFrameRef = useRef(null)
+  const overtimeClocksRef = useRef(overtimeClocks)
+  overtimeClocksRef.current = overtimeClocks
   const overtimeVolumeRef = useRef(overtimeVolume)
   overtimeVolumeRef.current = overtimeVolume
 
@@ -135,8 +138,12 @@ export function ToolsProvider({ children }) {
   }, [restroomOut])
 
   useEffect(() => {
-    saveLessonChrome({ subject: lessonSubject, subjects: lessonSubjects })
-  }, [lessonSubject, lessonSubjects])
+    saveLessonChrome({
+      subject: lessonSubject,
+      day: lessonDay,
+      subjects: lessonSubjects,
+    })
+  }, [lessonSubject, lessonDay, lessonSubjects])
 
   useEffect(() => {
     setFocusMusicVolume(focusMusicVolume)
@@ -204,6 +211,31 @@ export function ToolsProvider({ children }) {
       stopOvertimeTicking()
     }
   }, [anyOvertimeRunning, overtimeVolume])
+
+  // Persist when clocks settle (paused/reset/adjust). Skip while RAF is updating every frame.
+  useEffect(() => {
+    if (anyOvertimeRunning) return
+    saveOvertimeClocks(overtimeClocks)
+  }, [anyOvertimeRunning, overtimeClocks])
+
+  // While running, snapshot every 2s so a refresh keeps nearly current time.
+  useEffect(() => {
+    if (!anyOvertimeRunning) return undefined
+    const id = window.setInterval(() => {
+      saveOvertimeClocks(overtimeClocksRef.current)
+    }, 2000)
+    return () => window.clearInterval(id)
+  }, [anyOvertimeRunning])
+
+  useEffect(() => {
+    const persist = () => saveOvertimeClocks(overtimeClocksRef.current)
+    window.addEventListener('pagehide', persist)
+    window.addEventListener('beforeunload', persist)
+    return () => {
+      window.removeEventListener('pagehide', persist)
+      window.removeEventListener('beforeunload', persist)
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -470,11 +502,14 @@ export function ToolsProvider({ children }) {
         ...prev,
         [lessonSubject]: {
           ...prev[lessonSubject],
-          objective: value,
+          [lessonDay]: {
+            ...getLessonDayContent(prev, lessonSubject, lessonDay),
+            objective: value,
+          },
         },
       }))
     },
-    [lessonSubject],
+    [lessonSubject, lessonDay],
   )
 
   const setLessonAgenda = useCallback(
@@ -483,11 +518,14 @@ export function ToolsProvider({ children }) {
         ...prev,
         [lessonSubject]: {
           ...prev[lessonSubject],
-          agenda: value,
+          [lessonDay]: {
+            ...getLessonDayContent(prev, lessonSubject, lessonDay),
+            agenda: value,
+          },
         },
       }))
     },
-    [lessonSubject],
+    [lessonSubject, lessonDay],
   )
 
   const goNextLessonSubject = useCallback(() => {
@@ -497,6 +535,16 @@ export function ToolsProvider({ children }) {
   const goPrevLessonSubject = useCallback(() => {
     setLessonSubject((prev) => prevLessonSubject(prev))
   }, [])
+
+  const selectLessonDay = useCallback((dayId) => {
+    setLessonDay(dayId)
+  }, [])
+
+  const activeLessonContent = getLessonDayContent(
+    lessonSubjects,
+    lessonSubject,
+    lessonDay,
+  )
 
   const startOvertime = useCallback((clockId = 'overtime') => {
     setOvertimeClocks((prev) => {
@@ -627,10 +675,12 @@ export function ToolsProvider({ children }) {
       },
       lesson: {
         subject: lessonSubject,
-        objective: lessonSubjects[lessonSubject]?.objective || '',
-        agenda: lessonSubjects[lessonSubject]?.agenda || '',
+        day: lessonDay,
+        objective: activeLessonContent.objective,
+        agenda: activeLessonContent.agenda,
         setObjective: setLessonObjective,
         setAgenda: setLessonAgenda,
+        setDay: selectLessonDay,
         nextSubject: goNextLessonSubject,
         prevSubject: goPrevLessonSubject,
       },
@@ -687,9 +737,11 @@ export function ToolsProvider({ children }) {
       toggleRestroomStudent,
       clearRestroomList,
       lessonSubject,
+      lessonDay,
       lessonSubjects,
       setLessonObjective,
       setLessonAgenda,
+      selectLessonDay,
       goNextLessonSubject,
       goPrevLessonSubject,
       overtimeClocks,
