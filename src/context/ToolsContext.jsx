@@ -218,12 +218,11 @@ export function ToolsProvider({ children }) {
       frameId = requestAnimationFrame(tick)
     }
     frameId = requestAnimationFrame(tick)
-    // Volume updates alone should not restart the scheduler (that caused gaps).
+    // Keep ticking across Strict Mode remounts — only stop when no clocks run.
     startOvertimeTicking({ volume: overtimeVolumeRef.current }).catch(() => {})
 
     return () => {
       cancelAnimationFrame(frameId)
-      stopOvertimeTicking()
     }
   }, [anyOvertimeRunning])
 
