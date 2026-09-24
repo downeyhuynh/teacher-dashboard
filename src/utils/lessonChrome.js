@@ -111,6 +111,7 @@ function normalizeClassTracks(raw) {
  *   day: string,
  *   subjects: Record<string, Record<string, { objective: string, agenda: string }>>,
  *   classTracks: Record<string, Record<string, string>>,
+ *   chromeVisible: boolean,
  * }}
  */
 export function loadLessonChrome() {
@@ -119,6 +120,7 @@ export function loadLessonChrome() {
     day: defaultLessonDay(),
     subjects: emptySubjects(),
     classTracks: emptyClassTracks(),
+    chromeVisible: true,
   }
 
   try {
@@ -166,6 +168,7 @@ export function loadLessonChrome() {
       day: normalizeDay(parsed?.day || defaultLessonDay()),
       subjects,
       classTracks: normalizeClassTracks(parsed?.classTracks),
+      chromeVisible: parsed?.chromeVisible !== false,
     }
   } catch {
     return fallback

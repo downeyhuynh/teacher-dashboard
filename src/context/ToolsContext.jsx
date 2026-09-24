@@ -123,6 +123,9 @@ export function ToolsProvider({ children }) {
   const [lessonDay, setLessonDay] = useState(initialLesson.day)
   const [lessonSubjects, setLessonSubjects] = useState(initialLesson.subjects)
   const [classTracks, setClassTracks] = useState(initialLesson.classTracks)
+  const [lessonChromeVisible, setLessonChromeVisible] = useState(
+    initialLesson.chromeVisible !== false,
+  )
 
   // --- Overtime stopwatches (soccer / Tabs Hawaii / Caltech) ---
   const [overtimeClocks, setOvertimeClocks] = useState(() => loadOvertimeClocks())
@@ -146,8 +149,15 @@ export function ToolsProvider({ children }) {
       day: lessonDay,
       subjects: lessonSubjects,
       classTracks,
+      chromeVisible: lessonChromeVisible,
     })
-  }, [lessonSubject, lessonDay, lessonSubjects, classTracks])
+  }, [
+    lessonSubject,
+    lessonDay,
+    lessonSubjects,
+    classTracks,
+    lessonChromeVisible,
+  ])
 
   useEffect(() => {
     setFocusMusicVolume(focusMusicVolume)
@@ -562,6 +572,14 @@ export function ToolsProvider({ children }) {
     [lessonDay],
   )
 
+  const toggleLessonChrome = useCallback(() => {
+    setLessonChromeVisible((prev) => !prev)
+  }, [])
+
+  const setLessonChromeOpen = useCallback((open) => {
+    setLessonChromeVisible(Boolean(open))
+  }, [])
+
   const activeLessonContent = getLessonDayContent(
     lessonSubjects,
     lessonSubject,
@@ -706,6 +724,7 @@ export function ToolsProvider({ children }) {
         day: lessonDay,
         objective: activeLessonContent.objective,
         agenda: activeLessonContent.agenda,
+        chromeVisible: lessonChromeVisible,
         classTracks: {
           hawaii: getClassTrack(classTracks, lessonDay, 'hawaii'),
           caltech: getClassTrack(classTracks, lessonDay, 'caltech'),
@@ -714,6 +733,8 @@ export function ToolsProvider({ children }) {
         setAgenda: setLessonAgenda,
         setDay: selectLessonDay,
         setClassTrack,
+        toggleChrome: toggleLessonChrome,
+        setChromeVisible: setLessonChromeOpen,
         nextSubject: goNextLessonSubject,
         prevSubject: goPrevLessonSubject,
       },
@@ -773,10 +794,13 @@ export function ToolsProvider({ children }) {
       lessonDay,
       lessonSubjects,
       classTracks,
+      lessonChromeVisible,
       setLessonObjective,
       setLessonAgenda,
       selectLessonDay,
       setClassTrack,
+      toggleLessonChrome,
+      setLessonChromeOpen,
       goNextLessonSubject,
       goPrevLessonSubject,
       overtimeClocks,
