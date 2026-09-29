@@ -1,9 +1,17 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useDraggable } from '../../hooks/useDraggable'
 import { useResizable } from '../../hooks/useResizable'
 import { CloseIcon, MinimizeIcon, RestoreIcon } from './icons'
 
 const RESIZE_EDGES = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']
+const ZOOM_MIN = 0.85
+const ZOOM_MAX = 2
+const ZOOM_STEP = 0.15
+
+function clampZoom(value) {
+  const next = Math.round(value * 100) / 100
+  return Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, next))
+}
 
 /**
  * Draggable + resizable floating window chrome.
@@ -30,6 +38,8 @@ export function FloatingPanel({
   resizable = true,
   children,
 }) {
+  const [zoom, setZoom] = useState(1)
+
   const displaySize = useMemo(() => {
     if (isMinimized) {
       return { width: 200, height: 40 }
@@ -75,6 +85,9 @@ export function FloatingPanel({
     minHeight,
   })
 
+  const zoomOut = () => setZoom((prev) => clampZoom(prev - ZOOM_STEP))
+  const zoomIn = () => setZoom((prev) => clampZoom(prev + ZOOM_STEP))
+
   const className = [
     'floating-panel',
     compact ? 'floating-panel--compact' : '',
@@ -108,6 +121,30 @@ export function FloatingPanel({
       >
         {!hud && <h2 className="floating-panel__title">{title}</h2>}
         <div className="floating-panel__actions">
+          {!isMinimized && (
+            <div className="floating-panel__zoom" role="group" aria-label={`${title} zoom`}>
+              <button
+                type="button"
+                className="floating-panel__action"
+                aria-label={`Zoom out ${title}`}
+                title="Zoom out"
+                disabled={zoom <= ZOOM_MIN}
+                onClick={zoomOut}
+              >
+                −
+              </button>
+              <button
+                type="button"
+                className="floating-panel__action"
+                aria-label={`Zoom in ${title}`}
+                title="Zoom in"
+                disabled={zoom >= ZOOM_MAX}
+                onClick={zoomIn}
+              >
+                +
+              </button>
+            </div>
+          )}
           {!hideMinimize &&
             (isMinimized ? (
               <button
@@ -142,6 +179,7 @@ export function FloatingPanel({
       {/* Keep body mounted while minimized so future tool logic keeps running. */}
       <div
         className="floating-panel__body"
+        style={{ '--text-zoom': isMinimized ? 1 : zoom }}
         aria-hidden={isMinimized}
         {...(hud ? dragHandleProps : {})}
       >

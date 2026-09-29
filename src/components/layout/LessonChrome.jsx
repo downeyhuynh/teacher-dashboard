@@ -37,13 +37,11 @@ function AutoGrowField({ id, label, value, placeholder, ariaLabel, onChange }) {
 }
 
 /**
- * Persistent top chrome: objective, subject/day switcher, agenda,
- * and Hawaii / Caltech Science|History tracks.
+ * Left sidebar: objective, agenda, subject/day, and class tracks.
  * Collapses to a pull-tab so it can be brought up or taken away.
  */
 export function LessonChrome() {
   const { lesson } = useTools()
-  const rootRef = useRef(null)
   const visible = lesson.chromeVisible !== false
   const subjectMeta =
     LESSON_SUBJECTS.find((entry) => entry.id === lesson.subject) ||
@@ -51,37 +49,8 @@ export function LessonChrome() {
   const dayMeta =
     LESSON_DAYS.find((entry) => entry.id === lesson.day) || LESSON_DAYS[0]
 
-  useEffect(() => {
-    const el = rootRef.current
-    const surface = el?.closest('.presentation-stage__surface')
-    if (!el || !surface || typeof ResizeObserver === 'undefined') {
-      return undefined
-    }
-
-    const syncHeight = () => {
-      // Offset from surface top → bottom of chrome (includes deck tabs above).
-      const surfaceRect = surface.getBoundingClientRect()
-      const elRect = el.getBoundingClientRect()
-      const bottom = Math.ceil(elRect.bottom - surfaceRect.top)
-      surface.style.setProperty('--lesson-chrome-height', `${bottom}px`)
-    }
-
-    syncHeight()
-    const observer = new ResizeObserver(syncHeight)
-    observer.observe(el)
-    const tabs = surface.querySelector('.deck-tabs')
-    if (tabs) observer.observe(tabs)
-    window.addEventListener('resize', syncHeight)
-    return () => {
-      observer.disconnect()
-      window.removeEventListener('resize', syncHeight)
-      surface.style.removeProperty('--lesson-chrome-height')
-    }
-  }, [visible])
-
   return (
-    <div
-      ref={rootRef}
+    <aside
       className={`lesson-chrome ${visible ? 'is-open' : 'is-collapsed'}`}
       aria-label="Lesson objective and agenda"
     >
@@ -93,10 +62,10 @@ export function LessonChrome() {
         onClick={lesson.toggleChrome}
       >
         <span className="lesson-chrome__tab-label">
-          {visible ? 'Hide agenda' : 'Agenda / Objective'}
+          {visible ? 'Hide' : 'Agenda'}
         </span>
         <span className="lesson-chrome__tab-chevron" aria-hidden="true">
-          {visible ? '▴' : '▾'}
+          {visible ? '‹' : '›'}
         </span>
       </button>
 
@@ -217,6 +186,6 @@ export function LessonChrome() {
           </div>
         </div>
       ) : null}
-    </div>
+    </aside>
   )
 }

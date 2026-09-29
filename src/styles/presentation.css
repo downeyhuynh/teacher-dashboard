@@ -568,7 +568,7 @@
   border: 1px solid var(--color-border);
   background: #fff;
   color: var(--color-text);
-  font-size: 0.8rem;
+  font-size: calc(0.8rem * var(--text-zoom, 1));
   font-weight: 550;
   transition:
     background-color var(--duration-fast) var(--ease-out),

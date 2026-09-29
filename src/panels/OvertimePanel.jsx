@@ -38,6 +38,7 @@ export function OvertimePanel() {
 
   const [clockId, setClockId] = useState(OVERTIME_CLOCKS[0].id)
   const [stageOpen, setStageOpen] = useState(false)
+  const [stageZoom, setStageZoom] = useState(1)
   const activeMeta =
     OVERTIME_CLOCKS.find((clock) => clock.id === clockId) || OVERTIME_CLOCKS[0]
   const clock = clocks[clockId] || createEmptyOvertimeClock()
@@ -147,27 +148,32 @@ export function OvertimePanel() {
       </label>
 
       <div className="overtime-panel__actions">
-        {running ? (
-          <button type="button" className="stage-button" onClick={stop}>
-            Pause
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="stage-button stage-button--primary"
-            onClick={begin}
-          >
-            {elapsedMs > 0 ? 'Resume' : 'Start'}
-          </button>
-        )}
+        <button
+          type="button"
+          className={`stage-button stage-button--primary ${
+            running && !paying ? 'is-active' : ''
+          }`}
+          onClick={begin}
+          title="Count time up"
+        >
+          Run
+        </button>
         <button
           type="button"
           className={`stage-button ${paying ? 'is-active' : ''}`}
           onClick={beginPay}
           disabled={elapsedMs <= 0}
-          title="Count overtime back down toward zero"
+          title="Count time down toward zero"
         >
           Pay
+        </button>
+        <button
+          type="button"
+          className="stage-button"
+          onClick={stop}
+          disabled={!running}
+        >
+          Pause
         </button>
         <button
           type="button"
@@ -204,14 +210,36 @@ export function OvertimePanel() {
             role="dialog"
             aria-label={`${title} overtime`}
           >
-            <button
-              type="button"
-              className="overtime-stage__shrink"
-              onClick={() => setStageOpen(false)}
-            >
-              Shrink
-            </button>
-            <div className="overtime-stage__clock">
+            <div className="overtime-stage__tools">
+              <div className="overtime-stage__zoom" role="group" aria-label="Zoom overtime">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setStageZoom((prev) => Math.max(0.85, Math.round((prev - 0.15) * 100) / 100))
+                  }
+                  disabled={stageZoom <= 0.85}
+                >
+                  −
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setStageZoom((prev) => Math.min(2, Math.round((prev + 0.15) * 100) / 100))
+                  }
+                  disabled={stageZoom >= 2}
+                >
+                  +
+                </button>
+              </div>
+              <button
+                type="button"
+                className="overtime-stage__shrink"
+                onClick={() => setStageOpen(false)}
+              >
+                Shrink
+              </button>
+            </div>
+            <div className="overtime-stage__clock" style={{ zoom: stageZoom }}>
               <div className="overtime-stage__label">
                 {paying ? `${title} · paying` : title}
               </div>

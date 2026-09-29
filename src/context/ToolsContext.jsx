@@ -586,7 +586,7 @@ export function ToolsProvider({ children }) {
   )
 
   const startOvertime = useCallback((clockId = 'overtime') => {
-    // Unlock + first tick inside the click gesture so browsers allow audio.
+    // Unlock inside the click so the tick is allowed to play.
     unlockOvertimeAudio(overtimeVolumeRef.current)
     startOvertimeTicking({ volume: overtimeVolumeRef.current }).catch(() => {})
     setOvertimeClocks((prev) => {
@@ -595,7 +595,7 @@ export function ToolsProvider({ children }) {
         ...prev,
         [clockId]: {
           ...clock,
-          mode: clock.elapsedMs <= 0 ? 'accrue' : clock.mode,
+          mode: 'accrue',
           running: true,
         },
       }
@@ -603,15 +603,17 @@ export function ToolsProvider({ children }) {
   }, [])
 
   const payOvertime = useCallback((clockId = 'overtime') => {
+    const clock = overtimeClocksRef.current?.[clockId]
+    if (!clock || clock.elapsedMs <= 0) return
     unlockOvertimeAudio(overtimeVolumeRef.current)
     startOvertimeTicking({ volume: overtimeVolumeRef.current }).catch(() => {})
     setOvertimeClocks((prev) => {
-      const clock = prev[clockId] || createEmptyOvertimeClock()
-      if (clock.elapsedMs <= 0) return prev
+      const current = prev[clockId] || createEmptyOvertimeClock()
+      if (current.elapsedMs <= 0) return prev
       return {
         ...prev,
         [clockId]: {
-          ...clock,
+          ...current,
           mode: 'pay',
           running: true,
         },

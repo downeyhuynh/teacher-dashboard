@@ -260,7 +260,9 @@ export function PresentationStage({
     >
       <div className="presentation-stage__surface">
         <DeckTabs />
-        <LessonChrome />
+        <div className="presentation-stage__main">
+          <LessonChrome />
+          <div className="presentation-stage__content">
         <SlideNav
           viewControls={
             slideCount > 0 ? (
@@ -326,6 +328,8 @@ export function PresentationStage({
             Importing slides…
           </div>
         )}
+          </div>
+        </div>
       </div>
     </main>
   )

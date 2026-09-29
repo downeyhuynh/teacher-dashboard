@@ -17,27 +17,41 @@ const CORNER_MARGIN = 12
 const EDGE_PX = 28
 const HIDE_DELAY_MS = 420
 
-function getUnderChromeY(boundsTop, margin = CORNER_MARGIN) {
-  const chrome = document.querySelector('.lesson-chrome')
-  if (!chrome) return margin
-  const bottom = chrome.getBoundingClientRect().bottom
-  return Math.max(margin, Math.round(bottom - boundsTop + margin))
+function getStageInsets(bounds) {
+  const boundsTop = bounds?.top ?? 0
+  const boundsLeft = bounds?.left ?? 0
+  const tabs = document.querySelector('.deck-tabs')
+  const sidebar = document.querySelector('.lesson-chrome.is-open')
+  let top = CORNER_MARGIN
+  let left = CORNER_MARGIN
+  if (tabs) {
+    top = Math.max(
+      top,
+      Math.round(tabs.getBoundingClientRect().bottom - boundsTop + 8),
+    )
+  }
+  if (sidebar) {
+    left = Math.max(
+      left,
+      Math.round(sidebar.getBoundingClientRect().right - boundsLeft + 8),
+    )
+  }
+  return { top, left }
 }
 
 function getCornerPosition(corner, size, bounds) {
   const width = bounds?.width ?? window.innerWidth
   const height = bounds?.height ?? window.innerHeight
-  const boundsTop = bounds?.top ?? 0
   const rightX = Math.max(CORNER_MARGIN, width - size.width - CORNER_MARGIN)
   const bottomY = Math.max(CORNER_MARGIN, height - size.height - CORNER_MARGIN)
   const midY = Math.max(CORNER_MARGIN, Math.round((height - size.height) / 2))
-  const underChromeY = getUnderChromeY(boundsTop)
+  const insets = getStageInsets(bounds)
 
   switch (corner) {
     case 'top-right':
-      return { x: rightX, y: underChromeY }
+      return { x: rightX, y: insets.top }
     case 'top-left':
-      return { x: CORNER_MARGIN, y: underChromeY }
+      return { x: insets.left, y: insets.top }
     case 'mid-right':
       return { x: rightX, y: midY }
     case 'bottom-left':
@@ -72,7 +86,7 @@ export function AppShell() {
     enableAnnotate,
     resetSlideView,
   } = usePresentation()
-  const { timer } = useTools()
+  const { timer, lesson } = useTools()
 
   const {
     panels,
@@ -215,14 +229,11 @@ export function AppShell() {
       const x = event.clientX - rect.left
       const y = event.clientY - rect.top
 
-      const surface = shell.querySelector('.presentation-stage__surface')
-      const chromeRaw = surface
-        ? getComputedStyle(surface).getPropertyValue('--lesson-chrome-height')
-        : ''
-      const chromePx = Number.parseFloat(chromeRaw) || 88
-      // Reveal from the very top edge, or just under the objective/agenda bar.
-      const nearTop =
-        y <= EDGE_PX || (y >= chromePx && y <= chromePx + EDGE_PX)
+      const tabs = shell.querySelector('.deck-tabs')
+      const tabsBottom = tabs
+        ? tabs.getBoundingClientRect().bottom - rect.top
+        : 0
+      const nearTop = y <= Math.max(EDGE_PX, tabsBottom + EDGE_PX)
       const nearRight = x >= rect.width - EDGE_PX
 
       if (nearTop) {
@@ -292,7 +303,7 @@ export function AppShell() {
       PANEL_IDS.TIMER,
       getCornerPosition('top-left', PANEL_DEFAULT_SIZES[PANEL_IDS.TIMER], bounds),
     )
-  }, [setPanelPosition, setPanelSize, timer.compact, timerPanelOpen])
+  }, [setPanelPosition, setPanelSize, timer.compact, timerPanelOpen, lesson.chromeVisible])
 
   useEffect(() => {
     if (!overtimePanelOpen) return
@@ -302,7 +313,7 @@ export function AppShell() {
       PANEL_IDS.OVERTIME,
       getCornerPosition('top-right', OVERTIME_HUD_SIZE, bounds),
     )
-  }, [overtimePanelOpen, setPanelPosition, setPanelSize])
+  }, [overtimePanelOpen, setPanelPosition, setPanelSize, lesson.chromeVisible])
 
   const handleToolSelect = useCallback(
     (id) => {

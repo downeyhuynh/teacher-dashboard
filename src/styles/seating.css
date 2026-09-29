@@ -42,14 +42,14 @@
 }
 
 .seating-panel__note {
-  font-size: 0.8rem;
+  font-size: calc(0.8rem * var(--text-zoom, 1));
   color: var(--color-accent);
   font-weight: 600;
 }
 
 .seating-panel__multi {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem * var(--text-zoom, 1));
   color: var(--color-accent);
   font-weight: 600;
 }
@@ -72,7 +72,7 @@
   background: #fff;
   color: var(--color-text);
   font: inherit;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem * var(--text-zoom, 1));
   font-weight: 600;
   text-align: center;
   z-index: 5;
@@ -80,7 +80,7 @@
 
 .seating-rename--seat {
   width: calc(100% - 4px);
-  font-size: 0.58rem;
+  font-size: calc(0.58rem * var(--text-zoom, 1));
   padding: 1px 2px;
 }
 
@@ -104,7 +104,7 @@
 }
 
 .seating-panel__field span {
-  font-size: 0.72rem;
+  font-size: calc(0.72rem * var(--text-zoom, 1));
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -122,7 +122,7 @@
   background: #fff;
   color: var(--color-text);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: calc(0.875rem * var(--text-zoom, 1));
 }
 
 .seating-panel__name-row {
@@ -208,7 +208,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(26, 35, 50, 0.12);
   cursor: grab;
-  font-size: 0.78rem;
+  font-size: calc(0.78rem * var(--text-zoom, 1));
   font-weight: 600;
   text-align: center;
 }
@@ -274,7 +274,7 @@
   box-shadow: 0 1px 2px rgba(26, 35, 50, 0.08);
   cursor: grab;
   color: var(--color-text);
-  font-size: 0.52rem;
+  font-size: calc(0.52rem * var(--text-zoom, 1));
   font-weight: 600;
   line-height: 1.05;
   text-align: center;
@@ -332,13 +332,13 @@
 .seating-fill__title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: calc(1.2rem * var(--text-zoom, 1));
   font-weight: 600;
 }
 
 .seating-fill__copy {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--text-zoom, 1));
   line-height: 1.45;
   color: var(--color-text-muted);
 }
@@ -347,7 +347,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.875rem;
+  font-size: calc(0.875rem * var(--text-zoom, 1));
   color: var(--color-text);
 }
 

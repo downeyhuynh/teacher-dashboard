@@ -60,8 +60,13 @@ function hookVisibilityResume() {
     'pointerdown',
     () => {
       if (!tickingActive) return
-      unlockOvertimeAudio(tickVolume)
-      void startOvertimeTicking({ volume: tickVolume })
+      // Resume audio only. Restarting the scheduler here inserts extra ticks.
+      try {
+        const ctx = getAudioContext()
+        if (ctx.state === 'suspended') void ctx.resume()
+      } catch {
+        // Ignore.
+      }
     },
     true,
   )
@@ -109,8 +114,12 @@ function playBuzz(
   ctx,
   { startFreq, endFreq, duration, peak, type = 'square', when = null },
 ) {
-  // Never schedule in the past — browsers often drop those nodes silently.
-  const now = Math.max(ctx.currentTime, when == null ? ctx.currentTime : when)
+  // Keep the scheduled time when it is still ahead. Only nudge a tick that
+  // is a few milliseconds late; dropping further-late ticks avoids bursts.
+  const earliest = ctx.currentTime
+  const scheduled = when == null ? earliest : when
+  if (scheduled < earliest - 0.08) return
+  const now = Math.max(earliest, scheduled)
   const osc = ctx.createOscillator()
   const gain = ctx.createGain()
   osc.type = type
@@ -284,23 +293,21 @@ function pumpTickSchedule() {
     }
 
     const ctx = getAudioContext()
-    if (ctx.state === 'suspended') {
-      void ctx.resume()
-      ensureSchedulerRunning()
-      return
-    }
-
     if (ctx.state !== 'running') {
+      if (ctx.state === 'suspended') void ctx.resume()
       ensureSchedulerRunning()
       return
     }
 
-    // Catch up if the tab was throttled so we don't burst many ticks at once.
-    if (nextTickTime < ctx.currentTime - TICK_INTERVAL_SEC * 0.5) {
-      nextTickTime = ctx.currentTime
+    // One late tick is nudged forward inside playBuzz. A bigger gap skips
+    // the missed beats so they do not all fire at once.
+    if (nextTickTime < ctx.currentTime - 0.08) {
+      const missed = Math.floor((ctx.currentTime - nextTickTime) / TICK_INTERVAL_SEC)
+      nextTickTime += missed * TICK_INTERVAL_SEC
     }
 
-    while (nextTickTime < ctx.currentTime + SCHEDULE_AHEAD_SEC) {
+    const horizon = ctx.currentTime + SCHEDULE_AHEAD_SEC
+    while (nextTickTime < horizon) {
       playClockTickAt(ctx, nextTickTime, tickVolume)
       nextTickTime += TICK_INTERVAL_SEC
     }
@@ -341,9 +348,9 @@ export async function startOvertimeTicking({ volume = tickVolume } = {}) {
     if (!tickingActive) return
 
     if (ctx.state === 'running') {
+      // Keep the existing beat if one is already queued.
       if (!alreadyActive || nextTickTime <= ctx.currentTime) {
-        playClockTickAt(ctx, ctx.currentTime, tickVolume)
-        nextTickTime = ctx.currentTime + TICK_INTERVAL_SEC
+        nextTickTime = ctx.currentTime
       }
     } else {
       // Will play as soon as a gesture resumes the context.

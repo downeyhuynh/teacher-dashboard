@@ -81,6 +81,26 @@
   flex-shrink: 0;
 }
 
+.floating-panel__zoom {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  margin-right: 2px;
+}
+
+.floating-panel__zoom .floating-panel__action {
+  width: 24px;
+  height: 24px;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.floating-panel__zoom .floating-panel__action:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 .floating-panel__action {
   display: inline-flex;
   align-items: center;
@@ -114,6 +134,7 @@
   min-height: 0;
   overflow: auto;
   padding: 16px;
+  font-size: calc(1rem * var(--text-zoom, 1));
 }
 
 .floating-panel__resize {
