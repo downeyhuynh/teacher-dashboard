@@ -1,10 +1,62 @@
+.app-frame {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(13, 122, 111, 0.06), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(26, 55, 90, 0.05), transparent 50%),
+    var(--color-canvas);
+}
+
+.app-frame__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  height: 48px;
+  padding: 0 14px;
+  background: var(--color-chrome);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-nav__link {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 7px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.app-nav__link:hover {
+  color: var(--color-text);
+  background: rgba(26, 35, 50, 0.05);
+}
+
+.app-nav__link.is-active {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.app-nav__link.is-active:hover {
+  background: var(--color-accent-hover);
+  color: #fff;
+}
+
 .app-shell {
   position: relative;
   display: grid;
   grid-template-columns: 1fr var(--toolbar-width);
   width: 100%;
   height: 100%;
-  min-height: 100dvh;
+  min-height: 0;
   overflow: hidden;
   background:
     radial-gradient(ellipse 80% 60% at 20% 10%, rgba(13, 122, 111, 0.06), transparent 55%),
