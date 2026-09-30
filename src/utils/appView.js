@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { t, useLanguage } from './language'
 
 /** Hash routes keep GitHub Pages working without a server rewrite. */
 export function viewFromHash() {
@@ -26,6 +27,7 @@ export function navigateApp(view) {
 }
 
 export function useAppView() {
+  const lang = useLanguage()
   const [view, setView] = useState(viewFromHash)
 
   useEffect(() => {
@@ -35,10 +37,9 @@ export function useAppView() {
   }, [])
 
   useEffect(() => {
-    if (view === 'portal') document.title = 'Progress Report'
-    else if (view === 'dashboard') document.title = 'Teacher Dashboard'
-    else document.title = 'Teacher Dashboard'
-  }, [view])
+    if (view === 'portal') document.title = t(lang, 'progressReport')
+    else document.title = t(lang, 'homeTitle')
+  }, [view, lang])
 
   return view
 }

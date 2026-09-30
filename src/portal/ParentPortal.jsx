@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { missingCounts, StudentProgress } from '../grades/GradeReport'
 import { useGrades } from '../hooks/useGrades'
 import { navigateApp } from '../utils/appView'
+import { t, useLanguage } from '../utils/language'
 import {
   clearPortalSession,
   formatUpdated,
@@ -54,23 +55,24 @@ export function ParentPortal() {
 }
 
 function PortalGate({ data, onGranted }) {
+  const lang = useLanguage()
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState(null)
   const [pin, setPin] = useState('')
-  const [error, setError] = useState('')
+  const [errorKey, setErrorKey] = useState('')
   const [lockedUntil, setLockedUntil] = useState(() => readLock().until)
   const matches = useMemo(() => searchStudents(data, query), [data, query])
   const selected = data.students.find((student) => student.id === selectedId) || null
 
   const submit = async (event) => {
     event.preventDefault()
-    setError('')
+    setErrorKey('')
     if (lockedUntil > Date.now()) {
-      setError('Too many attempts. Wait a moment and try again.')
+      setErrorKey('tooMany')
       return
     }
     if (!selected) {
-      setError('Search for a student and choose the matching name.')
+      setErrorKey('chooseName')
       return
     }
     const ok = await pinMatches(selected, pin)
@@ -81,7 +83,7 @@ function PortalGate({ data, onGranted }) {
       const nextCount = until ? 0 : count
       sessionStorage.setItem(FAIL_KEY, JSON.stringify({ count: nextCount, until }))
       setLockedUntil(until)
-      setError(until ? 'Too many attempts. Wait a moment and try again.' : 'That family access code doesn’t match.')
+      setErrorKey(until ? 'tooMany' : 'codeMismatch')
       return
     }
     sessionStorage.removeItem(FAIL_KEY)
@@ -92,31 +94,29 @@ function PortalGate({ data, onGranted }) {
   return (
     <div className="portal-page">
       <button type="button" className="home-link" onClick={() => navigateApp('home')}>
-        Home
+        {t(lang, 'home')}
       </button>
       <form className="portal-card" onSubmit={submit}>
-        <p className="grades-kicker">Family access</p>
-        <h1>Progress Report</h1>
-        <p className="grades-help">
-          Choose a student, then enter the 6-digit family access code. Grades stay hidden until the code matches.
-        </p>
+        <p className="grades-kicker">{t(lang, 'familyAccess')}</p>
+        <h1>{t(lang, 'progressReport')}</h1>
+        <p className="grades-help">{t(lang, 'portalHelp')}</p>
         <label className="grades-label" htmlFor="portal-search">
-          Search or select student
+          {t(lang, 'searchStudent')}
         </label>
         <input
           id="portal-search"
           className="grades-input"
           value={query}
-          placeholder="Search student..."
+          placeholder={t(lang, 'searchPlaceholder')}
           autoComplete="off"
           onChange={(event) => {
             setQuery(event.target.value)
             setSelectedId(null)
-            setError('')
+            setErrorKey('')
           }}
         />
         {query.trim() ? (
-          <ul className="portal-matches" role="listbox" aria-label="Matching students">
+          <ul className="portal-matches" role="listbox" aria-label={t(lang, 'matchingStudents')}>
             {matches.length ? (
               matches.map((student) => (
                 <li key={student.id}>
@@ -128,7 +128,7 @@ function PortalGate({ data, onGranted }) {
                     onClick={() => {
                       setSelectedId(student.id)
                       setQuery(student.name)
-                      setError('')
+                      setErrorKey('')
                     }}
                   >
                     <span>{student.name}</span>
@@ -136,12 +136,12 @@ function PortalGate({ data, onGranted }) {
                 </li>
               ))
             ) : (
-              <li className="grades-empty">No matching students.</li>
+              <li className="grades-empty">{t(lang, 'noMatches')}</li>
             )}
           </ul>
         ) : null}
         <label className="grades-label" htmlFor="portal-pin">
-          Family access code
+          {t(lang, 'accessCode')}
         </label>
         <input
           id="portal-pin"
@@ -153,9 +153,9 @@ function PortalGate({ data, onGranted }) {
           value={pin}
           onChange={(event) => setPin(event.target.value.replace(/\D/g, '').slice(0, 6))}
         />
-        {error ? <p className="grades-error">{error}</p> : null}
+        {errorKey ? <p className="grades-error">{t(lang, errorKey)}</p> : null}
         <button type="submit" className="stage-button stage-button--primary portal-submit">
-          View progress
+          {t(lang, 'viewProgress')}
         </button>
       </form>
     </div>
@@ -163,26 +163,29 @@ function PortalGate({ data, onGranted }) {
 }
 
 function PortalDashboard({ data, student, onSignOut }) {
+  const lang = useLanguage()
   const missing = missingCounts(student, data)
   return (
     <div className="portal-page">
       <button type="button" className="home-link" onClick={() => navigateApp('home')}>
-        Home
+        {t(lang, 'home')}
       </button>
       <div className="portal-card portal-card--wide">
         <div className="grades-card__toolbar">
           <div>
-            <p className="grades-kicker">Progress Report</p>
+            <p className="grades-kicker">{t(lang, 'progressReport')}</p>
             <h1>{student.name}</h1>
             <p className="missing-total">
-              Total missing work <strong>{missing.total}</strong>
+              {t(lang, 'totalMissing')} <strong>{missing.total}</strong>
             </p>
           </div>
           <button type="button" className="stage-button" onClick={onSignOut}>
-            Sign out
+            {t(lang, 'signOut')}
           </button>
         </div>
-        <p className="grades-help">Last updated {formatUpdated(data.lastUpdated)}</p>
+        <p className="grades-help">
+          {t(lang, 'lastUpdated')} {formatUpdated(data.lastUpdated, lang)}
+        </p>
         <StudentProgress student={student} data={data} />
       </div>
     </div>

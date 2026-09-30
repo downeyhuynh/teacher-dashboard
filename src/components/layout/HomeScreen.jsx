@@ -1,26 +1,46 @@
 import { navigateApp } from '../../utils/appView'
-
-const CHOICES = [
-  {
-    id: 'dashboard',
-    label: 'Teacher Dashboard',
-    detail: 'Slides, timers, agenda, and classroom tools',
-  },
-  {
-    id: 'portal',
-    label: 'Progress Report',
-    detail: 'Family view of a student’s grades',
-  },
-]
+import { setLanguage, t, useLanguage } from '../../utils/language'
 
 export function HomeScreen() {
+  const lang = useLanguage()
+  const choices = [
+    {
+      id: 'dashboard',
+      label: t(lang, 'dashboardLabel'),
+      detail: t(lang, 'dashboardDetail'),
+    },
+    {
+      id: 'portal',
+      label: t(lang, 'portalLabel'),
+      detail: t(lang, 'portalDetail'),
+    },
+  ]
+
   return (
     <div className="home-screen">
       <div className="home-screen__panel">
-        <p className="grades-kicker">Choose where to go</p>
-        <h1>Teacher Dashboard</h1>
+        <div className="language-toggle" role="group" aria-label={t(lang, 'language')}>
+          <button
+            type="button"
+            aria-pressed={lang === 'en'}
+            className={lang === 'en' ? 'is-active' : ''}
+            onClick={() => setLanguage('en')}
+          >
+            English
+          </button>
+          <button
+            type="button"
+            aria-pressed={lang === 'es'}
+            className={lang === 'es' ? 'is-active' : ''}
+            onClick={() => setLanguage('es')}
+          >
+            Español
+          </button>
+        </div>
+        <p className="grades-kicker">{t(lang, 'homeKicker')}</p>
+        <h1>{t(lang, 'homeTitle')}</h1>
         <div className="home-choices">
-          {CHOICES.map((choice) => (
+          {choices.map((choice) => (
             <button
               key={choice.id}
               type="button"

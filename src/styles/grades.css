@@ -441,6 +441,28 @@
   width: min(640px, 100%);
 }
 
+.language-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.language-toggle button {
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-text-muted);
+  font-weight: 650;
+}
+
+.language-toggle button.is-active {
+  background: var(--color-accent);
+  border-color: transparent;
+  color: #fff;
+}
+
 .home-screen__panel h1 {
   margin: 0 0 18px;
   font-family: var(--font-display);

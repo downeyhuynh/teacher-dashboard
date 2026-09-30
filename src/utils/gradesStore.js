@@ -13,8 +13,13 @@ function classMeta(classId) {
   return GRADE_CLASSES.find((entry) => entry.id === classId) || null
 }
 
-export function classLabel(classId) {
-  return classMeta(classId)?.label || 'Class'
+export function classLabel(classId, lang = 'en') {
+  const meta = classMeta(classId)
+  if (!meta) return lang === 'es' ? 'Clase' : 'Class'
+  if (lang !== 'es') return meta.label
+  const subject = meta.subject === 'Math' ? 'Matemáticas' : 'Ciencias'
+  const school = classId.startsWith('hawaii') ? 'Hawaii' : 'Caltech'
+  return `${subject} ${school}`
 }
 
 export function subjectLabel(classId) {
@@ -105,14 +110,14 @@ export function summarizeClass(student, classRecord) {
   return { percent, earned, possible, missing, groups }
 }
 
-export function formatUpdated(value) {
-  if (!value) return 'Not yet published'
+export function formatUpdated(value, lang = 'en') {
+  if (!value) return lang === 'es' ? 'Aún no publicado' : 'Not yet published'
   const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value))
   const date = dateOnly
     ? new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3]))
     : new Date(value)
   if (Number.isNaN(date.getTime())) return String(value)
-  return date.toLocaleDateString(undefined, { dateStyle: 'long' })
+  return date.toLocaleDateString(lang === 'es' ? 'es' : 'en', { dateStyle: 'long' })
 }
 
 export function formatScore(score, maxPoints) {
