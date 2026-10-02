@@ -19,24 +19,25 @@ function collectStudentWork(student, data, subject, lang) {
     const summary = summarizeClass(student, classRecord)
     const label = classLabel(classId, lang)
     for (const assignment of summary.missing) {
+      if (assignment.category === 'quiz') continue
+      if (subject === 'Math' && assignment.category === 'test') continue
       missing.push({ key: `${classId}-${assignment.id}`, title: assignment.title, className: label })
     }
     for (const item of summary.groups.test) {
-      if (item.score.missing) continue
+      if (item.score.missing && subject !== 'Math') continue
       tests.push({
         key: `${classId}-${item.assignment.id}`,
         title: item.assignment.title,
         className: label,
-        score: formatScore(item.score, item.assignment.maxPoints),
+        score: item.score.missing ? `0/${item.assignment.maxPoints}` : formatScore(item.score, item.assignment.maxPoints),
       })
     }
     for (const item of summary.groups.quiz) {
-      if (item.score.missing) continue
       quizzes.push({
         key: `${classId}-${item.assignment.id}`,
         title: item.assignment.title,
         className: label,
-        score: formatScore(item.score, item.assignment.maxPoints),
+        score: item.score.missing ? `0/${item.assignment.maxPoints}` : formatScore(item.score, item.assignment.maxPoints),
       })
     }
   }
