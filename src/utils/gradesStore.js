@@ -54,6 +54,7 @@ function publishedGrades() {
     .map((student) => ({
       id: String(student.id),
       name: String(student.name).trim(),
+      aliases: Array.isArray(student.aliases) ? student.aliases.map((alias) => String(alias).trim()).filter(Boolean) : [],
       pin: /^\d{6}$/.test(String(student.pin || '')) ? String(student.pin) : null,
       classes: student.classes && typeof student.classes === 'object' ? student.classes : {},
     }))
@@ -154,10 +155,28 @@ export async function pinMatches(student, pin) {
   return hashesEqual(student.pin, code)
 }
 
+function normName(name) {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}
+
+/** Grade files may use a different name. The progress report still shows student.name. */
+export function studentMatchesName(student, name) {
+  const needle = normName(name)
+  if (!needle) return false
+  if (normName(student.name) === needle) return true
+  return (student.aliases || []).some((alias) => normName(alias) === needle)
+}
+
 export function searchStudents(data, query) {
   const needle = String(query || '').trim().toLowerCase()
   if (!needle) return []
-  return data.students.filter((student) => student.name.toLowerCase().includes(needle))
+  return data.students.filter((student) => {
+    if (student.name.toLowerCase().includes(needle)) return true
+    return (student.aliases || []).some((alias) => alias.toLowerCase().includes(needle))
+  })
 }
 
 export function readPortalSession() {

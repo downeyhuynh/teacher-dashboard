@@ -2,6 +2,7 @@
  * Published progress report.
  * Update this file each Friday, then commit and push.
  * Each student has their own 6-digit family code.
+ * `aliases` are other names in the grade files for that same student. The report shows `name`.
  * One shared code also opens any student. It is stored as a hash, not the code itself.
  * Families see this file after the site is published. Nothing typed into the browser is saved here.
  *
@@ -546,9 +547,56 @@ export const gradebook = {
     {
       id: 'maurithia-castaneda',
       name: 'Maurithia Castaneda',
+      aliases: ['Daisy Castaneda'],
       pin: '551724',
       classes: {
-
+        'hawaii-science': {
+          scores: {
+            'earth-layers-extension': { points: 0, missing: true, excused: false },
+            'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
+            'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
+            'exploration-liquid-freezing-and-boiling-temperat': { points: 5, missing: false, excused: false },
+            'formula-decoder': { points: 0, missing: true, excused: false },
+            'heat-and-particle-movement': { points: 5, missing: false, excused: false },
+            'matter-mystery-presentation-notes': { points: 0, missing: true, excused: false },
+            'physical-properties-discovery': { points: 10, missing: false, excused: false },
+            'unit-1-test': { points: 13.8, missing: false, excused: false },
+            'unit-1-2-quiz-compounds-molecules': { points: 6.5, missing: false, excused: false },
+            'unit-1-matter': { points: 4, missing: false, excused: false },
+            'building-blocks-states-of-matter': { points: 0, missing: true, excused: false },
+          },
+        },
+        'hawaii-math': {
+          scores: {
+            'adding-multiple-integers': { points: 0, missing: true, excused: false },
+            'lesson-15-homework': { points: 0, missing: true, excused: false },
+            'm1-l16': { points: 0, missing: true, excused: false },
+            'm1-ta-l3': { points: 0, missing: true, excused: false },
+            'm1-ta-l7': { points: 0, missing: true, excused: false },
+            'm1-ta-quiz': { points: 5, missing: false, excused: false },
+            'm1-tb-l10': { points: 0, missing: true, excused: false },
+            'm1-tb-l11': { points: 0, missing: true, excused: false },
+            'm1-tb-l12': { points: 0, missing: true, excused: false },
+            'm1-tb-l8': { points: 0, missing: true, excused: false },
+            'm2-tb-l9': { points: 0, missing: true, excused: false },
+            'map-scaling-homework': { points: 0, missing: true, excused: false },
+            'module-1-test': { points: 1.4, missing: false, excused: false },
+            'module-2-homework-1': { points: 0, missing: true, excused: false },
+            'module-2-lesson-2': { points: 0, missing: true, excused: false },
+            'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
+            'module-2-lesson-5': { points: 0, missing: true, excused: false },
+            'module-2-lesson-6': { points: 10, missing: false, excused: false },
+            'module-2-lesson-7': { points: 10, missing: false, excused: false },
+            'module-2-topic-a-quiz': { points: 0, missing: true, excused: false },
+            'scale-factor-homework': { points: 0, missing: true, excused: false },
+            'topic-b-quiz': { points: 2, missing: false, excused: false },
+            'topic-c-review-homework': { points: 0, missing: true, excused: false },
+            'module-1-topic-a-lesson-1-practice-pgs-13-14': { points: 5, missing: false, excused: false },
+            'module-1-topic-a-lesson-2-practice-pgs-25-29-ski': { points: 0, missing: true, excused: false },
+            'm1-ta-l4': { points: 0, missing: true, excused: false },
+            'm1-ta-l5': { points: 0, missing: true, excused: false },
+          },
+        },
       },
     },
     {
