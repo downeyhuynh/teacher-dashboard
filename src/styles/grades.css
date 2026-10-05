@@ -528,6 +528,132 @@
   margin-bottom: 4px;
 }
 
+.marks-section-title,
+.marks-detail h3 {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 550;
+}
+
+.marks-overview {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.marks-overview__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.marks-category-card,
+.marks-detail,
+.marks-explain {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.marks-category-card {
+  padding: 12px 14px;
+}
+
+.marks-category-card h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.marks-category-card__percent {
+  margin: 8px 0 0;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.marks-category-card__mark {
+  margin: 6px 0 0;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 550;
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+.marks-category-card__mark span {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+.marks-subject {
+  margin-top: 18px;
+}
+
+.marks-detail {
+  padding: 14px;
+  margin-top: 10px;
+}
+
+.marks-table th:nth-child(2),
+.marks-table th:nth-child(3),
+.marks-table td:nth-child(2),
+.marks-table td:nth-child(3) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.marks-table tfoot th,
+.marks-table tfoot td {
+  font-weight: 700;
+  border-top: 1px solid var(--color-border);
+}
+
+.marks-mark-value {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--color-accent);
+}
+
+.marks-explain {
+  margin-top: 16px;
+}
+
+.marks-explain summary {
+  cursor: pointer;
+  padding: 12px 14px;
+  font-weight: 650;
+  color: var(--color-accent);
+}
+
+.marks-explain__body {
+  padding: 0 14px 14px;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.marks-explain__body p,
+.marks-explain__body ul {
+  margin: 8px 0;
+}
+
+.marks-explain__math {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.marks-explain__body ul {
+  padding-left: 1.2rem;
+}
+
 @media (max-width: 800px) {
   .grades-stats,
   .grades-roster,

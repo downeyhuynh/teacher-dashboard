@@ -1,8 +1,8 @@
 import { useState } from 'react'
+import { MarksReport } from './MarksReport'
 import {
   classLabel,
   enrolledClassIds,
-  formatScore,
   subjectLabel,
   summarizeClass,
 } from '../utils/gradesStore'
@@ -10,8 +10,6 @@ import { t, useLanguage } from '../utils/language'
 
 function collectStudentWork(student, data, subject, lang) {
   const missing = []
-  const tests = []
-  const quizzes = []
   const classIds = enrolledClassIds(student).filter((classId) => subjectLabel(classId) === subject)
   for (const classId of classIds) {
     const classRecord = data.classes[classId]
@@ -19,29 +17,11 @@ function collectStudentWork(student, data, subject, lang) {
     const summary = summarizeClass(student, classRecord)
     const label = classLabel(classId, lang)
     for (const assignment of summary.missing) {
-      if (assignment.category === 'quiz') continue
-      if (subject === 'Math' && assignment.category === 'test') continue
+      if (assignment.category === 'quiz' || assignment.category === 'test') continue
       missing.push({ key: `${classId}-${assignment.id}`, title: assignment.title, className: label })
     }
-    for (const item of summary.groups.test) {
-      if (item.score.missing && subject !== 'Math') continue
-      tests.push({
-        key: `${classId}-${item.assignment.id}`,
-        title: item.assignment.title,
-        className: label,
-        score: item.score.missing ? `0/${item.assignment.maxPoints}` : formatScore(item.score, item.assignment.maxPoints),
-      })
-    }
-    for (const item of summary.groups.quiz) {
-      quizzes.push({
-        key: `${classId}-${item.assignment.id}`,
-        title: item.assignment.title,
-        className: label,
-        score: item.score.missing ? `0/${item.assignment.maxPoints}` : formatScore(item.score, item.assignment.maxPoints),
-      })
-    }
   }
-  return { missing, tests, quizzes }
+  return { missing }
 }
 
 function WorkList({ items, emptyLabel, missingLabel }) {
@@ -72,20 +52,18 @@ export function missingCounts(student, data) {
   return { ...counts, total: counts.Math + counts.Science }
 }
 
-/** Family view: missing work, quizzes, and tests, split by Math or Science. */
-export function StudentProgress({ student, data }) {
+function HomeworkProgress({ student, data }) {
   const lang = useLanguage()
-  const enrolled = student ? enrolledClassIds(student) : []
+  const enrolled = enrolledClassIds(student)
   const [subject, setSubject] = useState(
     enrolled.some((classId) => subjectLabel(classId) === 'Math') ? 'Math' : 'Science',
   )
-  if (!student) return null
   const counts = missingCounts(student, data)
   const work = collectStudentWork(student, data, subject, lang)
   const none = t(lang, 'none')
   const missingMark = t(lang, 'missingMark')
   return (
-    <section className="grade-report" aria-label={`${student.name} progress`}>
+    <>
       <div className="grades-classes" role="tablist" aria-label={t(lang, 'subject')}>
         {SUBJECTS.map((name) => (
           <button
@@ -108,14 +86,38 @@ export function StudentProgress({ student, data }) {
         </h4>
         <WorkList items={work.missing} emptyLabel={none} missingLabel={missingMark} />
       </div>
-      <div className="grade-report__block">
-        <h4>{t(lang, 'tests')}</h4>
-        <WorkList items={work.tests} emptyLabel={none} missingLabel={missingMark} />
+    </>
+  )
+}
+
+/** Family view: homework stays separate from category progress-report marks. */
+export function StudentProgress({ student, data }) {
+  const lang = useLanguage()
+  const [tab, setTab] = useState('homework')
+  if (!student) return null
+  return (
+    <section className="grade-report" aria-label={`${student.name} progress`}>
+      <div className="grades-classes" role="tablist" aria-label={t(lang, 'reportSection')}>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === 'homework'}
+          className={`tool-chip ${tab === 'homework' ? 'is-active' : ''}`}
+          onClick={() => setTab('homework')}
+        >
+          {t(lang, 'homeworkTab')}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === 'marks'}
+          className={`tool-chip ${tab === 'marks' ? 'is-active' : ''}`}
+          onClick={() => setTab('marks')}
+        >
+          {t(lang, 'marksTab')}
+        </button>
       </div>
-      <div className="grade-report__block">
-        <h4>{t(lang, 'quizzes')}</h4>
-        <WorkList items={work.quizzes} emptyLabel={none} missingLabel={missingMark} />
-      </div>
+      {tab === 'marks' ? <MarksReport student={student} data={data} /> : <HomeworkProgress student={student} data={data} />}
     </section>
   )
 }

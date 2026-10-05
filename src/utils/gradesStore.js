@@ -38,6 +38,7 @@ function publishedGrades() {
             id: String(item.id),
             title: String(item.title),
             category: item.category === 'test' || item.category === 'quiz' ? item.category : 'assignment',
+            academicCategory: typeof item.academicCategory === 'string' ? item.academicCategory.trim() : '',
             maxPoints: Number(item.maxPoints) > 0 ? Number(item.maxPoints) : 100,
           }))
       : []
@@ -91,7 +92,10 @@ export function summarizeClass(student, classRecord) {
   const scores = student.classes[classRecord.id].scores || {}
   for (const assignment of classRecord.assignments) {
     const score = scores[assignment.id]
-    if (score?.excused) continue
+    if (score?.excused) {
+      groups[assignment.category].push({ assignment, score })
+      continue
+    }
     const max = Number(assignment.maxPoints) || 0
     const hasPoints = score && score.points != null && !Number.isNaN(Number(score.points))
     const scoredZero = hasPoints && Number(score.points) === 0
