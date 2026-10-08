@@ -56,7 +56,8 @@ const COPY = {
     unassignedNote: 'Assign an academic category to give these assessments a progress report mark.',
     howCalculated: 'How is this mark calculated?',
     howCalculatedIntro: 'Progress report marks are calculated by academic category.',
-    howCalculatedCombine: 'All quiz and test points within a category are combined.',
+    howCalculatedCombine:
+      'All quiz and test points within a category are combined. A blank quiz or test counts as excused, and an excused quiz or test counts as completed and receives full points.',
     howCalculatedExample:
       'For example, if a student earns 77 total points out of 90 possible points in Ratios and Proportional Relationships:',
     howCalculatedResult: 'An 85.6% corresponds to a Progress Report Mark of 3.',
@@ -116,7 +117,8 @@ const COPY = {
     unassignedNote: 'Asigna una categoría académica para dar a estas evaluaciones una calificación del informe.',
     howCalculated: '¿Cómo se calcula esta calificación?',
     howCalculatedIntro: 'Las calificaciones del informe de progreso se calculan por categoría académica.',
-    howCalculatedCombine: 'Se combinan todos los puntos de pruebas y exámenes dentro de una categoría.',
+    howCalculatedCombine:
+      'Se combinan todos los puntos de pruebas y exámenes dentro de una categoría. Una prueba o examen en blanco cuenta como justificado, y uno justificado cuenta como completado y recibe todos los puntos.',
     howCalculatedExample:
       'Por ejemplo, si un estudiante obtiene 77 puntos de 90 posibles en Ratios and Proportional Relationships:',
     howCalculatedResult: 'Un 85.6% corresponde a una calificación del informe de progreso de 3.',

@@ -93,14 +93,11 @@ function parseAssignmentHeader(header) {
 
 function parseScore(raw) {
   const text = String(raw ?? '').trim()
-  if (!text || text === '-' || text === '—' || /^ungraded$/i.test(text)) {
-    return { points: 0, missing: true, excused: false }
+  if (!text || text === '-' || text === '—' || /^ungraded$/i.test(text) || /^excused$/i.test(text)) {
+    return { points: null, missing: false, excused: true }
   }
   if (/^(missing|not turned in|absent)$/i.test(text)) {
     return { points: 0, missing: true, excused: false }
-  }
-  if (/^excused$/i.test(text)) {
-    return { points: null, missing: false, excused: true }
   }
   const num = Number(text.replace(/%$/, '').replace(/,/g, ''))
   if (Number.isFinite(num)) return { points: num, missing: num === 0, excused: false }

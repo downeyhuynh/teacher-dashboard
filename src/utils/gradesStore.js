@@ -93,7 +93,13 @@ export function summarizeClass(student, classRecord) {
   for (const assignment of classRecord.assignments) {
     const score = scores[assignment.id]
     if (score?.excused) {
-      groups[assignment.category].push({ assignment, score })
+      const excusedMax = Number(assignment.maxPoints) || 0
+      earned += excusedMax
+      possible += excusedMax
+      groups[assignment.category].push({
+        assignment,
+        score: { points: excusedMax, missing: false, excused: true },
+      })
       continue
     }
     const max = Number(assignment.maxPoints) || 0
@@ -126,8 +132,8 @@ export function formatUpdated(value, lang = 'en') {
 }
 
 export function formatScore(score, maxPoints) {
-  if (!score || score.excused) return 'Excused'
-  if (score.missing) return 'Missing'
+  if (score?.excused) return `${maxPoints}/${maxPoints}`
+  if (!score || score.missing) return 'Missing'
   if (score.points == null) return '—'
   return `${score.points}/${maxPoints}`
 }

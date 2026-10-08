@@ -34,15 +34,14 @@ export function resolveAcademicCategory(assignment, subject) {
 
 /**
  * Every quiz and test stays on the list.
- * Excused work is labeled and left out of the total.
- * A blank or missing grade is labeled and left out of the total.
+ * A blank quiz or test is excused. An excused quiz or test counts as completed and earns full points.
  * A recorded 0 is shown as 0 and left out until it is a real graded score.
  */
 export function readGradedScore(score, maxPoints) {
   const max = Number(maxPoints)
   const safeMax = Number.isFinite(max) && max > 0 ? max : 0
   if (score?.excused) {
-    return { status: 'excused', graded: false, excused: true, points: null, maxPoints: safeMax }
+    return { status: 'graded', graded: true, excused: false, points: safeMax, maxPoints: safeMax }
   }
   const hasPoints = score && score.points != null && Number.isFinite(Number(score.points))
   const points = hasPoints ? Number(score.points) : null

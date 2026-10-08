@@ -20,16 +20,7 @@ function categoryTitle(lang, category) {
   return category.unassigned ? t(lang, 'unassignedCategory') : category.name
 }
 
-function AssessmentRow({ item, noGrade, excusedLabel }) {
-  if (item.excused) {
-    return (
-      <tr>
-        <td>{item.title}</td>
-        <td>{excusedLabel}</td>
-        <td>{excusedLabel}</td>
-      </tr>
-    )
-  }
+function AssessmentRow({ item, noGrade }) {
   if (!item.graded && item.points === 0) {
     return (
       <tr>
@@ -82,7 +73,6 @@ function CategoryDetail({ lang, category }) {
                 key={item.key}
                 item={item}
                 noGrade={t(lang, 'noGrade')}
-                excusedLabel={t(lang, 'excused')}
               />
             ))}
           </tbody>
