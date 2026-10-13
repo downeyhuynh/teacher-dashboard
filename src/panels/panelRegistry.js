@@ -1,6 +1,7 @@
 import {
   AnnotateIcon,
   BathroomIcon,
+  LunchIcon,
   CalculatorIcon,
   SeatingIcon,
   SoccerBallIcon,
@@ -10,6 +11,7 @@ import {
 import { PANEL_IDS } from '../utils/panelDefaults'
 import { AnnotatePanel } from './AnnotatePanel'
 import { BathroomPanel } from './BathroomPanel'
+import { LunchRecoveryPanel } from './LunchRecoveryPanel'
 import { CalculatorPanel } from './CalculatorPanel'
 import { OvertimePanel } from './OvertimePanel'
 import { SeatingChartPanel } from './SeatingChartPanel'
@@ -72,6 +74,16 @@ export const PANEL_REGISTRY = [
     compact: true,
     hideMinimize: true,
     corner: 'bottom-right',
+  },
+  {
+    id: PANEL_IDS.LUNCH,
+    label: 'Lunch Recovery',
+    Icon: LunchIcon,
+    Component: LunchRecoveryPanel,
+    dock: 'quick',
+    compact: true,
+    hideMinimize: true,
+    corner: 'bottom-left',
   },
 ]
 

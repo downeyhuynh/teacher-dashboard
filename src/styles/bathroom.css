@@ -115,6 +115,11 @@
   font-size: calc(0.72rem * var(--text-zoom, 1));
 }
 
+.lunch-panel__name {
+  flex: 1;
+  font-size: calc(1.05rem * var(--text-zoom, 1));
+}
+
 .floating-panel--compact {
   min-width: 0;
   min-height: 0;

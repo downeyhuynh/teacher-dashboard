@@ -90,6 +90,18 @@ export function MusicOffIcon({ className }) {
   )
 }
 
+export function LunchIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <path d="M6 3v8" />
+      <path d="M4.5 3v3a1.5 1.5 0 0 0 3 0V3" />
+      <path d="M6 11v10" />
+      <path d="M14 3c-1.5 2.2-1.5 4.2 0 6.2 1.2 1.6 1.2 3.2 0 4.8" />
+      <path d="M14 3v18" />
+    </svg>
+  )
+}
+
 export function BathroomIcon({ className }) {
   return (
     <svg className={className} {...iconProps}>

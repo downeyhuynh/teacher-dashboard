@@ -15,7 +15,17 @@ export function createEmptyOvertimeClock() {
     elapsedMs: 0,
     running: false,
     mode: 'accrue', // accrue | pay
+    anchorElapsedMs: 0,
+    anchorAt: 0,
   }
+}
+
+/** Live elapsed time. A running clock is measured from its start anchor. */
+export function readOvertimeElapsed(clock, now = performance.now()) {
+  if (!clock?.running || !clock.anchorAt) return Math.max(0, Number(clock?.elapsedMs) || 0)
+  const delta = Math.max(0, now - clock.anchorAt)
+  if (clock.mode === 'pay') return Math.max(0, clock.anchorElapsedMs - delta)
+  return clock.anchorElapsedMs + delta
 }
 
 export function createEmptyOvertimeState() {
@@ -73,6 +83,19 @@ export function loadOvertimeClocks() {
   } catch {
     return createEmptyOvertimeState()
   }
+}
+
+/** Freeze running clocks to their live elapsed time before saving. */
+export function snapshotOvertimeClocks(clocks, now = performance.now()) {
+  const snapshot = {}
+  for (const id of OVERTIME_CLOCK_IDS) {
+    const clock = clocks?.[id] || createEmptyOvertimeClock()
+    snapshot[id] = {
+      ...clock,
+      elapsedMs: readOvertimeElapsed(clock, now),
+    }
+  }
+  return snapshot
 }
 
 export function saveOvertimeClocks(clocks) {

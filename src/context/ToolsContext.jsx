@@ -25,6 +25,7 @@ import {
 } from '../utils/roster'
 import { createId } from '../utils/id'
 import { loadRestroomList, saveRestroomList } from '../utils/restroomList'
+import { loadLunchRecoveryList, saveLunchRecoveryList } from '../utils/lunchRecoveryList'
 import {
   loadLessonChrome,
   saveLessonChrome,
@@ -37,7 +38,6 @@ import {
   setOvertimeTickVolume,
   startOvertimeTicking,
   stopOvertimeTicking,
-  maybePlayOvertimeProgressCues,
   resetOvertimeProgressCueMarks,
   playPositiveAdjustBuzz,
   playNegativeAdjustBuzz,
@@ -47,7 +47,9 @@ import {
   OVERTIME_CLOCK_IDS,
   createEmptyOvertimeClock,
   loadOvertimeClocks,
+  readOvertimeElapsed,
   saveOvertimeClocks,
+  snapshotOvertimeClocks,
 } from '../utils/overtimeClocks'
 
 const VOLUME_STORAGE_KEY = 'teacher-dashboard.audio-volumes.v1'
@@ -116,6 +118,7 @@ export function ToolsProvider({ children }) {
 
   // --- Restroom out list (survives panel close + refresh) ---
   const [restroomOut, setRestroomOut] = useState(() => loadRestroomList())
+  const [lunchRecovery, setLunchRecovery] = useState(() => loadLunchRecoveryList())
 
   // --- Lesson objective / agenda (per subject × Mon–Fri) ---
   const initialLesson = useMemo(() => loadLessonChrome(), [])
@@ -129,7 +132,6 @@ export function ToolsProvider({ children }) {
 
   // --- Overtime stopwatches (soccer / Tabs Hawaii / Caltech) ---
   const [overtimeClocks, setOvertimeClocks] = useState(() => loadOvertimeClocks())
-  const overtimeFrameRef = useRef(null)
   const overtimeClocksRef = useRef(overtimeClocks)
   overtimeClocksRef.current = overtimeClocks
   const overtimeVolumeRef = useRef(overtimeVolume)
@@ -142,6 +144,10 @@ export function ToolsProvider({ children }) {
   useEffect(() => {
     saveRestroomList(restroomOut)
   }, [restroomOut])
+
+  useEffect(() => {
+    saveLunchRecoveryList(lunchRecovery)
+  }, [lunchRecovery])
 
   useEffect(() => {
     saveLessonChrome({
@@ -171,50 +177,45 @@ export function ToolsProvider({ children }) {
 
   useEffect(() => {
     if (!anyOvertimeRunning) {
-      overtimeFrameRef.current = null
       stopOvertimeTicking()
       return undefined
     }
 
-    overtimeFrameRef.current = performance.now()
     let frameId = 0
-    const tick = (now) => {
-      const last = overtimeFrameRef.current ?? now
-      const delta = now - last
-      overtimeFrameRef.current = now
-
-      const pendingCues = []
+    const tick = () => {
+      const now = performance.now()
       setOvertimeClocks((prev) => {
         let changed = false
         const nextState = { ...prev }
         for (const id of OVERTIME_CLOCK_IDS) {
           const clock = prev[id]
           if (!clock?.running) continue
-          changed = true
-          if (clock.mode === 'pay') {
-            const elapsedMs = Math.max(0, clock.elapsedMs - delta)
+          if (!clock.anchorAt) {
+            changed = true
             nextState[id] = {
               ...clock,
-              elapsedMs,
-              running: elapsedMs > 0,
-              mode: elapsedMs > 0 ? 'pay' : 'accrue',
+              anchorElapsedMs: clock.elapsedMs,
+              anchorAt: now,
             }
-          } else {
-            const elapsedMs = clock.elapsedMs + delta
-            nextState[id] = { ...clock, elapsedMs }
-            pendingCues.push({ id, elapsedMs })
+            continue
+          }
+          const elapsedMs = readOvertimeElapsed(clock, now)
+          const stopped = clock.mode === 'pay' && elapsedMs <= 0
+          const second = Math.floor(elapsedMs / 1000)
+          const previousSecond = Math.floor(clock.elapsedMs / 1000)
+          if (!stopped && second === previousSecond) continue
+          changed = true
+          nextState[id] = {
+            ...clock,
+            elapsedMs: stopped ? 0 : elapsedMs,
+            running: !stopped,
+            mode: stopped ? 'accrue' : clock.mode,
+            anchorAt: stopped ? 0 : clock.anchorAt,
+            anchorElapsedMs: stopped ? 0 : clock.anchorElapsedMs,
           }
         }
         return changed ? nextState : prev
       })
-      for (const cue of pendingCues) {
-        maybePlayOvertimeProgressCues(
-          cue.elapsedMs,
-          overtimeVolumeRef.current,
-          cue.id,
-        )
-      }
-
       frameId = requestAnimationFrame(tick)
     }
     frameId = requestAnimationFrame(tick)
@@ -240,13 +241,13 @@ export function ToolsProvider({ children }) {
   useEffect(() => {
     if (!anyOvertimeRunning) return undefined
     const id = window.setInterval(() => {
-      saveOvertimeClocks(overtimeClocksRef.current)
+      saveOvertimeClocks(snapshotOvertimeClocks(overtimeClocksRef.current))
     }, 2000)
     return () => window.clearInterval(id)
   }, [anyOvertimeRunning])
 
   useEffect(() => {
-    const persist = () => saveOvertimeClocks(overtimeClocksRef.current)
+    const persist = () => saveOvertimeClocks(snapshotOvertimeClocks(overtimeClocksRef.current))
     window.addEventListener('pagehide', persist)
     window.addEventListener('beforeunload', persist)
     return () => {
@@ -514,6 +515,23 @@ export function ToolsProvider({ children }) {
     setRestroomOut([])
   }, [])
 
+  const addLunchStudent = useCallback((name) => {
+    const trimmed = String(name || '').trim()
+    if (!trimmed) return
+    setLunchRecovery((prev) => [
+      { id: createId('lunch'), name: trimmed },
+      ...prev,
+    ])
+  }, [])
+
+  const removeLunchStudent = useCallback((id) => {
+    setLunchRecovery((prev) => prev.filter((entry) => entry.id !== id))
+  }, [])
+
+  const clearLunchRecovery = useCallback(() => {
+    setLunchRecovery([])
+  }, [])
+
   const setLessonObjective = useCallback(
     (value) => {
       setLessonSubjects((prev) => ({
@@ -586,15 +604,20 @@ export function ToolsProvider({ children }) {
   )
 
   const startOvertime = useCallback((clockId = 'overtime') => {
+    const now = performance.now()
     // Unlock inside the click so the tick is allowed to play.
     unlockOvertimeAudio(overtimeVolumeRef.current)
     startOvertimeTicking({ volume: overtimeVolumeRef.current }).catch(() => {})
     setOvertimeClocks((prev) => {
       const clock = prev[clockId] || createEmptyOvertimeClock()
+      const elapsedMs = readOvertimeElapsed(clock, now)
       return {
         ...prev,
         [clockId]: {
           ...clock,
+          elapsedMs,
+          anchorElapsedMs: elapsedMs,
+          anchorAt: now,
           mode: 'accrue',
           running: true,
         },
@@ -603,17 +626,22 @@ export function ToolsProvider({ children }) {
   }, [])
 
   const payOvertime = useCallback((clockId = 'overtime') => {
+    const now = performance.now()
     const clock = overtimeClocksRef.current?.[clockId]
-    if (!clock || clock.elapsedMs <= 0) return
+    if (!clock || readOvertimeElapsed(clock, now) <= 0) return
     unlockOvertimeAudio(overtimeVolumeRef.current)
     startOvertimeTicking({ volume: overtimeVolumeRef.current }).catch(() => {})
     setOvertimeClocks((prev) => {
       const current = prev[clockId] || createEmptyOvertimeClock()
-      if (current.elapsedMs <= 0) return prev
+      const elapsedMs = readOvertimeElapsed(current, now)
+      if (elapsedMs <= 0) return prev
       return {
         ...prev,
         [clockId]: {
           ...current,
+          elapsedMs,
+          anchorElapsedMs: elapsedMs,
+          anchorAt: now,
           mode: 'pay',
           running: true,
         },
@@ -622,11 +650,17 @@ export function ToolsProvider({ children }) {
   }, [])
 
   const pauseOvertime = useCallback((clockId = 'overtime') => {
+    const now = performance.now()
     setOvertimeClocks((prev) => {
       const clock = prev[clockId] || createEmptyOvertimeClock()
       return {
         ...prev,
-        [clockId]: { ...clock, running: false },
+        [clockId]: {
+          ...clock,
+          elapsedMs: readOvertimeElapsed(clock, now),
+          running: false,
+          anchorAt: 0,
+        },
       }
     })
   }, [])
@@ -642,14 +676,18 @@ export function ToolsProvider({ children }) {
   const adjustOvertimeSeconds = useCallback((clockId, deltaSeconds) => {
     const deltaMs = Math.round(Number(deltaSeconds) || 0) * 1000
     if (!deltaMs) return
+    const now = performance.now()
     unlockOvertimeAudio(overtimeVolumeRef.current)
     setOvertimeClocks((prev) => {
       const clock = prev[clockId] || createEmptyOvertimeClock()
+      const elapsedMs = Math.max(0, readOvertimeElapsed(clock, now) + deltaMs)
       return {
         ...prev,
         [clockId]: {
           ...clock,
-          elapsedMs: Math.max(0, clock.elapsedMs + deltaMs),
+          elapsedMs,
+          anchorElapsedMs: elapsedMs,
+          anchorAt: clock.running ? now : 0,
         },
       }
     })
@@ -719,6 +757,12 @@ export function ToolsProvider({ children }) {
         remove: removeRestroomStudent,
         toggle: toggleRestroomStudent,
         clear: clearRestroomList,
+      },
+      lunchRecovery: {
+        names: lunchRecovery,
+        add: addLunchStudent,
+        remove: removeLunchStudent,
+        clear: clearLunchRecovery,
       },
       lesson: {
         subject: lessonSubject,
@@ -791,6 +835,10 @@ export function ToolsProvider({ children }) {
       removeRestroomStudent,
       toggleRestroomStudent,
       clearRestroomList,
+      lunchRecovery,
+      addLunchStudent,
+      removeLunchStudent,
+      clearLunchRecovery,
       lessonSubject,
       lessonDay,
       lessonSubjects,

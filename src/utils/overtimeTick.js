@@ -14,8 +14,8 @@ let visibilityHooked = false
 const progressMarksByClock = new Map()
 
 const TICK_INTERVAL_SEC = 1
-const SCHEDULE_AHEAD_SEC = 0.25
-const SCHEDULER_POLL_MS = 50
+const SCHEDULE_AHEAD_SEC = 1.25
+const SCHEDULER_POLL_MS = 100
 
 function getAudioContext() {
   const AudioCtx = window.AudioContext || window.webkitAudioContext
@@ -114,11 +114,11 @@ function playBuzz(
   ctx,
   { startFreq, endFreq, duration, peak, type = 'square', when = null },
 ) {
-  // Keep the scheduled time when it is still ahead. Only nudge a tick that
-  // is a few milliseconds late; dropping further-late ticks avoids bursts.
+  // Play on the audio clock. A tick queued ahead stays on that beat.
+  // A tick only a few milliseconds late plays immediately instead of being dropped.
   const earliest = ctx.currentTime
   const scheduled = when == null ? earliest : when
-  if (scheduled < earliest - 0.08) return
+  if (scheduled < earliest - 0.03) return
   const now = Math.max(earliest, scheduled)
   const osc = ctx.createOscillator()
   const gain = ctx.createGain()
@@ -299,10 +299,12 @@ function pumpTickSchedule() {
       return
     }
 
-    // One late tick is nudged forward inside playBuzz. A bigger gap skips
-    // the missed beats so they do not all fire at once.
-    if (nextTickTime < ctx.currentTime - 0.08) {
-      const missed = Math.floor((ctx.currentTime - nextTickTime) / TICK_INTERVAL_SEC)
+    // Stay on a 1-second grid. If the page stalled, skip the missed beats
+    // instead of playing them in a burst, then keep scheduling ahead.
+    if (!Number.isFinite(nextTickTime) || nextTickTime <= 0) {
+      nextTickTime = ctx.currentTime
+    } else if (nextTickTime < ctx.currentTime - 0.03) {
+      const missed = Math.ceil((ctx.currentTime - nextTickTime) / TICK_INTERVAL_SEC)
       nextTickTime += missed * TICK_INTERVAL_SEC
     }
 
