@@ -3,6 +3,7 @@ import {
   CompressIcon,
   ExpandIcon,
   HandIcon,
+  PointerIcon,
   ZoomInIcon,
   ZoomOutIcon,
 } from '../components/ui/icons'
@@ -14,6 +15,8 @@ import { usePresentation } from '../context/PresentationContext'
 export function SlideViewControls({
   panMode,
   onPanModeChange,
+  selectActive = false,
+  onSelect,
   isFullscreen = false,
   onToggleFullscreen,
 }) {
@@ -51,6 +54,16 @@ export function SlideViewControls({
         onClick={zoomIn}
       >
         <ZoomInIcon className="stage-button__icon" />
+      </button>
+      <button
+        type="button"
+        className={`stage-button stage-button--icon ${selectActive ? 'is-active' : ''}`}
+        aria-label="Select — press V to click normally"
+        aria-pressed={selectActive}
+        title="Select (V) — click normally"
+        onClick={onSelect}
+      >
+        <PointerIcon className="stage-button__icon" />
       </button>
       <button
         type="button"

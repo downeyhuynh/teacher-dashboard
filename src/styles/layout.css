@@ -295,6 +295,20 @@
   border: none;
 }
 
+.app-shell.is-fullscreen .slide-viewport__video {
+  width: min(100cqw, calc(100cqh * 16 / 9));
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.app-shell.is-fullscreen .fs-edge--right {
+  pointer-events: auto;
+}
+
+.app-shell.is-fullscreen.is-reveal-right .fs-edge--right {
+  pointer-events: none;
+}
+
 .app-shell.is-fullscreen .annotation-layer {
   border-radius: 0;
 }

@@ -34,7 +34,7 @@ export const PANEL_DEFAULT_SIZES = {
   [PANEL_IDS.STUDENTS]: { width: 380, height: 620 },
   [PANEL_IDS.SEATING]: { width: 720, height: 560 },
   [PANEL_IDS.BATHROOM]: { width: 260, height: 280 },
-  [PANEL_IDS.LUNCH]: { width: 280, height: 320 },
+  [PANEL_IDS.LUNCH]: { width: 340, height: 320 },
   [PANEL_IDS.OVERTIME]: { width: 168, height: 72 },
 }
 

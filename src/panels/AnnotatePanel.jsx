@@ -73,7 +73,7 @@ export function AnnotatePanel() {
       <p className="tool-panel__hint">
         {slideCount === 0
           ? 'Import a presentation first, then draw on slides from this panel.'
-          : 'Draw on the slide while Annotate is on. P = pen, E = eraser, T = text. In text: Ctrl+B bold, Ctrl+I italic, Ctrl+U underline. Hold Shift for a straight line. Ctrl+Z undoes draws and erases.'}
+          : 'Draw on the slide while Annotate is on. V = select, P = pen, E = eraser, T = text. In text: Ctrl+B bold, Ctrl+I italic, Ctrl+U underline. Hold Shift for a straight line. Ctrl+Z undoes draws and erases.'}
       </p>
 
       <div className="tool-panel__row">

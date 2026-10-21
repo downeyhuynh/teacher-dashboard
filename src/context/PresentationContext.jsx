@@ -7,6 +7,7 @@ import {
 import { ANNOTATION_STAMPS } from '../utils/annotationStamps'
 import { clamp } from '../utils/clamp'
 import { createId } from '../utils/id'
+import { youtubeVideoId } from '../utils/youtube'
 
 const MAX_UNDO = 60
 
@@ -202,6 +203,46 @@ export function PresentationProvider({ children }) {
       }
     })
   }, [patchActiveDeck])
+
+  /** Insert a YouTube video after the current slide and jump to it. */
+  const addYoutubeSlide = useCallback(
+    (url) => {
+      const videoId = youtubeVideoId(url)
+      if (!videoId) return false
+      const slide = {
+        id: createId('slide'),
+        source: 'youtube',
+        name: 'Video',
+        videoId,
+      }
+      const id = activeDeckIdRef.current
+
+      if (!id) {
+        const deck = createDeck({ name: 'Lesson', slides: [slide] })
+        setDecks([deck])
+        setActiveDeckId(deck.id)
+        setFocusTextId(null)
+        return true
+      }
+
+      patchActiveDeck((deck) => {
+        const insertAt = Math.min(deck.currentIndex + 1, deck.slides.length)
+        const slidesNext = [
+          ...deck.slides.slice(0, insertAt),
+          slide,
+          ...deck.slides.slice(insertAt),
+        ]
+        return {
+          slides: slidesNext,
+          currentIndex: insertAt,
+          slideView: { ...DEFAULT_VIEW },
+          name: deck.name || 'Lesson',
+        }
+      })
+      return true
+    },
+    [patchActiveDeck],
+  )
 
   const goToSlide = useCallback(
     (index) => {
@@ -460,6 +501,7 @@ export function PresentationProvider({ children }) {
       importFiles,
       clearDeck,
       addWhiteboardSlide,
+      addYoutubeSlide,
       goToSlide,
       nextSlide,
       prevSlide,
@@ -507,6 +549,7 @@ export function PresentationProvider({ children }) {
       importFiles,
       clearDeck,
       addWhiteboardSlide,
+      addYoutubeSlide,
       goToSlide,
       nextSlide,
       prevSlide,

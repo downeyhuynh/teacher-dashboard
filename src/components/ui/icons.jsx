@@ -201,6 +201,14 @@ export function ZoomOutIcon({ className }) {
   )
 }
 
+export function PointerIcon({ className }) {
+  return (
+    <svg className={className} {...iconProps}>
+      <path d="M5.5 3.5v12.2l3.2-3.1 2.4 5.6 2.2-.9-2.4-5.6H16L5.5 3.5z" />
+    </svg>
+  )
+}
+
 export function HandIcon({ className }) {
   return (
     <svg className={className} {...iconProps}>

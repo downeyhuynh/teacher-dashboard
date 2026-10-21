@@ -2,9 +2,14 @@ import { createId } from './id'
 
 const STORAGE_KEY = 'teacher-dashboard.lunch-recovery.v1'
 
+function strikeCount(value) {
+  const count = Math.floor(Number(value) || 0)
+  return count > 0 ? count : 0
+}
+
 /**
- * Load lunch recovery names.
- * @returns {{ id: string, name: string }[]}
+ * Load lunch recovery names and strike counts.
+ * @returns {{ id: string, name: string, strikes: number }[]}
  */
 export function loadLunchRecoveryList() {
   try {
@@ -16,6 +21,7 @@ export function loadLunchRecoveryList() {
       .map((entry) => ({
         id: String(entry?.id || createId('lunch')),
         name: String(entry?.name || '').trim(),
+        strikes: strikeCount(entry?.strikes),
       }))
       .filter((entry) => entry.name)
   } catch {

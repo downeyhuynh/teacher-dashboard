@@ -32,6 +32,7 @@ export function PresentationStage({
     canUndoAnnotation,
     updateAnnotationTool,
     enableAnnotate,
+    disableAnnotate,
     addTextAnnotation,
     setFocusTextId,
   } = usePresentation()
@@ -108,6 +109,14 @@ export function PresentationStage({
         if (key === '0') resetSlideView()
         else if (event.key === '+' || event.key === '=') zoomIn()
         else zoomOut()
+        return
+      }
+
+      if (key === 'v' && !withMod && !event.altKey) {
+        event.preventDefault()
+        setPanMode(false)
+        disableAnnotate()
+        setFocusTextId(null)
         return
       }
 
@@ -211,6 +220,7 @@ export function PresentationStage({
     addTextAnnotation,
     canUndoAnnotation,
     currentSlide,
+    disableAnnotate,
     enableAnnotate,
     nextSlide,
     onRequestAnnotate,
@@ -272,6 +282,12 @@ export function PresentationStage({
                   setPanMode(next)
                   if (next) setFocusTextId(null)
                 }}
+                selectActive={!panMode && !annotateActive}
+                onSelect={() => {
+                  setPanMode(false)
+                  disableAnnotate()
+                  setFocusTextId(null)
+                }}
                 isFullscreen={isFullscreen}
                 onToggleFullscreen={toggleFullscreen}
               />
@@ -299,7 +315,19 @@ export function PresentationStage({
                   transform: `translate(${slideView.x}px, ${slideView.y}px) scale(${slideView.scale})`,
                 }}
               >
-                {currentSlide?.src ? (
+                {currentSlide?.source === 'youtube' && currentSlide.videoId ? (
+                  <div className="slide-viewport__video">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${currentSlide.videoId}?autoplay=1&rel=0`}
+                      title={currentSlide.name || 'YouTube video'}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                    {isPanning ? (
+                      <div className="slide-viewport__video-shield" aria-hidden="true" />
+                    ) : null}
+                  </div>
+                ) : currentSlide?.src ? (
                   <img
                     className={`slide-viewport__image ${
                       currentSlide.source === 'whiteboard'

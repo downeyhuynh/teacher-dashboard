@@ -6,7 +6,7 @@ import { useTools } from '../context/ToolsContext'
  */
 export function LunchRecoveryPanel() {
   const { lunchRecovery } = useTools()
-  const { names, add, remove, clear } = lunchRecovery
+  const { names, add, adjustStrikes, remove, clear } = lunchRecovery
   const [nameInput, setNameInput] = useState('')
   const inputRef = useRef(null)
 
@@ -57,18 +57,43 @@ export function LunchRecoveryPanel() {
           <p className="bathroom-panel__empty">No one serving lunch</p>
         ) : (
           <ul className="bathroom-panel__items">
-            {names.map((entry) => (
-              <li key={entry.id} className="bathroom-panel__item">
-                <strong className="bathroom-panel__name lunch-panel__name">{entry.name}</strong>
-                <button
-                  type="button"
-                  className="stage-button"
-                  onClick={() => remove(entry.id)}
-                >
-                  Remove
-                </button>
-              </li>
-            ))}
+            {names.map((entry) => {
+              const strikes = entry.strikes || 0
+              return (
+                <li key={entry.id} className="bathroom-panel__item">
+                  <strong className="bathroom-panel__name lunch-panel__name">{entry.name}</strong>
+                  <div className="lunch-panel__strikes" role="group" aria-label={`${entry.name} strikes`}>
+                    <button
+                      type="button"
+                      className="stage-button lunch-panel__strike-btn"
+                      onClick={() => adjustStrikes(entry.id, -1)}
+                      disabled={strikes <= 0}
+                      aria-label={`Remove a strike from ${entry.name}`}
+                    >
+                      −
+                    </button>
+                    <span className="lunch-panel__strike-count" aria-label={`${strikes} strikes`}>
+                      {strikes}
+                    </span>
+                    <button
+                      type="button"
+                      className="stage-button lunch-panel__strike-btn"
+                      onClick={() => adjustStrikes(entry.id, 1)}
+                      aria-label={`Add a strike for ${entry.name}`}
+                    >
+                      +
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    className="stage-button"
+                    onClick={() => remove(entry.id)}
+                  >
+                    Remove
+                  </button>
+                </li>
+              )
+            })}
           </ul>
         )}
       </div>

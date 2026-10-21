@@ -519,9 +519,20 @@ export function ToolsProvider({ children }) {
     const trimmed = String(name || '').trim()
     if (!trimmed) return
     setLunchRecovery((prev) => [
-      { id: createId('lunch'), name: trimmed },
+      { id: createId('lunch'), name: trimmed, strikes: 0 },
       ...prev,
     ])
+  }, [])
+
+  const adjustLunchStrikes = useCallback((id, delta) => {
+    const step = Math.trunc(Number(delta) || 0)
+    if (!step) return
+    setLunchRecovery((prev) =>
+      prev.map((entry) => {
+        if (entry.id !== id) return entry
+        return { ...entry, strikes: Math.max(0, (entry.strikes || 0) + step) }
+      }),
+    )
   }, [])
 
   const removeLunchStudent = useCallback((id) => {
@@ -761,6 +772,7 @@ export function ToolsProvider({ children }) {
       lunchRecovery: {
         names: lunchRecovery,
         add: addLunchStudent,
+        adjustStrikes: adjustLunchStrikes,
         remove: removeLunchStudent,
         clear: clearLunchRecovery,
       },
@@ -837,6 +849,7 @@ export function ToolsProvider({ children }) {
       clearRestroomList,
       lunchRecovery,
       addLunchStudent,
+      adjustLunchStrikes,
       removeLunchStudent,
       clearLunchRecovery,
       lessonSubject,

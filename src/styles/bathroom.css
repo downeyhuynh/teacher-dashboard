@@ -120,6 +120,29 @@
   font-size: calc(1.05rem * var(--text-zoom, 1));
 }
 
+.lunch-panel__strikes {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.lunch-panel__strike-btn {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  font-size: calc(0.9rem * var(--text-zoom, 1));
+  line-height: 1;
+}
+
+.lunch-panel__strike-count {
+  min-width: 1.1em;
+  text-align: center;
+  font-size: calc(0.95rem * var(--text-zoom, 1));
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
 .floating-panel--compact {
   min-width: 0;
   min-height: 0;

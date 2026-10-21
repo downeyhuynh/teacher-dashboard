@@ -1,5 +1,72 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { usePresentation } from '../context/PresentationContext'
+import { youtubeVideoId } from '../utils/youtube'
+
+function VideoLink({ onPlay }) {
+  const [open, setOpen] = useState(false)
+  const [url, setUrl] = useState('')
+  const [error, setError] = useState('')
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (open) inputRef.current?.focus()
+  }, [open])
+
+  const close = () => {
+    setOpen(false)
+    setUrl('')
+    setError('')
+  }
+
+  if (!open) {
+    return (
+      <button type="button" className="stage-button" onClick={() => setOpen(true)}>
+        Video
+      </button>
+    )
+  }
+
+  return (
+    <form
+      className="slide-nav__video"
+      onSubmit={(event) => {
+        event.preventDefault()
+        if (!youtubeVideoId(url)) {
+          setError('Paste a YouTube link')
+          return
+        }
+        const played = onPlay(url)
+        if (!played) {
+          setError('Paste a YouTube link')
+          return
+        }
+        close()
+      }}
+    >
+      <input
+        ref={inputRef}
+        className="slide-nav__video-input"
+        type="url"
+        inputMode="url"
+        value={url}
+        placeholder="YouTube link"
+        aria-label="YouTube link"
+        autoComplete="off"
+        onChange={(event) => {
+          setUrl(event.target.value)
+          setError('')
+        }}
+      />
+      <button type="submit" className="stage-button stage-button--primary" disabled={!url.trim()}>
+        Play
+      </button>
+      <button type="button" className="stage-button" onClick={close}>
+        Cancel
+      </button>
+      {error ? <span className="slide-nav__video-error">{error}</span> : null}
+    </form>
+  )
+}
 
 /**
  * Previous / next slide controls and deck actions.
@@ -14,6 +81,7 @@ export function SlideNav({ viewControls = null }) {
     clearDeck,
     clearAllMarks,
     addWhiteboardSlide,
+    addYoutubeSlide,
     enableAnnotate,
   } = usePresentation()
 
@@ -39,6 +107,7 @@ export function SlideNav({ viewControls = null }) {
           >
             Whiteboard
           </button>
+          <VideoLink onPlay={addYoutubeSlide} />
         </div>
       </div>
     )
@@ -81,6 +150,7 @@ export function SlideNav({ viewControls = null }) {
         >
           Whiteboard
         </button>
+        <VideoLink onPlay={addYoutubeSlide} />
         <button
           type="button"
           className="stage-button"
