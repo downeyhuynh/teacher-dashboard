@@ -515,32 +515,58 @@ export function ToolsProvider({ children }) {
     setRestroomOut([])
   }, [])
 
-  const addLunchStudent = useCallback((name) => {
+  const addLunchStudent = useCallback((group, name) => {
+    const key = group === 'caltech' ? 'caltech' : 'hawaii'
     const trimmed = String(name || '').trim()
     if (!trimmed) return
-    setLunchRecovery((prev) => [
-      { id: createId('lunch'), name: trimmed, strikes: 0 },
+    setLunchRecovery((prev) => ({
       ...prev,
-    ])
+      [key]: [
+        { id: createId('lunch'), name: trimmed, strikes: 0, mark: '' },
+        ...(prev[key] || []),
+      ],
+    }))
   }, [])
 
-  const adjustLunchStrikes = useCallback((id, delta) => {
+  const adjustLunchStrikes = useCallback((group, id, delta) => {
+    const key = group === 'caltech' ? 'caltech' : 'hawaii'
     const step = Math.trunc(Number(delta) || 0)
     if (!step) return
-    setLunchRecovery((prev) =>
-      prev.map((entry) => {
+    setLunchRecovery((prev) => ({
+      ...prev,
+      [key]: (prev[key] || []).map((entry) => {
         if (entry.id !== id) return entry
         return { ...entry, strikes: Math.max(0, (entry.strikes || 0) + step) }
       }),
-    )
+    }))
   }, [])
 
-  const removeLunchStudent = useCallback((id) => {
-    setLunchRecovery((prev) => prev.filter((entry) => entry.id !== id))
+  const setLunchMark = useCallback((group, id, mark) => {
+    const key = group === 'caltech' ? 'caltech' : 'hawaii'
+    const nextMark = mark === 'M' || mark === 'R' ? mark : ''
+    setLunchRecovery((prev) => ({
+      ...prev,
+      [key]: (prev[key] || []).map((entry) => {
+        if (entry.id !== id) return entry
+        return { ...entry, mark: entry.mark === nextMark ? '' : nextMark }
+      }),
+    }))
   }, [])
 
-  const clearLunchRecovery = useCallback(() => {
-    setLunchRecovery([])
+  const removeLunchStudent = useCallback((group, id) => {
+    const key = group === 'caltech' ? 'caltech' : 'hawaii'
+    setLunchRecovery((prev) => ({
+      ...prev,
+      [key]: (prev[key] || []).filter((entry) => entry.id !== id),
+    }))
+  }, [])
+
+  const clearLunchRecovery = useCallback((group) => {
+    const key = group === 'caltech' ? 'caltech' : 'hawaii'
+    setLunchRecovery((prev) => ({
+      ...prev,
+      [key]: [],
+    }))
   }, [])
 
   const setLessonObjective = useCallback(
@@ -770,9 +796,10 @@ export function ToolsProvider({ children }) {
         clear: clearRestroomList,
       },
       lunchRecovery: {
-        names: lunchRecovery,
+        lists: lunchRecovery,
         add: addLunchStudent,
         adjustStrikes: adjustLunchStrikes,
+        setMark: setLunchMark,
         remove: removeLunchStudent,
         clear: clearLunchRecovery,
       },
@@ -850,6 +877,7 @@ export function ToolsProvider({ children }) {
       lunchRecovery,
       addLunchStudent,
       adjustLunchStrikes,
+      setLunchMark,
       removeLunchStudent,
       clearLunchRecovery,
       lessonSubject,
