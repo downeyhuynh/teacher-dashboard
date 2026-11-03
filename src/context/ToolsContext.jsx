@@ -32,8 +32,12 @@ import {
   nextLessonSubject,
   prevLessonSubject,
   getLessonDayContent,
-  getClassTrack,
+  resolveLiveLessonContent,
+  upsertDatedObjective,
+  upsertDatedDay,
+  defaultLessonDay,
 } from '../utils/lessonChrome'
+import { dateKey, getActivePeriod } from '../utils/lessonSchedule'
 import {
   setOvertimeTickVolume,
   startOvertimeTicking,
@@ -120,15 +124,25 @@ export function ToolsProvider({ children }) {
   const [restroomOut, setRestroomOut] = useState(() => loadRestroomList())
   const [lunchRecovery, setLunchRecovery] = useState(() => loadLunchRecoveryList())
 
-  // --- Lesson objective / agenda (per subject × Mon–Fri) ---
+  // --- Lesson objective / agenda (schedule + dated Math/Science) ---
   const initialLesson = useMemo(() => loadLessonChrome(), [])
   const [lessonSubject, setLessonSubject] = useState(initialLesson.subject)
   const [lessonDay, setLessonDay] = useState(initialLesson.day)
   const [lessonSubjects, setLessonSubjects] = useState(initialLesson.subjects)
   const [classTracks, setClassTracks] = useState(initialLesson.classTracks)
+  const [datedObjectives, setDatedObjectives] = useState(
+    () => initialLesson.datedObjectives || {},
+  )
+  const [plgContent, setPlgContent] = useState(
+    () => initialLesson.plg || { objective: '', agenda: '' },
+  )
+  const [followSchedule, setFollowSchedule] = useState(
+    initialLesson.followSchedule !== false,
+  )
   const [lessonChromeVisible, setLessonChromeVisible] = useState(
     initialLesson.chromeVisible !== false,
   )
+  const [scheduleNow, setScheduleNow] = useState(() => new Date())
 
   // --- Overtime stopwatches (soccer / Tabs Hawaii / Caltech) ---
   const [overtimeClocks, setOvertimeClocks] = useState(() => loadOvertimeClocks())
@@ -155,15 +169,40 @@ export function ToolsProvider({ children }) {
       day: lessonDay,
       subjects: lessonSubjects,
       classTracks,
+      datedObjectives,
+      plg: plgContent,
       chromeVisible: lessonChromeVisible,
+      followSchedule,
     })
   }, [
     lessonSubject,
     lessonDay,
     lessonSubjects,
     classTracks,
+    datedObjectives,
+    plgContent,
     lessonChromeVisible,
+    followSchedule,
   ])
+
+  useEffect(() => {
+    const tick = () => setScheduleNow(new Date())
+    tick()
+    const id = window.setInterval(tick, 30_000)
+    const onFocus = () => tick()
+    window.addEventListener('focus', onFocus)
+    return () => {
+      window.clearInterval(id)
+      window.removeEventListener('focus', onFocus)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!followSchedule) return
+    const active = getActivePeriod(scheduleNow)
+    if (active?.subject) setLessonSubject(active.subject)
+    setLessonDay(defaultLessonDay(scheduleNow))
+  }, [followSchedule, scheduleNow])
 
   useEffect(() => {
     setFocusMusicVolume(focusMusicVolume)
@@ -490,29 +529,43 @@ export function ToolsProvider({ children }) {
     setPickedHistory([])
   }, [])
 
-  const addRestroomStudent = useCallback((name) => {
+  const addRestroomStudent = useCallback((group, name) => {
+    const key = group === 'caltech' ? 'caltech' : 'hawaii'
     const trimmed = String(name || '').trim()
     if (!trimmed) return
-    setRestroomOut((prev) => [
-      { id: createId('restroom'), name: trimmed, out: false },
+    setRestroomOut((prev) => ({
       ...prev,
-    ])
+      [key]: [
+        { id: createId('restroom'), name: trimmed, out: false },
+        ...(prev[key] || []),
+      ],
+    }))
   }, [])
 
-  const removeRestroomStudent = useCallback((id) => {
-    setRestroomOut((prev) => prev.filter((entry) => entry.id !== id))
+  const removeRestroomStudent = useCallback((group, id) => {
+    const key = group === 'caltech' ? 'caltech' : 'hawaii'
+    setRestroomOut((prev) => ({
+      ...prev,
+      [key]: (prev[key] || []).filter((entry) => entry.id !== id),
+    }))
   }, [])
 
-  const toggleRestroomStudent = useCallback((id) => {
-    setRestroomOut((prev) =>
-      prev.map((entry) =>
+  const toggleRestroomStudent = useCallback((group, id) => {
+    const key = group === 'caltech' ? 'caltech' : 'hawaii'
+    setRestroomOut((prev) => ({
+      ...prev,
+      [key]: (prev[key] || []).map((entry) =>
         entry.id === id ? { ...entry, out: !entry.out } : entry,
       ),
-    )
+    }))
   }, [])
 
-  const clearRestroomList = useCallback(() => {
-    setRestroomOut([])
+  const clearRestroomList = useCallback((group) => {
+    const key = group === 'caltech' ? 'caltech' : 'hawaii'
+    setRestroomOut((prev) => ({
+      ...prev,
+      [key]: [],
+    }))
   }, [])
 
   const addLunchStudent = useCallback((group, name) => {
@@ -522,7 +575,7 @@ export function ToolsProvider({ children }) {
     setLunchRecovery((prev) => ({
       ...prev,
       [key]: [
-        { id: createId('lunch'), name: trimmed, strikes: 0, mark: '' },
+        { id: createId('lunch'), name: trimmed, strikes: 0, marks: [] },
         ...(prev[key] || []),
       ],
     }))
@@ -537,18 +590,6 @@ export function ToolsProvider({ children }) {
       [key]: (prev[key] || []).map((entry) => {
         if (entry.id !== id) return entry
         return { ...entry, strikes: Math.max(0, (entry.strikes || 0) + step) }
-      }),
-    }))
-  }, [])
-
-  const setLunchMark = useCallback((group, id, mark) => {
-    const key = group === 'caltech' ? 'caltech' : 'hawaii'
-    const nextMark = mark === 'M' || mark === 'R' ? mark : ''
-    setLunchRecovery((prev) => ({
-      ...prev,
-      [key]: (prev[key] || []).map((entry) => {
-        if (entry.id !== id) return entry
-        return { ...entry, mark: entry.mark === nextMark ? '' : nextMark }
       }),
     }))
   }, [])
@@ -571,6 +612,17 @@ export function ToolsProvider({ children }) {
 
   const setLessonObjective = useCallback(
     (value) => {
+      if (lessonSubject === 'plg') {
+        setPlgContent((prev) => ({ ...prev, objective: value }))
+        return
+      }
+      if (lessonSubject === 'math' || lessonSubject === 'science') {
+        const key = dateKey(scheduleNow)
+        setDatedObjectives((prev) =>
+          upsertDatedObjective(prev, key, lessonSubject, { objective: value }),
+        )
+        return
+      }
       setLessonSubjects((prev) => ({
         ...prev,
         [lessonSubject]: {
@@ -582,11 +634,22 @@ export function ToolsProvider({ children }) {
         },
       }))
     },
-    [lessonSubject, lessonDay],
+    [lessonSubject, lessonDay, scheduleNow],
   )
 
   const setLessonAgenda = useCallback(
     (value) => {
+      if (lessonSubject === 'plg') {
+        setPlgContent((prev) => ({ ...prev, agenda: value }))
+        return
+      }
+      if (lessonSubject === 'math' || lessonSubject === 'science') {
+        const key = dateKey(scheduleNow)
+        setDatedObjectives((prev) =>
+          upsertDatedObjective(prev, key, lessonSubject, { agenda: value }),
+        )
+        return
+      }
       setLessonSubjects((prev) => ({
         ...prev,
         [lessonSubject]: {
@@ -598,15 +661,34 @@ export function ToolsProvider({ children }) {
         },
       }))
     },
-    [lessonSubject, lessonDay],
+    [lessonSubject, lessonDay, scheduleNow],
   )
 
+  const setDatedLessonContent = useCallback((key, subjectId, patch) => {
+    setDatedObjectives((prev) => upsertDatedObjective(prev, key, subjectId, patch))
+  }, [])
+
+  const setDatedDayContent = useCallback((key, dayContent) => {
+    setDatedObjectives((prev) => upsertDatedDay(prev, key, dayContent))
+  }, [])
+
   const goNextLessonSubject = useCallback(() => {
+    setFollowSchedule(false)
     setLessonSubject((prev) => nextLessonSubject(prev))
   }, [])
 
   const goPrevLessonSubject = useCallback(() => {
+    setFollowSchedule(false)
     setLessonSubject((prev) => prevLessonSubject(prev))
+  }, [])
+
+  const enableFollowSchedule = useCallback(() => {
+    setFollowSchedule(true)
+    const now = new Date()
+    setScheduleNow(now)
+    const active = getActivePeriod(now)
+    if (active?.subject) setLessonSubject(active.subject)
+    setLessonDay(defaultLessonDay(now))
   }, [])
 
   const selectLessonDay = useCallback((dayId) => {
@@ -634,11 +716,17 @@ export function ToolsProvider({ children }) {
     setLessonChromeVisible(Boolean(open))
   }, [])
 
-  const activeLessonContent = getLessonDayContent(
-    lessonSubjects,
-    lessonSubject,
-    lessonDay,
-  )
+  const liveLesson = resolveLiveLessonContent({
+    date: scheduleNow,
+    subject: lessonSubject,
+    datedObjectives,
+    plg: plgContent,
+    followSchedule,
+  })
+  const activeLessonContent = {
+    objective: liveLesson.objective,
+    agenda: liveLesson.agenda,
+  }
 
   const startOvertime = useCallback((clockId = 'overtime') => {
     const now = performance.now()
@@ -789,7 +877,7 @@ export function ToolsProvider({ children }) {
         activeRoster: rosters[activeClassId] || [],
       },
       restroom: {
-        out: restroomOut,
+        lists: restroomOut,
         add: addRestroomStudent,
         remove: removeRestroomStudent,
         toggle: toggleRestroomStudent,
@@ -799,28 +887,34 @@ export function ToolsProvider({ children }) {
         lists: lunchRecovery,
         add: addLunchStudent,
         adjustStrikes: adjustLunchStrikes,
-        setMark: setLunchMark,
         remove: removeLunchStudent,
         clear: clearLunchRecovery,
       },
       lesson: {
-        subject: lessonSubject,
+        subject: liveLesson.subject,
         day: lessonDay,
         objective: activeLessonContent.objective,
         agenda: activeLessonContent.agenda,
         chromeVisible: lessonChromeVisible,
-        classTracks: {
-          hawaii: getClassTrack(classTracks, lessonDay, 'hawaii'),
-          caltech: getClassTrack(classTracks, lessonDay, 'caltech'),
-        },
+        followSchedule,
+        period: liveLesson.period,
+        nextPeriod: liveLesson.nextPeriod,
+        betweenClasses: liveLesson.betweenClasses,
+        dateKey: liveLesson.dateKey,
+        dateLabel: liveLesson.dateLabel,
+        editable: liveLesson.editable,
+        datedObjectives,
         setObjective: setLessonObjective,
         setAgenda: setLessonAgenda,
+        setDatedContent: setDatedLessonContent,
+        setDatedDay: setDatedDayContent,
         setDay: selectLessonDay,
         setClassTrack,
         toggleChrome: toggleLessonChrome,
         setChromeVisible: setLessonChromeOpen,
         nextSubject: goNextLessonSubject,
         prevSubject: goPrevLessonSubject,
+        followLiveSchedule: enableFollowSchedule,
       },
       overtime: {
         clocks: overtimeClocks,
@@ -877,22 +971,29 @@ export function ToolsProvider({ children }) {
       lunchRecovery,
       addLunchStudent,
       adjustLunchStrikes,
-      setLunchMark,
       removeLunchStudent,
       clearLunchRecovery,
       lessonSubject,
       lessonDay,
       lessonSubjects,
       classTracks,
+      datedObjectives,
+      plgContent,
+      followSchedule,
+      scheduleNow,
+      liveLesson,
       lessonChromeVisible,
       setLessonObjective,
       setLessonAgenda,
+      setDatedLessonContent,
+      setDatedDayContent,
       selectLessonDay,
       setClassTrack,
       toggleLessonChrome,
       setLessonChromeOpen,
       goNextLessonSubject,
       goPrevLessonSubject,
+      enableFollowSchedule,
       overtimeClocks,
       overtimeVolume,
       startOvertime,

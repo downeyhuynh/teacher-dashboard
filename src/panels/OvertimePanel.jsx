@@ -57,10 +57,6 @@ export function OvertimePanel() {
     return () => window.removeEventListener('keydown', onKey)
   }, [stageOpen])
 
-  useEffect(() => {
-    if (!running) setStageOpen(false)
-  }, [running])
-
   const begin = () => {
     start(clockId)
     setStageOpen(true)
@@ -73,13 +69,23 @@ export function OvertimePanel() {
 
   const stop = () => {
     pause(clockId)
-    setStageOpen(false)
   }
 
   const clear = () => {
     reset(clockId)
     setStageOpen(false)
   }
+
+  const exitFullscreen = () => {
+    setStageOpen(false)
+  }
+
+  const paused = elapsedMs > 0 && !running
+  const stageTitle = paying
+    ? `${title} · paying`
+    : paused
+      ? `${title} · paused`
+      : title
 
   const controls = (
     <>
@@ -107,9 +113,7 @@ export function OvertimePanel() {
         })}
       </div>
 
-      <div className="overtime-panel__label">
-        {paying ? `${title} · paying` : title}
-      </div>
+      <div className="overtime-panel__label">{stageTitle}</div>
 
       <div
         className="overtime-panel__adjust"
@@ -191,9 +195,7 @@ export function OvertimePanel() {
     <div
       className={`overtime-panel overtime-panel--${clockId} ${
         running ? 'is-running' : ''
-      } ${paying ? 'is-paying' : ''} ${
-        elapsedMs > 0 && !running ? 'is-paused' : ''
-      }`}
+      } ${paying ? 'is-paying' : ''} ${paused ? 'is-paused' : ''}`}
     >
       <div className="overtime-panel__display" aria-live="polite">
         {formatElapsed(elapsedMs)}
@@ -206,7 +208,9 @@ export function OvertimePanel() {
     stageOpen && portalRoot
       ? createPortal(
           <div
-            className={`overtime-stage ${paying ? 'is-paying' : ''}`}
+            className={`overtime-stage ${paying ? 'is-paying' : ''} ${
+              paused ? 'is-paused' : ''
+            }`}
             role="dialog"
             aria-label={`${title} overtime`}
           >
@@ -233,16 +237,15 @@ export function OvertimePanel() {
               </div>
               <button
                 type="button"
-                className="overtime-stage__shrink"
-                onClick={() => setStageOpen(false)}
+                className="overtime-stage__exit"
+                onClick={exitFullscreen}
+                title="Exit fullscreen (Esc)"
               >
-                Shrink
+                Exit fullscreen
               </button>
             </div>
             <div className="overtime-stage__clock" style={{ zoom: stageZoom }}>
-              <div className="overtime-stage__label">
-                {paying ? `${title} · paying` : title}
-              </div>
+              <div className="overtime-stage__label">{stageTitle}</div>
               <div className="overtime-stage__time" aria-live="polite">
                 {formatElapsed(elapsedMs)}
               </div>

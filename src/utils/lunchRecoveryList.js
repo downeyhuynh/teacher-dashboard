@@ -14,9 +14,21 @@ function strikeCount(value) {
   return count > 0 ? count : 0
 }
 
-function normalizeMark(value) {
-  const mark = String(value || '').trim().toUpperCase()
-  return LUNCH_MARKS.includes(mark) ? mark : ''
+function normalizeMarks(value) {
+  const raw = Array.isArray(value)
+    ? value
+    : value
+      ? String(value)
+          .toUpperCase()
+          .split(/[^A-Z]+/)
+      : []
+  const marks = []
+  for (const letter of LUNCH_MARKS) {
+    if (raw.some((item) => String(item).trim().toUpperCase() === letter)) {
+      marks.push(letter)
+    }
+  }
+  return marks
 }
 
 function normalizeEntry(entry) {
@@ -26,7 +38,7 @@ function normalizeEntry(entry) {
     id: String(entry?.id || createId('lunch')),
     name,
     strikes: strikeCount(entry?.strikes),
-    mark: normalizeMark(entry?.mark),
+    marks: normalizeMarks(entry?.marks ?? entry?.mark),
   }
 }
 
@@ -42,7 +54,7 @@ function emptyLists() {
 /**
  * Load lunch recovery lists by school and optional M/R marks.
  * Migrates the older flat array into the Hawaii list.
- * @returns {{ hawaii: { id: string, name: string, strikes: number, mark: string }[], caltech: { id: string, name: string, strikes: number, mark: string }[] }}
+ * @returns {{ hawaii: { id: string, name: string, strikes: number, marks: string[] }[], caltech: { id: string, name: string, strikes: number, marks: string[] }[] }}
  */
 export function loadLunchRecoveryList() {
   try {

@@ -1,26 +1,48 @@
 import { useRef, useState } from 'react'
 import { useTools } from '../context/ToolsContext'
+import { RESTROOM_GROUPS } from '../utils/restroomList'
 
 /**
- * Restroom list — add names, click a name to highlight red when they are out.
+ * Restroom list — Hawaii / Caltech tabs; click a name to mark out (red).
  */
 export function BathroomPanel() {
   const { restroom } = useTools()
-  const { out: names, add, remove, toggle, clear } = restroom
+  const { lists, add, remove, toggle, clear } = restroom
+  const [group, setGroup] = useState(RESTROOM_GROUPS[0].id)
   const [nameInput, setNameInput] = useState('')
   const inputRef = useRef(null)
+
+  const names = lists?.[group] || []
 
   const addName = () => {
     const name = nameInput.trim()
     if (!name) return
-    add(name)
+    add(group, name)
     setNameInput('')
-    // Keep focus for rapid entry; Escape / click-outside blurs so shortcuts work.
     inputRef.current?.focus()
   }
 
   return (
     <div className="bathroom-panel">
+      <div
+        className="lunch-panel__tabs"
+        role="tablist"
+        aria-label="Restroom classes"
+      >
+        {RESTROOM_GROUPS.map((entry) => (
+          <button
+            key={entry.id}
+            type="button"
+            role="tab"
+            className={`lunch-panel__tab ${group === entry.id ? 'is-active' : ''}`}
+            aria-selected={group === entry.id}
+            onClick={() => setGroup(entry.id)}
+          >
+            {entry.label}
+          </button>
+        ))}
+      </div>
+
       <form
         className="bathroom-panel__add"
         onSubmit={(event) => {
@@ -66,7 +88,7 @@ export function BathroomPanel() {
                 <button
                   type="button"
                   className="bathroom-panel__name-btn"
-                  onClick={() => toggle(entry.id)}
+                  onClick={() => toggle(group, entry.id)}
                   aria-pressed={Boolean(entry.out)}
                   title={
                     entry.out
@@ -79,7 +101,7 @@ export function BathroomPanel() {
                 <button
                   type="button"
                   className="stage-button"
-                  onClick={() => remove(entry.id)}
+                  onClick={() => remove(group, entry.id)}
                 >
                   Remove
                 </button>
@@ -93,7 +115,7 @@ export function BathroomPanel() {
         <button
           type="button"
           className="stage-button bathroom-panel__clear"
-          onClick={clear}
+          onClick={() => clear(group)}
         >
           Clear all
         </button>

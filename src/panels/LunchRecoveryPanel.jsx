@@ -1,13 +1,13 @@
 import { useRef, useState } from 'react'
 import { useTools } from '../context/ToolsContext'
-import { LUNCH_GROUPS, LUNCH_MARKS } from '../utils/lunchRecoveryList'
+import { LUNCH_GROUPS } from '../utils/lunchRecoveryList'
 
 /**
- * Lunch recovery list — Hawaii / Caltech tabs, strikes, and M/R marks.
+ * Lunch recovery list — Hawaii / Caltech tabs and strike counts.
  */
 export function LunchRecoveryPanel() {
   const { lunchRecovery } = useTools()
-  const { lists, add, adjustStrikes, setMark, remove, clear } = lunchRecovery
+  const { lists, add, adjustStrikes, remove, clear } = lunchRecovery
   const [group, setGroup] = useState(LUNCH_GROUPS[0].id)
   const [nameInput, setNameInput] = useState('')
   const inputRef = useRef(null)
@@ -82,26 +82,9 @@ export function LunchRecoveryPanel() {
           <ul className="bathroom-panel__items">
             {names.map((entry) => {
               const strikes = entry.strikes || 0
-              const mark = entry.mark || ''
               return (
                 <li key={entry.id} className="bathroom-panel__item">
                   <strong className="bathroom-panel__name lunch-panel__name">{entry.name}</strong>
-                  <div className="lunch-panel__marks" role="group" aria-label={`${entry.name} M or R`}>
-                    {LUNCH_MARKS.map((letter) => (
-                      <button
-                        key={letter}
-                        type="button"
-                        className={`stage-button lunch-panel__mark-btn ${
-                          mark === letter ? 'is-active' : ''
-                        }`}
-                        aria-pressed={mark === letter}
-                        onClick={() => setMark(group, entry.id, letter)}
-                        aria-label={`${letter} for ${entry.name}`}
-                      >
-                        {letter}
-                      </button>
-                    ))}
-                  </div>
                   <div className="lunch-panel__strikes" role="group" aria-label={`${entry.name} strikes`}>
                     <button
                       type="button"

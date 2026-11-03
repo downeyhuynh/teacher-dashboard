@@ -160,7 +160,7 @@
 }
 
 .overtime-stage__zoom button,
-.overtime-stage__shrink {
+.overtime-stage__exit {
   padding: 8px 14px;
   border: 1px solid rgba(255, 90, 90, 0.45);
   border-radius: 999px;
@@ -178,9 +178,13 @@
 }
 
 .overtime-stage__zoom button:hover:not(:disabled),
-.overtime-stage__shrink:hover {
+.overtime-stage__exit:hover {
   background: rgba(255, 90, 90, 0.18);
   color: #fff;
+}
+
+.overtime-stage.is-paused .overtime-stage__time {
+  color: #ff8a8a;
 }
 
 .overtime-stage__clock {
