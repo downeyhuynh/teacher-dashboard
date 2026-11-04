@@ -16,6 +16,40 @@ const CHROME_TABS = [
   { id: 'lunch', label: 'Lunch' },
 ]
 
+const IDLE_RETURN_MS = 5000
+
+/** Run `onIdle` after idleMs with no activity, only while the page is visible. */
+function useIdleTimeout(enabled, onIdle, activityTick, idleMs = IDLE_RETURN_MS) {
+  const onIdleRef = useRef(onIdle)
+  onIdleRef.current = onIdle
+
+  useEffect(() => {
+    if (!enabled) return undefined
+
+    let id = 0
+    const clear = () => {
+      if (id) window.clearTimeout(id)
+      id = 0
+    }
+    const arm = () => {
+      clear()
+      if (document.visibilityState !== 'visible') return
+      id = window.setTimeout(() => onIdleRef.current?.(), idleMs)
+    }
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') arm()
+      else clear()
+    }
+
+    arm()
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => {
+      clear()
+      document.removeEventListener('visibilitychange', onVisibility)
+    }
+  }, [enabled, activityTick, idleMs])
+}
+
 const MONTH_NAMES = [
   'January',
   'February',
@@ -265,24 +299,23 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay }) {
   )
 }
 
-function AgendaTab({ lesson }) {
+function AgendaTab({ lesson, active }) {
   const [activityTick, setActivityTick] = useState(0)
   const subjectMeta =
     LESSON_SUBJECTS.find((entry) => entry.id === lesson.subject) || LESSON_SUBJECTS[0]
 
   const bumpActivity = () => setActivityTick((prev) => prev + 1)
 
-  useEffect(() => {
-    if (lesson.followSchedule) return undefined
-    const id = window.setTimeout(() => {
-      lesson.followLiveSchedule()
-    }, 5000)
-    return () => window.clearTimeout(id)
-  }, [lesson.followSchedule, lesson.followLiveSchedule, activityTick])
+  useIdleTimeout(
+    Boolean(active && !lesson.followSchedule),
+    lesson.followLiveSchedule,
+    activityTick,
+  )
 
   return (
     <div
       className="lesson-chrome__agenda"
+      hidden={!active}
       onPointerDown={bumpActivity}
       onKeyDown={bumpActivity}
     >
@@ -359,12 +392,15 @@ export function LessonChrome() {
   const { lesson } = useTools()
   const visible = lesson.chromeVisible !== false
   const [chromeTab, setChromeTab] = useState(CHROME_TABS[0].id)
+  const [activityTick, setActivityTick] = useState(0)
 
-  useEffect(() => {
-    if (chromeTab === 'agenda') return undefined
-    const id = window.setTimeout(() => setChromeTab('agenda'), 5000)
-    return () => window.clearTimeout(id)
-  }, [chromeTab])
+  const bumpActivity = () => setActivityTick((prev) => prev + 1)
+
+  useIdleTimeout(
+    chromeTab !== 'agenda',
+    () => setChromeTab('agenda'),
+    activityTick,
+  )
 
   return (
     <aside
@@ -387,7 +423,12 @@ export function LessonChrome() {
       </button>
 
       {visible ? (
-        <div id="lesson-chrome-panel" className="lesson-chrome__body">
+        <div
+          id="lesson-chrome-panel"
+          className="lesson-chrome__body"
+          onPointerDown={bumpActivity}
+          onKeyDown={bumpActivity}
+        >
           <div
             className="lesson-chrome__main-tabs"
             role="tablist"
@@ -402,30 +443,33 @@ export function LessonChrome() {
                 className={`lesson-chrome__main-tab ${
                   chromeTab === tab.id ? 'is-active' : ''
                 }`}
-                onClick={() => setChromeTab(tab.id)}
+                onClick={() => {
+                  bumpActivity()
+                  setChromeTab(tab.id)
+                }}
               >
                 {tab.label}
               </button>
             ))}
           </div>
 
-          {chromeTab === 'agenda' ? <AgendaTab lesson={lesson} /> : null}
-          {chromeTab === 'calendar' ? (
+          {/* Keep panels mounted so returning to a tab restores place/drafts. */}
+          <AgendaTab lesson={lesson} active={chromeTab === 'agenda'} />
+          <div hidden={chromeTab !== 'calendar'}>
             <ObjectiveCalendar
               datedObjectives={lesson.datedObjectives}
               onSaveDay={lesson.setDatedDay}
             />
-          ) : null}
-          {chromeTab === 'restroom' ? (
-            <div className="lesson-chrome__embed">
-              <BathroomPanel />
-            </div>
-          ) : null}
-          {chromeTab === 'lunch' ? (
-            <div className="lesson-chrome__embed">
-              <LunchRecoveryPanel />
-            </div>
-          ) : null}
+          </div>
+          <div
+            className="lesson-chrome__embed"
+            hidden={chromeTab !== 'restroom'}
+          >
+            <BathroomPanel />
+          </div>
+          <div className="lesson-chrome__embed" hidden={chromeTab !== 'lunch'}>
+            <LunchRecoveryPanel />
+          </div>
         </div>
       ) : null}
     </aside>

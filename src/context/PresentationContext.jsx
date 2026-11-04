@@ -1,9 +1,22 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   createWhiteboardSlide,
   importPresentationFiles,
   revokeSlideUrls,
 } from '../utils/presentationImport'
+import {
+  clearPresentationState,
+  loadPresentationState,
+  savePresentationState,
+} from '../utils/presentationStore'
 import { ANNOTATION_STAMPS } from '../utils/annotationStamps'
 import { clamp } from '../utils/clamp'
 import { createId } from '../utils/id'
@@ -55,6 +68,7 @@ const PresentationContext = createContext(null)
 export function PresentationProvider({ children }) {
   const [decks, setDecks] = useState([])
   const [activeDeckId, setActiveDeckId] = useState(null)
+  const [decksReady, setDecksReady] = useState(false)
   const annotationsRef = useRef({})
   const annotationUndoRef = useRef({})
   const activeDeckIdRef = useRef(null)
@@ -67,6 +81,35 @@ export function PresentationProvider({ children }) {
 
   const activeDeck = decks.find((deck) => deck.id === activeDeckId) ?? null
   activeDeckIdRef.current = activeDeck?.id ?? null
+
+  useEffect(() => {
+    let cancelled = false
+    loadPresentationState()
+      .then((state) => {
+        if (cancelled) return
+        setDecks(state.decks)
+        setActiveDeckId(state.activeDeckId)
+        setDecksReady(true)
+      })
+      .catch(() => {
+        if (!cancelled) setDecksReady(true)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!decksReady || isImporting) return undefined
+    const timer = window.setTimeout(() => {
+      if (!decks.length) {
+        clearPresentationState().catch(() => {})
+        return
+      }
+      savePresentationState({ decks, activeDeckId }).catch(() => {})
+    }, 400)
+    return () => window.clearTimeout(timer)
+  }, [decks, activeDeckId, decksReady, isImporting])
 
   const slides = activeDeck?.slides ?? []
   const currentIndex = activeDeck?.currentIndex ?? 0
@@ -169,6 +212,7 @@ export function PresentationProvider({ children }) {
       setActiveDeckId(null)
       setImportErrors([])
       setFocusTextId(null)
+      clearPresentationState().catch(() => {})
       return
     }
     closeDeck(id)
