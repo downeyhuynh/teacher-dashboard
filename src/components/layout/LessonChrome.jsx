@@ -11,6 +11,7 @@ import { dateKey, parseDateKey, periodsForDate } from '../../utils/lessonSchedul
 
 const CHROME_TABS = [
   { id: 'agenda', label: 'Agenda' },
+  { id: 'calendar', label: 'Calendar' },
   { id: 'restroom', label: 'Restroom' },
   { id: 'lunch', label: 'Lunch' },
 ]
@@ -69,7 +70,7 @@ function buildMonthCells(year, monthIndex) {
   return cells
 }
 
-function ObjectiveCalendar({ datedObjectives, onSaveDay, onClose }) {
+function ObjectiveCalendar({ datedObjectives, onSaveDay }) {
   const todayKey = dateKey(new Date())
   const [month, setMonth] = useState(() => {
     const now = new Date()
@@ -127,7 +128,7 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay, onClose }) {
   }
 
   return (
-    <div className="lesson-chrome__calendar" role="dialog" aria-label="Math and Science calendar">
+    <div className="lesson-chrome__calendar" aria-label="Math and Science calendar">
       <div className="lesson-chrome__calendar-head">
         <button type="button" className="lesson-chrome__arrow" onClick={() => shiftMonth(-1)} aria-label="Previous month">
           ‹
@@ -137,9 +138,6 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay, onClose }) {
         </strong>
         <button type="button" className="lesson-chrome__arrow" onClick={() => shiftMonth(1)} aria-label="Next month">
           ›
-        </button>
-        <button type="button" className="stage-button lesson-chrome__calendar-close" onClick={onClose}>
-          Done
         </button>
       </div>
 
@@ -163,13 +161,14 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay, onClose }) {
               entry?.science?.agenda,
           )
           const isSelected = key === selectedKey
+          const isToday = key === todayKey
           return (
             <button
               key={key}
               type="button"
               className={`lesson-chrome__calendar-cell ${isSelected ? 'is-selected' : ''} ${
                 hasContent ? 'has-content' : ''
-              }`}
+              } ${isToday ? 'is-today' : ''}`}
               onClick={() => setSelectedKey(key)}
             >
               {date.getDate()}
@@ -249,7 +248,6 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay, onClose }) {
 }
 
 function AgendaTab({ lesson }) {
-  const [showCalendar, setShowCalendar] = useState(false)
   const [activityTick, setActivityTick] = useState(0)
   const subjectMeta =
     LESSON_SUBJECTS.find((entry) => entry.id === lesson.subject) || LESSON_SUBJECTS[0]
@@ -257,28 +255,12 @@ function AgendaTab({ lesson }) {
   const bumpActivity = () => setActivityTick((prev) => prev + 1)
 
   useEffect(() => {
-    if (lesson.followSchedule || showCalendar) return undefined
+    if (lesson.followSchedule) return undefined
     const id = window.setTimeout(() => {
       lesson.followLiveSchedule()
     }, 5000)
     return () => window.clearTimeout(id)
-  }, [lesson.followSchedule, lesson.followLiveSchedule, showCalendar, activityTick])
-
-  if (showCalendar) {
-    return (
-      <ObjectiveCalendar
-        datedObjectives={lesson.datedObjectives}
-        onSaveDay={(key, dayContent) => {
-          bumpActivity()
-          lesson.setDatedDay(key, dayContent)
-        }}
-        onClose={() => {
-          bumpActivity()
-          setShowCalendar(false)
-        }}
-      />
-    )
-  }
+  }, [lesson.followSchedule, lesson.followLiveSchedule, activityTick])
 
   return (
     <div
@@ -345,23 +327,12 @@ function AgendaTab({ lesson }) {
           lesson.setAgenda(value)
         }}
       />
-
-      <button
-        type="button"
-        className="stage-button lesson-chrome__calendar-open"
-        onClick={() => {
-          bumpActivity()
-          setShowCalendar(true)
-        }}
-      >
-        Edit Math / Science calendar
-      </button>
     </div>
   )
 }
 
 /**
- * Left sidebar: live agenda, restroom, and lunch recovery.
+ * Left sidebar: live agenda, calendar, restroom, and lunch recovery.
  * Collapses to a pull-tab so it can be brought up or taken away.
  */
 export function LessonChrome() {
@@ -419,6 +390,12 @@ export function LessonChrome() {
           </div>
 
           {chromeTab === 'agenda' ? <AgendaTab lesson={lesson} /> : null}
+          {chromeTab === 'calendar' ? (
+            <ObjectiveCalendar
+              datedObjectives={lesson.datedObjectives}
+              onSaveDay={lesson.setDatedDay}
+            />
+          ) : null}
           {chromeTab === 'restroom' ? (
             <div className="lesson-chrome__embed">
               <BathroomPanel />
