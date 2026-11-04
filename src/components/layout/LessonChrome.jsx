@@ -250,21 +250,42 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay, onClose }) {
 
 function AgendaTab({ lesson }) {
   const [showCalendar, setShowCalendar] = useState(false)
+  const [activityTick, setActivityTick] = useState(0)
   const subjectMeta =
     LESSON_SUBJECTS.find((entry) => entry.id === lesson.subject) || LESSON_SUBJECTS[0]
+
+  const bumpActivity = () => setActivityTick((prev) => prev + 1)
+
+  useEffect(() => {
+    if (lesson.followSchedule || showCalendar) return undefined
+    const id = window.setTimeout(() => {
+      lesson.followLiveSchedule()
+    }, 5000)
+    return () => window.clearTimeout(id)
+  }, [lesson.followSchedule, lesson.followLiveSchedule, showCalendar, activityTick])
 
   if (showCalendar) {
     return (
       <ObjectiveCalendar
         datedObjectives={lesson.datedObjectives}
-        onSaveDay={lesson.setDatedDay}
-        onClose={() => setShowCalendar(false)}
+        onSaveDay={(key, dayContent) => {
+          bumpActivity()
+          lesson.setDatedDay(key, dayContent)
+        }}
+        onClose={() => {
+          bumpActivity()
+          setShowCalendar(false)
+        }}
       />
     )
   }
 
   return (
-    <>
+    <div
+      className="lesson-chrome__agenda"
+      onPointerDown={bumpActivity}
+      onKeyDown={bumpActivity}
+    >
       {!lesson.followSchedule ? (
         <button
           type="button"
@@ -281,7 +302,10 @@ function AgendaTab({ lesson }) {
             type="button"
             className="lesson-chrome__arrow"
             aria-label="Previous subject"
-            onClick={lesson.prevSubject}
+            onClick={() => {
+              bumpActivity()
+              lesson.prevSubject()
+            }}
           >
             ‹
           </button>
@@ -290,7 +314,10 @@ function AgendaTab({ lesson }) {
             type="button"
             className="lesson-chrome__arrow"
             aria-label="Next subject"
-            onClick={lesson.nextSubject}
+            onClick={() => {
+              bumpActivity()
+              lesson.nextSubject()
+            }}
           >
             ›
           </button>
@@ -302,7 +329,10 @@ function AgendaTab({ lesson }) {
         value={lesson.objective}
         placeholder="What will students learn?"
         ariaLabel={`${subjectMeta.label} objective`}
-        onChange={lesson.setObjective}
+        onChange={(value) => {
+          bumpActivity()
+          lesson.setObjective(value)
+        }}
       />
 
       <AutoGrowField
@@ -310,17 +340,23 @@ function AgendaTab({ lesson }) {
         value={lesson.agenda}
         placeholder="Warm-up · Lesson · Practice…"
         ariaLabel={`${subjectMeta.label} agenda`}
-        onChange={lesson.setAgenda}
+        onChange={(value) => {
+          bumpActivity()
+          lesson.setAgenda(value)
+        }}
       />
 
       <button
         type="button"
         className="stage-button lesson-chrome__calendar-open"
-        onClick={() => setShowCalendar(true)}
+        onClick={() => {
+          bumpActivity()
+          setShowCalendar(true)
+        }}
       >
         Edit Math / Science calendar
       </button>
-    </>
+    </div>
   )
 }
 
