@@ -133,8 +133,13 @@ export function ToolsProvider({ children }) {
   const [datedObjectives, setDatedObjectives] = useState(
     () => initialLesson.datedObjectives || {},
   )
-  const [plgContent, setPlgContent] = useState(
-    () => initialLesson.plg || { objective: '', agenda: '' },
+  const [standingContent, setStandingContent] = useState(
+    () =>
+      initialLesson.standing || {
+        'morning-meeting': { objective: '', agenda: '' },
+        eld: { objective: '', agenda: '' },
+        plg: initialLesson.plg || { objective: '', agenda: '' },
+      },
   )
   const [followSchedule, setFollowSchedule] = useState(
     initialLesson.followSchedule !== false,
@@ -170,7 +175,8 @@ export function ToolsProvider({ children }) {
       subjects: lessonSubjects,
       classTracks,
       datedObjectives,
-      plg: plgContent,
+      standing: standingContent,
+      plg: standingContent.plg || { objective: '', agenda: '' },
       chromeVisible: lessonChromeVisible,
       followSchedule,
     })
@@ -180,7 +186,7 @@ export function ToolsProvider({ children }) {
     lessonSubjects,
     classTracks,
     datedObjectives,
-    plgContent,
+    standingContent,
     lessonChromeVisible,
     followSchedule,
   ])
@@ -612,8 +618,18 @@ export function ToolsProvider({ children }) {
 
   const setLessonObjective = useCallback(
     (value) => {
-      if (lessonSubject === 'plg') {
-        setPlgContent((prev) => ({ ...prev, objective: value }))
+      if (
+        lessonSubject === 'plg' ||
+        lessonSubject === 'morning-meeting' ||
+        lessonSubject === 'eld'
+      ) {
+        setStandingContent((prev) => ({
+          ...prev,
+          [lessonSubject]: {
+            ...(prev[lessonSubject] || { objective: '', agenda: '' }),
+            objective: value,
+          },
+        }))
         return
       }
       if (lessonSubject === 'math' || lessonSubject === 'science') {
@@ -639,8 +655,18 @@ export function ToolsProvider({ children }) {
 
   const setLessonAgenda = useCallback(
     (value) => {
-      if (lessonSubject === 'plg') {
-        setPlgContent((prev) => ({ ...prev, agenda: value }))
+      if (
+        lessonSubject === 'plg' ||
+        lessonSubject === 'morning-meeting' ||
+        lessonSubject === 'eld'
+      ) {
+        setStandingContent((prev) => ({
+          ...prev,
+          [lessonSubject]: {
+            ...(prev[lessonSubject] || { objective: '', agenda: '' }),
+            agenda: value,
+          },
+        }))
         return
       }
       if (lessonSubject === 'math' || lessonSubject === 'science') {
@@ -720,7 +746,7 @@ export function ToolsProvider({ children }) {
     date: scheduleNow,
     subject: lessonSubject,
     datedObjectives,
-    plg: plgContent,
+    standing: standingContent,
     followSchedule,
   })
   const activeLessonContent = {
@@ -978,7 +1004,7 @@ export function ToolsProvider({ children }) {
       lessonSubjects,
       classTracks,
       datedObjectives,
-      plgContent,
+      standingContent,
       followSchedule,
       scheduleNow,
       liveLesson,

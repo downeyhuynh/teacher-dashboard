@@ -203,11 +203,41 @@
   color: #0d7a6f;
 }
 
+.lesson-chrome__calendar-dayinfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .lesson-chrome__calendar-selected {
   margin: 0;
   font-size: calc(0.72rem * var(--text-zoom, 1));
   font-weight: 650;
   color: var(--color-text-muted);
+}
+
+.lesson-chrome__calendar-periods {
+  list-style: none;
+  margin: 0;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-radius: 8px;
+  background: rgba(13, 122, 111, 0.08);
+}
+
+.lesson-chrome__calendar-periods li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: calc(0.66rem * var(--text-zoom, 1));
+  color: var(--color-text);
+}
+
+.lesson-chrome__calendar-periods strong {
+  font-weight: 700;
+  color: #0d7a6f;
 }
 
 .lesson-chrome__calendar-locked {

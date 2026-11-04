@@ -156,15 +156,38 @@ function migrateSubjectsFromLegacy(parsed) {
   return subjects
 }
 
-function plgFromSubjects(subjects) {
-  return normalizeDayContent(
-    subjects?.plg?.monday ||
+function emptyStanding() {
+  return {
+    'morning-meeting': { ...FIXED_LESSON_CONTENT['morning-meeting'] },
+    eld: { ...FIXED_LESSON_CONTENT.eld },
+    plg: { ...EMPTY_CONTENT },
+  }
+}
+
+function normalizeStanding(raw, subjects) {
+  const standing = emptyStanding()
+  const plgFallback = normalizeDayContent(
+    raw?.plg ||
+      subjects?.plg?.monday ||
       subjects?.plg?.tuesday ||
       subjects?.plg?.wednesday ||
       subjects?.plg?.thursday ||
       subjects?.plg?.friday ||
       EMPTY_CONTENT,
   )
+  standing.plg = plgFallback
+  if (raw && typeof raw === 'object') {
+    for (const id of ['morning-meeting', 'eld', 'plg']) {
+      if (raw[id]) standing[id] = normalizeDayContent(raw[id])
+    }
+  }
+  // Seed MM / ELD from the fixed copy when the standing slot is still blank.
+  for (const id of ['morning-meeting', 'eld']) {
+    if (!standing[id].objective && !standing[id].agenda) {
+      standing[id] = { ...FIXED_LESSON_CONTENT[id] }
+    }
+  }
+  return standing
 }
 
 function datedFromLegacySubjects(subjects) {
@@ -197,6 +220,7 @@ function datedFromLegacySubjects(subjects) {
  *   subjects: Record<string, Record<string, { objective: string, agenda: string }>>,
  *   classTracks: Record<string, Record<string, string>>,
  *   datedObjectives: Record<string, { math: { objective: string, agenda: string }, science: { objective: string, agenda: string } }>,
+ *   standing: Record<string, { objective: string, agenda: string }>,
  *   plg: { objective: string, agenda: string },
  *   chromeVisible: boolean,
  *   followSchedule: boolean,
@@ -208,7 +232,8 @@ export function loadLessonChrome() {
     day: defaultLessonDay(),
     subjects: emptySubjects(),
     classTracks: emptyClassTracks(),
-    datedObjectives: {},
+    datedObjectives: { ...LOCKED_DATED_LESSONS },
+    standing: emptyStanding(),
     plg: { ...EMPTY_CONTENT },
     chromeVisible: true,
     followSchedule: true,
@@ -250,11 +275,15 @@ export function loadLessonChrome() {
     if (!parsed) return fallback
 
     const subjects = migrateSubjectsFromLegacy(parsed)
+    const standing = normalizeStanding(
+      parsed?.standing || (parsed?.plg ? { plg: parsed.plg } : null),
+      subjects,
+    )
     const datedObjectives = {
+      // Locked plan is the default; saved edits override it.
+      ...LOCKED_DATED_LESSONS,
       ...(migratedFromV2 ? datedFromLegacySubjects(subjects) : {}),
       ...normalizeDatedObjectives(parsed?.datedObjectives),
-      // Locked plan wins for Nov 4 – Dec 18, 2026 weekdays.
-      ...LOCKED_DATED_LESSONS,
     }
 
     return {
@@ -263,9 +292,8 @@ export function loadLessonChrome() {
       subjects,
       classTracks: normalizeClassTracks(parsed?.classTracks),
       datedObjectives,
-      plg: parsed?.plg
-        ? normalizeDayContent(parsed.plg)
-        : plgFromSubjects(subjects),
+      standing,
+      plg: standing.plg,
       chromeVisible: parsed?.chromeVisible !== false,
       followSchedule: parsed?.followSchedule !== false,
     }
@@ -311,8 +339,6 @@ export function isLockedDatedDay(key) {
 
 export function getDatedSubjectContent(datedObjectives, key, subjectId) {
   if (!DATED_SUBJECTS.includes(subjectId)) return { ...EMPTY_CONTENT }
-  const locked = LOCKED_DATED_LESSONS?.[key]?.[subjectId]
-  if (locked) return normalizeDayContent(locked)
   return normalizeDayContent(datedObjectives?.[key]?.[subjectId])
 }
 
@@ -323,6 +349,7 @@ export function resolveLiveLessonContent({
   date = new Date(),
   subject,
   datedObjectives,
+  standing,
   plg,
   followSchedule = true,
 }) {
@@ -332,15 +359,17 @@ export function resolveLiveLessonContent({
   const liveSubject =
     followSchedule && active ? active.subject : normalizeSubject(subject)
   const key = dateKey(date)
-  const fixed = FIXED_LESSON_CONTENT[liveSubject]
+  const standingMap = standing || emptyStanding()
+  if (plg) standingMap.plg = normalizeDayContent(plg)
 
   let content = { ...EMPTY_CONTENT }
-  // Morning Meeting, ELD, and PLG are standing copy (not calendar-dated).
-  if (fixed) {
-    content = { ...fixed }
-  } else if (liveSubject === 'plg') {
-    content = normalizeDayContent(plg)
-  } else if (!betweenClasses && (liveSubject === 'math' || liveSubject === 'science')) {
+  if (
+    liveSubject === 'morning-meeting' ||
+    liveSubject === 'eld' ||
+    liveSubject === 'plg'
+  ) {
+    content = normalizeDayContent(standingMap[liveSubject])
+  } else if (liveSubject === 'math' || liveSubject === 'science') {
     content = getDatedSubjectContent(datedObjectives, key, liveSubject)
   }
 
@@ -363,11 +392,7 @@ export function resolveLiveLessonContent({
     dateLabel,
     objective: content.objective,
     agenda: content.agenda,
-    editable:
-      !betweenClasses &&
-      (liveSubject === 'plg' ||
-        liveSubject === 'math' ||
-        liveSubject === 'science'),
+    editable: true,
   }
 }
 

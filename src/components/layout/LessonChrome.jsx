@@ -7,7 +7,7 @@ import {
   getDatedSubjectContent,
   isLockedDatedDay,
 } from '../../utils/lessonChrome'
-import { dateKey, parseDateKey } from '../../utils/lessonSchedule'
+import { dateKey, parseDateKey, periodsForDate } from '../../utils/lessonSchedule'
 
 const CHROME_TABS = [
   { id: 'agenda', label: 'Agenda' },
@@ -30,15 +30,7 @@ const MONTH_NAMES = [
   'December',
 ]
 
-function AutoGrowField({
-  id,
-  label,
-  value,
-  placeholder,
-  ariaLabel,
-  onChange,
-  readOnly = false,
-}) {
+function AutoGrowField({ id, value, placeholder, ariaLabel, onChange }) {
   const ref = useRef(null)
 
   useEffect(() => {
@@ -50,9 +42,6 @@ function AutoGrowField({
 
   return (
     <section className="lesson-chrome__card">
-      <label className="lesson-chrome__label" htmlFor={id}>
-        {label}
-      </label>
       <textarea
         ref={ref}
         id={id}
@@ -61,7 +50,6 @@ function AutoGrowField({
         value={value}
         placeholder={placeholder}
         aria-label={ariaLabel}
-        readOnly={readOnly}
         onChange={(event) => onChange?.(event.target.value)}
       />
     </section>
@@ -90,7 +78,7 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay, onClose }) {
   const [selectedKey, setSelectedKey] = useState(
     todayKey.startsWith('2026') ? todayKey : '2026-01-05',
   )
-  const locked = isLockedDatedDay(selectedKey)
+  const fromPlan = isLockedDatedDay(selectedKey)
   const math = getDatedSubjectContent(datedObjectives, selectedKey, 'math')
   const science = getDatedSubjectContent(datedObjectives, selectedKey, 'science')
   const [mathObjective, setMathObjective] = useState(math.objective)
@@ -115,12 +103,13 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay, onClose }) {
   const selectedDate = parseDateKey(selectedKey)
   const selectedLabel = selectedDate
     ? selectedDate.toLocaleDateString(undefined, {
-        weekday: 'short',
-        month: 'short',
+        weekday: 'long',
+        month: 'long',
         day: 'numeric',
         year: 'numeric',
       })
     : selectedKey
+  const dayPeriods = selectedDate ? periodsForDate(selectedDate) : []
 
   const shiftMonth = (delta) => {
     setMonth((prev) => {
@@ -131,7 +120,6 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay, onClose }) {
   }
 
   const save = () => {
-    if (locked) return
     onSaveDay(selectedKey, {
       math: { objective: mathObjective, agenda: mathAgenda },
       science: { objective: scienceObjective, agenda: scienceAgenda },
@@ -154,10 +142,6 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay, onClose }) {
           Done
         </button>
       </div>
-
-      {locked ? (
-        <p className="lesson-chrome__calendar-locked">Locked from the Nov–Dec plan</p>
-      ) : null}
 
       <div className="lesson-chrome__calendar-weekdays" aria-hidden="true">
         {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((label, index) => (
@@ -194,59 +178,72 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay, onClose }) {
         })}
       </div>
 
-      <p className="lesson-chrome__calendar-selected">{selectedLabel}</p>
+      <div className="lesson-chrome__calendar-dayinfo">
+        <p className="lesson-chrome__calendar-selected">{selectedLabel}</p>
+        {dayPeriods.length > 0 ? (
+          <ul className="lesson-chrome__calendar-periods">
+            {dayPeriods.map((period) => (
+              <li key={period.subject}>
+                <strong>{period.label}</strong>
+                <span>{period.rangeLabel}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="lesson-chrome__calendar-selected">Weekend — no class schedule</p>
+        )}
+        {fromPlan ? (
+          <p className="lesson-chrome__calendar-locked">From the Nov–Dec plan (editable)</p>
+        ) : null}
+      </div>
 
       <label className="lesson-chrome__label" htmlFor="cal-math-objective">
-        Math objective
+        Math
       </label>
       <textarea
         id="cal-math-objective"
         className="lesson-chrome__input"
         rows={2}
         value={mathObjective}
-        readOnly={locked}
+        placeholder="Math objective"
+        aria-label="Math objective"
         onChange={(event) => setMathObjective(event.target.value)}
       />
-      <label className="lesson-chrome__label" htmlFor="cal-math-agenda">
-        Math agenda
-      </label>
       <textarea
         id="cal-math-agenda"
         className="lesson-chrome__input"
         rows={2}
         value={mathAgenda}
-        readOnly={locked}
+        placeholder="Math agenda"
+        aria-label="Math agenda"
         onChange={(event) => setMathAgenda(event.target.value)}
       />
 
       <label className="lesson-chrome__label" htmlFor="cal-science-objective">
-        Science objective
+        Science
       </label>
       <textarea
         id="cal-science-objective"
         className="lesson-chrome__input"
         rows={2}
         value={scienceObjective}
-        readOnly={locked}
+        placeholder="Science objective"
+        aria-label="Science objective"
         onChange={(event) => setScienceObjective(event.target.value)}
       />
-      <label className="lesson-chrome__label" htmlFor="cal-science-agenda">
-        Science agenda
-      </label>
       <textarea
         id="cal-science-agenda"
         className="lesson-chrome__input"
         rows={2}
         value={scienceAgenda}
-        readOnly={locked}
+        placeholder="Science agenda"
+        aria-label="Science agenda"
         onChange={(event) => setScienceAgenda(event.target.value)}
       />
 
-      {!locked ? (
-        <button type="button" className="stage-button stage-button--primary" onClick={save}>
-          Save day
-        </button>
-      ) : null}
+      <button type="button" className="stage-button stage-button--primary" onClick={save}>
+        Save day
+      </button>
     </div>
   )
 }
@@ -255,13 +252,6 @@ function AgendaTab({ lesson }) {
   const [showCalendar, setShowCalendar] = useState(false)
   const subjectMeta =
     LESSON_SUBJECTS.find((entry) => entry.id === lesson.subject) || LESSON_SUBJECTS[0]
-  const readOnly = !lesson.editable
-  const periodLabel = lesson.period
-    ? `${lesson.period.label} · ${lesson.period.rangeLabel}`
-    : lesson.nextPeriod
-      ? `Between classes · next ${lesson.nextPeriod.label} (${lesson.nextPeriod.rangeLabel})`
-      : 'Outside class schedule'
-  const dateLabel = lesson.dateLabel || ''
 
   if (showCalendar) {
     return (
@@ -275,12 +265,6 @@ function AgendaTab({ lesson }) {
 
   return (
     <>
-      <div className="lesson-chrome__period" aria-live="polite">
-        {dateLabel ? <span className="lesson-chrome__period-date">{dateLabel}</span> : null}
-        <strong>{periodLabel}</strong>
-        <span>{subjectMeta.label}</span>
-      </div>
-
       {!lesson.followSchedule ? (
         <button
           type="button"
@@ -315,28 +299,18 @@ function AgendaTab({ lesson }) {
 
       <AutoGrowField
         id="lesson-objective-input"
-        label="Lesson objective:"
         value={lesson.objective}
-        placeholder={
-          lesson.betweenClasses
-            ? 'No active period right now'
-            : 'What will students learn?'
-        }
-        ariaLabel={`${subjectMeta.label} lesson objective`}
+        placeholder="What will students learn?"
+        ariaLabel={`${subjectMeta.label} objective`}
         onChange={lesson.setObjective}
-        readOnly={readOnly}
       />
 
       <AutoGrowField
         id="lesson-agenda-input"
-        label="Agenda:"
         value={lesson.agenda}
-        placeholder={
-          lesson.betweenClasses ? 'Waiting for the next period' : 'Warm-up · Lesson · Practice…'
-        }
+        placeholder="Warm-up · Lesson · Practice…"
         ariaLabel={`${subjectMeta.label} agenda`}
         onChange={lesson.setAgenda}
-        readOnly={readOnly}
       />
 
       <button
