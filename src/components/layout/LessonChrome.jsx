@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTools } from '../../context/ToolsContext'
 import { BathroomPanel } from '../../panels/BathroomPanel'
 import { LunchRecoveryPanel } from '../../panels/LunchRecoveryPanel'
@@ -31,27 +31,45 @@ const MONTH_NAMES = [
   'December',
 ]
 
-function AutoGrowField({ id, value, placeholder, ariaLabel, onChange }) {
+function resizeTextArea(el) {
+  if (!el) return
+  el.style.height = '0px'
+  el.style.height = `${Math.max(el.scrollHeight, 40)}px`
+}
+
+function AutoGrowField({ id, label, value, placeholder, ariaLabel, onChange }) {
   const ref = useRef(null)
 
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    el.style.height = 'auto'
-    el.style.height = `${Math.max(el.scrollHeight, 40)}px`
+  useLayoutEffect(() => {
+    resizeTextArea(ref.current)
   }, [value])
 
+  useEffect(() => {
+    const onResize = () => resizeTextArea(ref.current)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
   return (
-    <section className="lesson-chrome__card">
+    <section className="lesson-chrome__card lesson-chrome__card--grow">
+      {label ? (
+        <label className="lesson-chrome__label" htmlFor={id}>
+          {label}
+        </label>
+      ) : null}
       <textarea
         ref={ref}
         id={id}
         className="lesson-chrome__input"
-        rows={2}
+        rows={1}
         value={value}
         placeholder={placeholder}
-        aria-label={ariaLabel}
-        onChange={(event) => onChange?.(event.target.value)}
+        aria-label={ariaLabel || label}
+        onChange={(event) => {
+          resizeTextArea(event.currentTarget)
+          onChange?.(event.target.value)
+        }}
+        onInput={(event) => resizeTextArea(event.currentTarget)}
       />
     </section>
   )
@@ -308,9 +326,10 @@ function AgendaTab({ lesson }) {
 
       <AutoGrowField
         id="lesson-objective-input"
+        label="Lesson"
         value={lesson.objective}
         placeholder="What will students learn?"
-        ariaLabel={`${subjectMeta.label} objective`}
+        ariaLabel={`${subjectMeta.label} lesson`}
         onChange={(value) => {
           bumpActivity()
           lesson.setObjective(value)
@@ -319,6 +338,7 @@ function AgendaTab({ lesson }) {
 
       <AutoGrowField
         id="lesson-agenda-input"
+        label="Agenda"
         value={lesson.agenda}
         placeholder="Warm-up · Lesson · Practice…"
         ariaLabel={`${subjectMeta.label} agenda`}
