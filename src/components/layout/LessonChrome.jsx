@@ -65,24 +65,51 @@ const MONTH_NAMES = [
   'December',
 ]
 
+function supportsFieldSizing() {
+  return typeof CSS !== 'undefined' && CSS.supports?.('field-sizing', 'content')
+}
+
 function resizeTextArea(el) {
   if (!el) return
-  el.style.height = '0px'
+  // Skip while not laid out (e.g. parent [hidden]) — caller should remeasure later.
+  if (el.getClientRects().length === 0) return
+  if (supportsFieldSizing()) {
+    // Let CSS grow the field; clear any stale inline height from earlier measures.
+    el.style.height = ''
+    return
+  }
+  el.style.height = 'auto'
   el.style.height = `${Math.max(el.scrollHeight, 40)}px`
 }
 
-function AutoGrowField({ id, label, value, placeholder, ariaLabel, onChange }) {
+function AutoGrowField({ id, label, value, placeholder, ariaLabel, onChange, remountKey }) {
   const ref = useRef(null)
 
   useLayoutEffect(() => {
     resizeTextArea(ref.current)
-  }, [value])
+  }, [value, remountKey])
 
   useEffect(() => {
-    const onResize = () => resizeTextArea(ref.current)
+    const el = ref.current
+    if (!el) return undefined
+
+    const onResize = () => resizeTextArea(el)
     window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
+
+    const observer = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(() => resizeTextArea(el))
+      : null
+    observer?.observe(el)
+
+    // Catch fonts / late layout after first paint.
+    const raf = window.requestAnimationFrame(() => resizeTextArea(el))
+
+    return () => {
+      window.removeEventListener('resize', onResize)
+      observer?.disconnect()
+      window.cancelAnimationFrame(raf)
+    }
+  }, [remountKey])
 
   return (
     <section className="lesson-chrome__card lesson-chrome__card--grow">
@@ -299,12 +326,10 @@ function ObjectiveCalendar({ datedObjectives, onSaveDay }) {
   )
 }
 
-function AgendaTab({ lesson, active }) {
-  const [activityTick, setActivityTick] = useState(0)
+/** Subject switcher + Lesson/Agenda — shown on Agenda, Restroom, and Lunch. */
+function LessonAgendaBlock({ lesson, active, activityTick, onActivity }) {
   const subjectMeta =
     LESSON_SUBJECTS.find((entry) => entry.id === lesson.subject) || LESSON_SUBJECTS[0]
-
-  const bumpActivity = () => setActivityTick((prev) => prev + 1)
 
   useIdleTimeout(
     Boolean(active && !lesson.followSchedule),
@@ -313,12 +338,7 @@ function AgendaTab({ lesson, active }) {
   )
 
   return (
-    <div
-      className="lesson-chrome__agenda"
-      hidden={!active}
-      onPointerDown={bumpActivity}
-      onKeyDown={bumpActivity}
-    >
+    <div className="lesson-chrome__agenda" hidden={!active}>
       {!lesson.followSchedule ? (
         <button
           type="button"
@@ -336,7 +356,7 @@ function AgendaTab({ lesson, active }) {
             className="lesson-chrome__arrow"
             aria-label="Previous subject"
             onClick={() => {
-              bumpActivity()
+              onActivity?.()
               lesson.prevSubject()
             }}
           >
@@ -348,7 +368,7 @@ function AgendaTab({ lesson, active }) {
             className="lesson-chrome__arrow"
             aria-label="Next subject"
             onClick={() => {
-              bumpActivity()
+              onActivity?.()
               lesson.nextSubject()
             }}
           >
@@ -363,8 +383,9 @@ function AgendaTab({ lesson, active }) {
         value={lesson.objective}
         placeholder="What will students learn?"
         ariaLabel={`${subjectMeta.label} lesson`}
+        remountKey={active ? 'shown' : 'hidden'}
         onChange={(value) => {
-          bumpActivity()
+          onActivity?.()
           lesson.setObjective(value)
         }}
       />
@@ -375,8 +396,9 @@ function AgendaTab({ lesson, active }) {
         value={lesson.agenda}
         placeholder="Warm-up · Lesson · Practice…"
         ariaLabel={`${subjectMeta.label} agenda`}
+        remountKey={active ? 'shown' : 'hidden'}
         onChange={(value) => {
-          bumpActivity()
+          onActivity?.()
           lesson.setAgenda(value)
         }}
       />
@@ -395,6 +417,8 @@ export function LessonChrome() {
   const [activityTick, setActivityTick] = useState(0)
 
   const bumpActivity = () => setActivityTick((prev) => prev + 1)
+  const showLessonAgenda =
+    chromeTab === 'agenda' || chromeTab === 'restroom' || chromeTab === 'lunch'
 
   useIdleTimeout(
     chromeTab !== 'agenda',
@@ -453,9 +477,18 @@ export function LessonChrome() {
             ))}
           </div>
 
-          {/* Keep panels mounted so returning to a tab restores place/drafts. */}
-          <AgendaTab lesson={lesson} active={chromeTab === 'agenda'} />
-          <div hidden={chromeTab !== 'calendar'}>
+          {/* Lesson/Agenda stay up on Restroom and Lunch; Calendar replaces them. */}
+          <LessonAgendaBlock
+            lesson={lesson}
+            active={showLessonAgenda}
+            activityTick={activityTick}
+            onActivity={bumpActivity}
+          />
+
+          <div
+            className="lesson-chrome__panel"
+            hidden={chromeTab !== 'calendar'}
+          >
             <ObjectiveCalendar
               datedObjectives={lesson.datedObjectives}
               onSaveDay={lesson.setDatedDay}
