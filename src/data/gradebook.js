@@ -13,138 +13,144 @@
  * graded quiz and test in that category into one 1–4 mark. Homework is not included.
  */
 export const gradebook = {
-  lastUpdated: '2026-10-29',
+  lastUpdated: '2026-11-05',
   accessSalt: 'c4e8a1d67b9035f2e6d48a17c0b59e33',
   accessHash: '979ff1ceb595f7faad86d5d3e5ca9668c3d6fc9a0a2215229572d6fdefbd6ab9',
   classes: {
     'hawaii-science': {
       assignments: [
-        { id: 'earth-layers-extension', title: 'Earth Layers Extension', category: 'assignment', maxPoints: 10 },
-        { id: 'evaporation-detective-new-cases', title: 'Evaporation Detective: New Cases', category: 'assignment', maxPoints: 10 },
-        { id: 'exploration-lab-science-changes-of-matter-water', title: 'Exploration Lab Science: Changes of Matter Water', category: 'assignment', maxPoints: 10 },
-        { id: 'exploration-liquid-freezing-and-boiling-temperat', title: 'Exploration: Liquid Freezing and Boiling Temperatures', category: 'assignment', maxPoints: 10 },
-        { id: 'famous-volcano-research', title: 'Famous Volcano Research', category: 'assignment', maxPoints: 10 },
-        { id: 'formula-decoder', title: 'Formula Decoder', category: 'assignment', maxPoints: 10 },
-        { id: 'heat-and-particle-movement', title: 'Heat and Particle Movement', category: 'assignment', maxPoints: 10 },
-        { id: 'map-discovery-volcano-basic-questions', title: 'Map Discovery / Volcano Basic Questions', category: 'assignment', maxPoints: 10 },
-        { id: 'matter-mystery-presentation-notes', title: 'Matter Mystery Presentation Notes', category: 'assignment', maxPoints: 10 },
-        { id: 'physical-properties-discovery', title: 'Physical Properties Discovery', category: 'assignment', maxPoints: 10 },
-        { id: 'rockys-next-journey', title: 'Rockys Next Journey', category: 'assignment', maxPoints: 10 },
-        { id: 'unit-1-test', title: 'Unit 1 Test', category: 'test', academicCategory: 'Physical Science (PS)', maxPoints: 20 },
-        { id: 'unit-1-2-quiz-compounds-molecules', title: 'Unit 1.2 Quiz (Compounds & Molecules)', category: 'quiz', academicCategory: 'Physical Science (PS)', maxPoints: 10 },
-        { id: 'unit-1-matter', title: 'Unit 1: Matter', category: 'quiz', academicCategory: 'Physical Science (PS)', maxPoints: 10 },
-        { id: 'volcano-protections', title: 'Volcano Protections', category: 'assignment', maxPoints: 10 },
-        { id: 'building-blocks-states-of-matter', title: 'Building Blocks: States of Matter', category: 'assignment', maxPoints: 10 },
+        { id: 'earth-layers-extension', title: "Earth Layers Extension", category: 'assignment', maxPoints: 10 },
+        { id: 'evaporation-detective-new-cases', title: "Evaporation Detective: New Cases", category: 'assignment', maxPoints: 10 },
+        { id: 'exploration-lab-science-changes-of-matter-water', title: "Exploration Lab Science: Changes of Matter Water", category: 'assignment', maxPoints: 10 },
+        { id: 'exploration-liquid-freezing-and-boiling-temperat', title: "Exploration: Liquid Freezing and Boiling Temperatures", category: 'assignment', maxPoints: 10 },
+        { id: 'famous-volcano-research', title: "Famous Volcano Research", category: 'assignment', maxPoints: 10 },
+        { id: 'formula-decoder', title: "Formula Decoder", category: 'assignment', maxPoints: 10 },
+        { id: 'heat-and-particle-movement', title: "Heat and Particle Movement", category: 'assignment', maxPoints: 10 },
+        { id: 'lf-presentation', title: "LF Presentation", category: 'quiz', academicCategory: "Physical Science (PS)", maxPoints: 10 },
+        { id: 'lf-slides', title: "LF Slides", category: 'quiz', academicCategory: "Physical Science (PS)", maxPoints: 10 },
+        { id: 'map-discovery-volcano-basic-questions', title: "Map Discovery / Volcano Basic Questions", category: 'assignment', maxPoints: 10 },
+        { id: 'matter-mystery-presentation-notes', title: "Matter Mystery Presentation Notes", category: 'assignment', maxPoints: 10 },
+        { id: 'physical-properties-discovery', title: "Physical Properties Discovery", category: 'assignment', maxPoints: 10 },
+        { id: 'rockys-next-journey', title: "Rockys Next Journey", category: 'assignment', maxPoints: 10 },
+        { id: 'unit-1-test', title: "Unit 1 Test", category: 'test', academicCategory: "Physical Science (PS)", maxPoints: 20 },
+        { id: 'unit-1-2-quiz-compounds-molecules', title: "Unit 1.2 Quiz (Compounds & Molecules)", category: 'quiz', academicCategory: "Physical Science (PS)", maxPoints: 10 },
+        { id: 'unit-1-matter', title: "Unit 1: Matter", category: 'quiz', academicCategory: "Physical Science (PS)", maxPoints: 10 },
+        { id: 'volcano-protections', title: "Volcano Protections", category: 'assignment', maxPoints: 10 },
+        { id: 'building-blocks-states-of-matter', title: "Building Blocks: States of Matter", category: 'assignment', maxPoints: 10 },
       ],
     },
     'hawaii-math': {
       assignments: [
-        { id: 'adding-multiple-integers', title: 'Adding Multiple Integers', category: 'assignment', maxPoints: 10 },
-        { id: 'lesson-15-homework', title: 'Lesson 15 Homework', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-l16', title: 'M1 L16', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-ta-l3', title: 'M1 TA L3', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-ta-l7', title: 'M1 TA L7', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-ta-quiz', title: 'M1 TA Quiz', category: 'quiz', academicCategory: 'Ratios and Proportional Relationships', maxPoints: 10 },
-        { id: 'm1-tb-l10', title: 'M1 TB L10', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-tb-l11', title: 'M1 TB L11', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-tb-l12', title: 'M1 TB L12', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-tb-l8', title: 'M1 TB L8', category: 'assignment', maxPoints: 10 },
-        { id: 'm2-tb-l9', title: 'M2 TB L9', category: 'assignment', maxPoints: 10 },
-        { id: 'map-scaling-homework', title: 'Map Scaling Homework', category: 'assignment', maxPoints: 10 },
-        { id: 'module-1-test', title: 'Module 1 Test', category: 'test', academicCategory: 'Ratios and Proportional Relationships', maxPoints: 20 },
-        { id: 'module-2-homework-1', title: 'Module 2 Homework 1', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-10', title: 'Module 2 Lesson 10', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-11', title: 'Module 2 Lesson 11', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-14', title: 'Module 2 Lesson 14', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-15', title: 'Module 2 Lesson 15', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-16', title: 'Module 2 Lesson 16', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-18', title: 'Module 2 Lesson 18', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-19', title: 'Module 2 Lesson 19', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-2', title: 'Module 2 Lesson 2', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-21', title: 'Module 2 Lesson 21', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-3-homework', title: 'Module 2 Lesson 3 Homework', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-5', title: 'Module 2 Lesson 5', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-6', title: 'Module 2 Lesson 6', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-7', title: 'Module 2 Lesson 7', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-topic-a-quiz', title: 'Module 2 Topic A Quiz', category: 'quiz', academicCategory: 'The Number System (NS)', maxPoints: 20 },
-        { id: 'module-2-topic-b-quiz', title: 'Module 2 Topic B Quiz', category: 'quiz', academicCategory: 'The Number System (NS)', maxPoints: 10 },
-        { id: 'module-2-topic-c-quiz', title: 'Module 2 Topic C Quiz', category: 'quiz', academicCategory: 'The Number System (NS)', maxPoints: 10 },
-        { id: 'scale-factor-homework', title: 'Scale Factor Homework', category: 'assignment', maxPoints: 10 },
-        { id: 'topic-b-quiz', title: 'Topic B Quiz', category: 'quiz', academicCategory: 'Ratios and Proportional Relationships', maxPoints: 10 },
-        { id: 'topic-c-review-homework', title: 'Topic C Review Homework', category: 'assignment', maxPoints: 10 },
-        { id: 'module-1-topic-a-lesson-1-practice-pgs-13-14', title: 'Module 1 Topic A Lesson 1 Practice (pgs 13 & 14)', category: 'assignment', maxPoints: 10 },
-        { id: 'module-1-topic-a-lesson-2-practice-pgs-25-29-ski', title: 'Module 1 Topic A Lesson 2 Practice (pgs 25-29 Skip 6b)', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-ta-l4', title: 'M1 TA L4', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-ta-l5', title: 'M1 TA L5', category: 'assignment', maxPoints: 10 },
+        { id: 'adding-multiple-integers', title: "Adding Multiple Integers", category: 'assignment', maxPoints: 10 },
+        { id: 'lesson-15-homework', title: "Lesson 15 Homework", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-l16', title: "M1 L16", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-ta-l3', title: "M1 TA L3", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-ta-l7', title: "M1 TA L7", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-ta-quiz', title: "M1 TA Quiz", category: 'quiz', academicCategory: "Ratios and Proportional Relationships", maxPoints: 10 },
+        { id: 'm1-tb-l10', title: "M1 TB L10", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-tb-l11', title: "M1 TB L11", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-tb-l12', title: "M1 TB L12", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-tb-l8', title: "M1 TB L8", category: 'assignment', maxPoints: 10 },
+        { id: 'm2-tb-l9', title: "M2 TB L9", category: 'assignment', maxPoints: 10 },
+        { id: 'map-scaling-homework', title: "Map Scaling Homework", category: 'assignment', maxPoints: 10 },
+        { id: 'module-1-test', title: "Module 1 Test", category: 'test', academicCategory: "Ratios and Proportional Relationships", maxPoints: 20 },
+        { id: 'module-2-homework-1', title: "Module 2 Homework 1", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-10', title: "Module 2 Lesson 10", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-11', title: "Module 2 Lesson 11", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-14', title: "Module 2 Lesson 14", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-15', title: "Module 2 Lesson 15", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-16', title: "Module 2 Lesson 16", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-18', title: "Module 2 Lesson 18", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-19', title: "Module 2 Lesson 19", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-2', title: "Module 2 Lesson 2", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-21', title: "Module 2 Lesson 21", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-23', title: "Module 2 Lesson 23", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-25-26', title: "Module 2 Lesson 25-26", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-3-homework', title: "Module 2 Lesson 3 Homework", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-5', title: "Module 2 Lesson 5", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-6', title: "Module 2 Lesson 6", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-7', title: "Module 2 Lesson 7", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-topic-a-quiz', title: "Module 2 Topic A Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 20 },
+        { id: 'module-2-topic-b-quiz', title: "Module 2 Topic B Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 10 },
+        { id: 'module-2-topic-c-quiz', title: "Module 2 Topic C Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 10 },
+        { id: 'scale-factor-homework', title: "Scale Factor Homework", category: 'assignment', maxPoints: 10 },
+        { id: 'topic-b-quiz', title: "Topic B Quiz", category: 'quiz', academicCategory: "Ratios and Proportional Relationships", maxPoints: 10 },
+        { id: 'topic-c-review-homework', title: "Topic C Review Homework", category: 'assignment', maxPoints: 10 },
+        { id: 'module-1-topic-a-lesson-1-practice-pgs-13-14', title: "Module 1 Topic A Lesson 1 Practice (pgs 13 & 14)", category: 'assignment', maxPoints: 10 },
+        { id: 'module-1-topic-a-lesson-2-practice-pgs-25-29-ski', title: "Module 1 Topic A Lesson 2 Practice (pgs 25-29 Skip 6b)", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-ta-l4', title: "M1 TA L4", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-ta-l5', title: "M1 TA L5", category: 'assignment', maxPoints: 10 },
       ],
     },
     'caltech-math': {
       assignments: [
-        { id: 'topic-c-review-homework', title: 'Topic C Review Homework', category: 'assignment', maxPoints: 10 },
-        { id: 'adding-multiple-integers', title: 'Adding Multiple Integers', category: 'assignment', maxPoints: 10 },
-        { id: 'lesson-15-homework', title: 'Lesson 15 Homework', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-l16', title: 'M1 L16', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-ta-l3', title: 'M1 TA L3', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-ta-l7', title: 'M1 TA L7', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-tb-l10', title: 'M1 TB L10', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-tb-l11', title: 'M1 TB L11', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-tb-l12', title: 'M1 TB L12', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-tb-l8', title: 'M1 TB L8', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-tb-l9', title: 'M1 TB L9', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-topic-a-quiz', title: 'M1 Topic A Quiz', category: 'quiz', academicCategory: 'Ratios and Proportional Relationships', maxPoints: 10 },
-        { id: 'm1-topic-b-quiz', title: 'M1 Topic B Quiz', category: 'quiz', academicCategory: 'Ratios and Proportional Relationships', maxPoints: 10 },
-        { id: 'map-scaling-homework', title: 'Map Scaling Homework', category: 'assignment', maxPoints: 10 },
-        { id: 'module-1-test', title: 'Module 1 Test', category: 'test', academicCategory: 'Ratios and Proportional Relationships', maxPoints: 20 },
-        { id: 'module-2-homework-1', title: 'Module 2 Homework 1', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-10', title: 'Module 2 Lesson 10', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-11', title: 'Module 2 Lesson 11', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-14', title: 'Module 2 Lesson 14', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-15', title: 'Module 2 Lesson 15', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-16', title: 'Module 2 Lesson 16', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-18', title: 'Module 2 Lesson 18', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-19', title: 'Module 2 Lesson 19', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-2', title: 'Module 2 Lesson 2', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-21', title: 'Module 2 Lesson 21', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-3-homework', title: 'Module 2 Lesson 3 Homework', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-5', title: 'Module 2 Lesson 5', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-6', title: 'Module 2 Lesson 6', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-lesson-7', title: 'Module 2 Lesson 7', category: 'assignment', maxPoints: 10 },
-        { id: 'module-2-topic-a-quiz', title: 'Module 2 Topic A Quiz', category: 'quiz', academicCategory: 'The Number System (NS)', maxPoints: 20 },
-        { id: 'module-2-topic-b-quiz', title: 'Module 2 Topic B Quiz', category: 'quiz', academicCategory: 'The Number System (NS)', maxPoints: 10 },
-        { id: 'module-2-topic-c-quiz', title: 'Module 2 Topic C Quiz', category: 'quiz', academicCategory: 'The Number System (NS)', maxPoints: 10 },
-        { id: 'scale-factor-homework', title: 'Scale Factor Homework', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-ta-l1-pgs-13-14', title: 'M1 TA L1 (pgs 13 & 14)', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-ta-l2', title: 'M1 TA L2', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-ta-l4', title: 'M1 TA L4', category: 'assignment', maxPoints: 10 },
-        { id: 'm1-ta-l5', title: 'M1 TA L5', category: 'assignment', maxPoints: 10 },
+        { id: 'topic-c-review-homework', title: "Topic C Review Homework", category: 'assignment', maxPoints: 10 },
+        { id: 'adding-multiple-integers', title: "Adding Multiple Integers", category: 'assignment', maxPoints: 10 },
+        { id: 'lesson-15-homework', title: "Lesson 15 Homework", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-l16', title: "M1 L16", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-ta-l3', title: "M1 TA L3", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-ta-l7', title: "M1 TA L7", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-tb-l10', title: "M1 TB L10", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-tb-l11', title: "M1 TB L11", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-tb-l12', title: "M1 TB L12", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-tb-l8', title: "M1 TB L8", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-tb-l9', title: "M1 TB L9", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-topic-a-quiz', title: "M1 Topic A Quiz", category: 'quiz', academicCategory: "Ratios and Proportional Relationships", maxPoints: 10 },
+        { id: 'm1-topic-b-quiz', title: "M1 Topic B Quiz", category: 'quiz', academicCategory: "Ratios and Proportional Relationships", maxPoints: 10 },
+        { id: 'map-scaling-homework', title: "Map Scaling Homework", category: 'assignment', maxPoints: 10 },
+        { id: 'module-1-test', title: "Module 1 Test", category: 'test', academicCategory: "Ratios and Proportional Relationships", maxPoints: 20 },
+        { id: 'module-2-homework-1', title: "Module 2 Homework 1", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-10', title: "Module 2 Lesson 10", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-11', title: "Module 2 Lesson 11", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-14', title: "Module 2 Lesson 14", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-15', title: "Module 2 Lesson 15", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-16', title: "Module 2 Lesson 16", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-18', title: "Module 2 Lesson 18", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-19', title: "Module 2 Lesson 19", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-2', title: "Module 2 Lesson 2", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-21', title: "Module 2 Lesson 21", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-23', title: "Module 2 Lesson 23", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-25-26', title: "Module 2 Lesson 25-26", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-3-homework', title: "Module 2 Lesson 3 Homework", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-5', title: "Module 2 Lesson 5", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-6', title: "Module 2 Lesson 6", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-lesson-7', title: "Module 2 Lesson 7", category: 'assignment', maxPoints: 10 },
+        { id: 'module-2-topic-a-quiz', title: "Module 2 Topic A Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 20 },
+        { id: 'module-2-topic-b-quiz', title: "Module 2 Topic B Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 10 },
+        { id: 'module-2-topic-c-quiz', title: "Module 2 Topic C Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 10 },
+        { id: 'scale-factor-homework', title: "Scale Factor Homework", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-ta-l1-pgs-13-14', title: "M1 TA L1 (pgs 13 & 14)", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-ta-l2', title: "M1 TA L2", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-ta-l4', title: "M1 TA L4", category: 'assignment', maxPoints: 10 },
+        { id: 'm1-ta-l5', title: "M1 TA L5", category: 'assignment', maxPoints: 10 },
       ],
     },
     'caltech-science': {
       assignments: [
-        { id: 'earth-layer-extension', title: 'Earth Layer Extension', category: 'assignment', maxPoints: 10 },
-        { id: 'evaporation-detective-new-cases', title: 'Evaporation Detective: New Cases', category: 'assignment', maxPoints: 10 },
-        { id: 'exploration-lab-science-changes-of-matter-water', title: 'Exploration Lab Science: Changes of Matter Water', category: 'assignment', maxPoints: 10 },
-        { id: 'exploration-liquid-freezing-and-boiling-temperat', title: 'Exploration: Liquid Freezing and Boiling Temperatures', category: 'assignment', maxPoints: 10 },
-        { id: 'famous-volcano-research', title: 'Famous Volcano Research', category: 'assignment', maxPoints: 10 },
-        { id: 'heat-and-particle-movement', title: 'Heat and Particle Movement', category: 'assignment', maxPoints: 10 },
-        { id: 'map-discovery-volcano-basic-questions', title: 'Map Discovery / Volcano Basic Questions', category: 'assignment', maxPoints: 10 },
-        { id: 'matter-mystery-presentation-notes', title: 'Matter Mystery Presentation Notes', category: 'assignment', maxPoints: 10 },
-        { id: 'plate-boundary-research-extension', title: 'Plate Boundary Research Extension', category: 'assignment', maxPoints: 10 },
-        { id: 'quiz-1-2', title: 'Quiz 1.2', category: 'quiz', academicCategory: 'Physical Science (PS)', maxPoints: 10 },
-        { id: 'rockys-next-journey', title: 'Rockys Next Journey', category: 'assignment', maxPoints: 10 },
-        { id: 'science-decoder', title: 'Science Decoder', category: 'assignment', maxPoints: 10 },
-        { id: 'unit-1-test', title: 'Unit 1 Test', category: 'test', academicCategory: 'Physical Science (PS)', maxPoints: 20 },
-        { id: 'unit-1-matter', title: 'Unit 1: Matter', category: 'quiz', academicCategory: 'Physical Science (PS)', maxPoints: 10 },
-        { id: 'volcano-protections', title: 'Volcano Protections', category: 'assignment', maxPoints: 10 },
-        { id: 'building-blocks-matter', title: 'Building Blocks: Matter', category: 'assignment', maxPoints: 10 },
-        { id: 'building-blocks-states-of-matter', title: 'Building Blocks: States of Matter', category: 'assignment', maxPoints: 10 },
+        { id: 'earth-layer-extension', title: "Earth Layer Extension", category: 'assignment', maxPoints: 10 },
+        { id: 'evaporation-detective-new-cases', title: "Evaporation Detective: New Cases", category: 'assignment', maxPoints: 10 },
+        { id: 'exploration-lab-science-changes-of-matter-water', title: "Exploration Lab Science: Changes of Matter Water", category: 'assignment', maxPoints: 10 },
+        { id: 'exploration-liquid-freezing-and-boiling-temperat', title: "Exploration: Liquid Freezing and Boiling Temperatures", category: 'assignment', maxPoints: 10 },
+        { id: 'famous-volcano-research', title: "Famous Volcano Research", category: 'assignment', maxPoints: 10 },
+        { id: 'heat-and-particle-movement', title: "Heat and Particle Movement", category: 'assignment', maxPoints: 10 },
+        { id: 'map-discovery-volcano-basic-questions', title: "Map Discovery / Volcano Basic Questions", category: 'assignment', maxPoints: 10 },
+        { id: 'matter-mystery-presentation-notes', title: "Matter Mystery Presentation Notes", category: 'assignment', maxPoints: 10 },
+        { id: 'plate-boundary-research-extension', title: "Plate Boundary Research Extension", category: 'assignment', maxPoints: 10 },
+        { id: 'quiz-1-2', title: "Quiz 1.2", category: 'quiz', academicCategory: "Physical Science (PS)", maxPoints: 10 },
+        { id: 'rockys-next-journey', title: "Rockys Next Journey", category: 'assignment', maxPoints: 10 },
+        { id: 'science-decoder', title: "Science Decoder", category: 'assignment', maxPoints: 10 },
+        { id: 'unit-1-test', title: "Unit 1 Test", category: 'test', academicCategory: "Physical Science (PS)", maxPoints: 20 },
+        { id: 'unit-1-matter', title: "Unit 1: Matter", category: 'quiz', academicCategory: "Physical Science (PS)", maxPoints: 10 },
+        { id: 'volcano-protections', title: "Volcano Protections", category: 'assignment', maxPoints: 10 },
+        { id: 'building-blocks-matter', title: "Building Blocks: Matter", category: 'assignment', maxPoints: 10 },
+        { id: 'building-blocks-states-of-matter', title: "Building Blocks: States of Matter", category: 'assignment', maxPoints: 10 },
       ],
     },
   },
   students: [
     {
       id: 'aiden-hernandez',
-      name: 'Aiden Hernandez',
+      name: "Aiden Hernandez",
       pin: '294192',
       classes: {
         'hawaii-science': {
@@ -156,6 +162,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 10, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 5, missing: false, excused: false },
+            'lf-slides': { points: 1, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -191,7 +199,9 @@ export const gradebook = {
             'module-2-lesson-18': { points: 10, missing: false, excused: false },
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
-            'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -212,7 +222,7 @@ export const gradebook = {
     },
     {
       id: 'alan-carranza-morales',
-      name: 'Alan Carranza Morales',
+      name: "Alan Carranza Morales",
       pin: '533576',
       classes: {
         'hawaii-science': {
@@ -224,6 +234,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 10, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 5, missing: false, excused: false },
+            'lf-slides': { points: 7.5, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -260,6 +272,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -280,7 +294,7 @@ export const gradebook = {
     },
     {
       id: 'alexander-rubio',
-      name: 'Alexander Rubio',
+      name: "Alexander Rubio",
       pin: '549440',
       classes: {
         'hawaii-science': {
@@ -292,6 +306,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 0, missing: true, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 1, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 0, missing: true, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -328,6 +344,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -348,7 +366,7 @@ export const gradebook = {
     },
     {
       id: 'alondra-lopez',
-      name: 'Alondra Lopez',
+      name: "Alondra Lopez",
       pin: '369149',
       classes: {
         'hawaii-science': {
@@ -360,6 +378,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 5, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -396,6 +416,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -416,7 +438,7 @@ export const gradebook = {
     },
     {
       id: 'anneth-robles-cabrera',
-      name: 'Anneth Robles Cabrera',
+      name: "Anneth Robles Cabrera",
       pin: '995199',
       classes: {
         'hawaii-science': {
@@ -428,6 +450,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 0, missing: true, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 0, missing: true, excused: false },
+            'lf-presentation': { points: 0, missing: true, excused: false },
+            'lf-slides': { points: 0, missing: true, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 5, missing: false, excused: false },
@@ -464,6 +488,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -484,7 +510,7 @@ export const gradebook = {
     },
     {
       id: 'anthony-galvan',
-      name: 'Anthony Galvan',
+      name: "Anthony Galvan",
       pin: '770884',
       classes: {
         'hawaii-science': {
@@ -496,6 +522,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 5, missing: false, excused: false },
             'heat-and-particle-movement': { points: 5, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 7.5, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -532,6 +560,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -552,7 +582,7 @@ export const gradebook = {
     },
     {
       id: 'ariel-de-la-torre',
-      name: 'Ariel De La Torre',
+      name: "Ariel De La Torre",
       pin: '208461',
       classes: {
         'hawaii-science': {
@@ -564,6 +594,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 10, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -600,6 +632,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -620,7 +654,7 @@ export const gradebook = {
     },
     {
       id: 'christopher-lara',
-      name: 'Christopher Lara',
+      name: "Christopher Lara",
       pin: '684123',
       classes: {
         'hawaii-science': {
@@ -632,6 +666,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 0, missing: true, excused: false },
+            'lf-presentation': { points: 5, missing: false, excused: false },
+            'lf-slides': { points: 5, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 0, missing: true, excused: false },
             'physical-properties-discovery': { points: 0, missing: true, excused: false },
@@ -668,6 +704,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -688,9 +726,9 @@ export const gradebook = {
     },
     {
       id: 'maurithia-castaneda',
-      name: 'Maurithia Castaneda',
-      aliases: ['Daisy Castaneda'],
+      name: "Maurithia Castaneda",
       pin: '551724',
+      aliases: ["Daisy Castaneda"],
       classes: {
         'hawaii-science': {
           scores: {
@@ -701,6 +739,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 0, missing: true, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 5, missing: false, excused: false },
+            'lf-presentation': { points: 1, missing: false, excused: false },
+            'lf-slides': { points: 1, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 0, missing: true, excused: false },
             'matter-mystery-presentation-notes': { points: 0, missing: true, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -714,9 +754,9 @@ export const gradebook = {
         },
         'hawaii-math': {
           scores: {
-            'adding-multiple-integers': { points: 0, missing: true, excused: false },
-            'lesson-15-homework': { points: 0, missing: true, excused: false },
-            'm1-l16': { points: 0, missing: true, excused: false },
+            'adding-multiple-integers': { points: 10, missing: false, excused: false },
+            'lesson-15-homework': { points: 10, missing: false, excused: false },
+            'm1-l16': { points: 10, missing: false, excused: false },
             'm1-ta-l3': { points: 10, missing: false, excused: false },
             'm1-ta-l7': { points: 10, missing: false, excused: false },
             'm1-ta-quiz': { points: 5, missing: false, excused: false },
@@ -727,18 +767,20 @@ export const gradebook = {
             'm2-tb-l9': { points: 10, missing: false, excused: false },
             'map-scaling-homework': { points: 10, missing: false, excused: false },
             'module-1-test': { points: 1.4, missing: false, excused: false },
-            'module-2-homework-1': { points: 0, missing: true, excused: false },
-            'module-2-lesson-10': { points: 0, missing: true, excused: false },
+            'module-2-homework-1': { points: 10, missing: false, excused: false },
+            'module-2-lesson-10': { points: 10, missing: false, excused: false },
             'module-2-lesson-11': { points: 10, missing: false, excused: false },
             'module-2-lesson-14': { points: 10, missing: false, excused: false },
             'module-2-lesson-15': { points: 10, missing: false, excused: false },
-            'module-2-lesson-16': { points: 0, missing: true, excused: false },
-            'module-2-lesson-18': { points: 0, missing: true, excused: false },
+            'module-2-lesson-16': { points: 10, missing: false, excused: false },
+            'module-2-lesson-18': { points: 10, missing: false, excused: false },
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
-            'module-2-lesson-21': { points: 0, missing: true, excused: false },
-            'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
-            'module-2-lesson-5': { points: 0, missing: true, excused: false },
+            'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
+            'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
+            'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
             'module-2-lesson-7': { points: 10, missing: false, excused: false },
             'module-2-topic-a-quiz': { points: 0, missing: true, excused: false },
@@ -746,7 +788,7 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 0, missing: true, excused: false },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 2, missing: false, excused: false },
-            'topic-c-review-homework': { points: 0, missing: true, excused: false },
+            'topic-c-review-homework': { points: 10, missing: false, excused: false },
             'module-1-topic-a-lesson-1-practice-pgs-13-14': { points: 5, missing: false, excused: false },
             'module-1-topic-a-lesson-2-practice-pgs-25-29-ski': { points: 10, missing: false, excused: false },
             'm1-ta-l4': { points: 10, missing: false, excused: false },
@@ -757,7 +799,7 @@ export const gradebook = {
     },
     {
       id: 'daniel-sanchez',
-      name: 'Daniel Sanchez',
+      name: "Daniel Sanchez",
       pin: '374186',
       classes: {
         'hawaii-science': {
@@ -769,6 +811,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 5, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 7.5, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -801,10 +845,12 @@ export const gradebook = {
             'module-2-lesson-14': { points: 10, missing: false, excused: false },
             'module-2-lesson-15': { points: 10, missing: false, excused: false },
             'module-2-lesson-16': { points: 10, missing: false, excused: false },
-            'module-2-lesson-18': { points: 0, missing: true, excused: false },
-            'module-2-lesson-19': { points: 0, missing: true, excused: false },
+            'module-2-lesson-18': { points: 10, missing: false, excused: false },
+            'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -825,7 +871,7 @@ export const gradebook = {
     },
     {
       id: 'dominic-reyna',
-      name: 'Dominic Reyna',
+      name: "Dominic Reyna",
       pin: '662448',
       classes: {
         'hawaii-science': {
@@ -837,6 +883,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 5, missing: false, excused: false },
+            'lf-presentation': { points: 1, missing: false, excused: false },
+            'lf-slides': { points: 1, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 0, missing: true, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -873,6 +921,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -893,7 +943,7 @@ export const gradebook = {
     },
     {
       id: 'emanuel-penaloza',
-      name: 'Emanuel Penaloza',
+      name: "Emanuel Penaloza",
       pin: '124228',
       classes: {
         'hawaii-science': {
@@ -905,6 +955,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 0, missing: true, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 0, missing: true, excused: false },
+            'lf-presentation': { points: 0, missing: true, excused: false },
+            'lf-slides': { points: 0, missing: true, excused: false },
             'map-discovery-volcano-basic-questions': { points: 0, missing: true, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 0, missing: true, excused: false },
@@ -941,6 +993,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -961,7 +1015,7 @@ export const gradebook = {
     },
     {
       id: 'giovanni-bahena',
-      name: 'Giovanni Bahena',
+      name: "Giovanni Bahena",
       pin: '656043',
       classes: {
         'hawaii-science': {
@@ -973,6 +1027,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 0, missing: true, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 5, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -1009,6 +1065,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -1029,7 +1087,7 @@ export const gradebook = {
     },
     {
       id: 'giovanni-orendain',
-      name: 'Giovanni Orendain',
+      name: "Giovanni Orendain",
       pin: '141640',
       classes: {
         'hawaii-science': {
@@ -1041,6 +1099,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 5, missing: false, excused: false },
             'heat-and-particle-movement': { points: 0, missing: true, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 1, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 0, missing: true, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -1073,10 +1133,12 @@ export const gradebook = {
             'module-2-lesson-14': { points: 10, missing: false, excused: false },
             'module-2-lesson-15': { points: 0, missing: true, excused: false },
             'module-2-lesson-16': { points: 10, missing: false, excused: false },
-            'module-2-lesson-18': { points: 0, missing: true, excused: false },
-            'module-2-lesson-19': { points: 0, missing: true, excused: false },
+            'module-2-lesson-18': { points: 10, missing: false, excused: false },
+            'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
-            'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -1097,7 +1159,7 @@ export const gradebook = {
     },
     {
       id: 'isaac-jaimes',
-      name: 'Isaac Jaimes',
+      name: "Isaac Jaimes",
       pin: '239742',
       classes: {
         'hawaii-science': {
@@ -1109,6 +1171,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 10, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 7.5, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -1145,6 +1209,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -1165,7 +1231,7 @@ export const gradebook = {
     },
     {
       id: 'jaden-flores',
-      name: 'Jaden Flores',
+      name: "Jaden Flores",
       pin: '672850',
       classes: {
         'hawaii-science': {
@@ -1177,6 +1243,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 5, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 7.5, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -1213,6 +1281,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -1233,7 +1303,7 @@ export const gradebook = {
     },
     {
       id: 'jose-abarca',
-      name: 'Jose Abarca',
+      name: "Jose Abarca",
       pin: '869841',
       classes: {
         'hawaii-science': {
@@ -1245,6 +1315,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 0, missing: true, excused: false },
+            'lf-presentation': { points: 1, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 0, missing: true, excused: false },
@@ -1280,7 +1352,9 @@ export const gradebook = {
             'module-2-lesson-18': { points: 0, missing: true, excused: false },
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
-            'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 10, missing: false, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -1301,7 +1375,7 @@ export const gradebook = {
     },
     {
       id: 'joseph-francisco',
-      name: 'Joseph Francisco',
+      name: "Joseph Francisco",
       pin: '546787',
       classes: {
         'hawaii-science': {
@@ -1313,6 +1387,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 0, missing: true, excused: false },
+            'lf-presentation': { points: 5, missing: false, excused: false },
+            'lf-slides': { points: 5, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 0, missing: true, excused: false },
             'physical-properties-discovery': { points: 0, missing: true, excused: false },
@@ -1349,6 +1425,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -1369,7 +1447,7 @@ export const gradebook = {
     },
     {
       id: 'juan-alberto-vivas-calles',
-      name: 'Juan-Alberto Vivas-Calles',
+      name: "Juan-Alberto Vivas-Calles",
       pin: '952584',
       classes: {
         'hawaii-science': {
@@ -1381,6 +1459,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 10, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 1, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -1416,7 +1496,9 @@ export const gradebook = {
             'module-2-lesson-18': { points: 0, missing: true, excused: false },
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
-            'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -1437,7 +1519,7 @@ export const gradebook = {
     },
     {
       id: 'juliet-medina',
-      name: 'Juliet Medina',
+      name: "Juliet Medina",
       pin: '579680',
       classes: {
         'hawaii-science': {
@@ -1449,6 +1531,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 10, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -1484,7 +1568,9 @@ export const gradebook = {
             'module-2-lesson-18': { points: 10, missing: false, excused: false },
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
-            'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 10, missing: false, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -1505,7 +1591,7 @@ export const gradebook = {
     },
     {
       id: 'kandace-briseno',
-      name: 'Kandace Briseno',
+      name: "Kandace Briseno",
       pin: '856083',
       classes: {
         'hawaii-science': {
@@ -1517,6 +1603,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 5, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 0, missing: true, excused: false },
@@ -1552,7 +1640,9 @@ export const gradebook = {
             'module-2-lesson-18': { points: 0, missing: true, excused: false },
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
-            'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -1573,7 +1663,7 @@ export const gradebook = {
     },
     {
       id: 'laylah-harp',
-      name: 'Laylah Harp',
+      name: "Laylah Harp",
       pin: '225374',
       classes: {
         'hawaii-science': {
@@ -1585,6 +1675,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 0, missing: true, excused: false },
             'formula-decoder': { points: 10, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 0, missing: true, excused: false },
+            'lf-slides': { points: 0, missing: true, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 5, missing: false, excused: false },
@@ -1621,6 +1713,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -1641,7 +1735,7 @@ export const gradebook = {
     },
     {
       id: 'luis-rodriguez-arevalo',
-      name: 'Luis Rodriguez Arevalo',
+      name: "Luis Rodriguez Arevalo",
       pin: '873913',
       classes: {
         'hawaii-science': {
@@ -1653,6 +1747,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 0, missing: true, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 5, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 0, missing: true, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -1689,6 +1785,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -1709,7 +1807,7 @@ export const gradebook = {
     },
     {
       id: 'mia-gonzalez',
-      name: 'Mia Gonzalez',
+      name: "Mia Gonzalez",
       pin: '676981',
       classes: {
         'hawaii-science': {
@@ -1721,6 +1819,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 0, missing: true, excused: false },
             'formula-decoder': { points: 10, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -1757,6 +1857,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -1777,7 +1879,7 @@ export const gradebook = {
     },
     {
       id: 'sofia-guerrero',
-      name: 'Sofia Guerrero',
+      name: "Sofia Guerrero",
       pin: '784697',
       classes: {
         'hawaii-science': {
@@ -1789,6 +1891,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 5, missing: false, excused: false },
             'heat-and-particle-movement': { points: 5, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 7.5, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 0, missing: true, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 0, missing: true, excused: false },
@@ -1825,6 +1929,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -1845,7 +1951,7 @@ export const gradebook = {
     },
     {
       id: 'stacey-munoz',
-      name: 'Stacey Munoz',
+      name: "Stacey Munoz",
       pin: '301445',
       classes: {
         'hawaii-science': {
@@ -1857,6 +1963,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 0, missing: true, excused: false },
             'formula-decoder': { points: 5, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 7.5, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 0, missing: true, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -1893,6 +2001,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -1913,7 +2023,7 @@ export const gradebook = {
     },
     {
       id: 'victoria-gonzalez-guerrero',
-      name: 'Victoria Gonzalez Guerrero',
+      name: "Victoria Gonzalez Guerrero",
       pin: '552688',
       classes: {
         'hawaii-science': {
@@ -1925,6 +2035,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 10, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -1961,6 +2073,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 10, missing: false, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -1981,7 +2095,7 @@ export const gradebook = {
     },
     {
       id: 'yahir-hernandez',
-      name: 'Yahir Hernandez',
+      name: "Yahir Hernandez",
       pin: '936612',
       classes: {
         'hawaii-science': {
@@ -1993,6 +2107,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 5, missing: false, excused: false },
@@ -2025,10 +2141,12 @@ export const gradebook = {
             'module-2-lesson-14': { points: 10, missing: false, excused: false },
             'module-2-lesson-15': { points: 10, missing: false, excused: false },
             'module-2-lesson-16': { points: 10, missing: false, excused: false },
-            'module-2-lesson-18': { points: 0, missing: true, excused: false },
+            'module-2-lesson-18': { points: 10, missing: false, excused: false },
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
-            'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -2049,7 +2167,7 @@ export const gradebook = {
     },
     {
       id: 'yazmin-arevalo',
-      name: 'Yazmin Arevalo',
+      name: "Yazmin Arevalo",
       pin: '960504',
       classes: {
         'hawaii-science': {
@@ -2061,6 +2179,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 0, missing: true, excused: false },
             'formula-decoder': { points: 5, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 0, missing: true, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -2097,6 +2217,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -2117,7 +2239,7 @@ export const gradebook = {
     },
     {
       id: 'yulissa-avalos',
-      name: 'Yulissa Avalos',
+      name: "Yulissa Avalos",
       pin: '525770',
       classes: {
         'hawaii-science': {
@@ -2129,6 +2251,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 0, missing: true, excused: false },
             'formula-decoder': { points: 0, missing: true, excused: false },
             'heat-and-particle-movement': { points: 0, missing: true, excused: false },
+            'lf-presentation': { points: 5, missing: false, excused: false },
+            'lf-slides': { points: 10, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 0, missing: true, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -2165,6 +2289,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -2185,7 +2311,7 @@ export const gradebook = {
     },
     {
       id: 'zoetry-luong',
-      name: 'Zoetry Luong',
+      name: "Zoetry Luong",
       pin: '390230',
       classes: {
         'hawaii-science': {
@@ -2197,6 +2323,8 @@ export const gradebook = {
             'famous-volcano-research': { points: 10, missing: false, excused: false },
             'formula-decoder': { points: 5, missing: false, excused: false },
             'heat-and-particle-movement': { points: 10, missing: false, excused: false },
+            'lf-presentation': { points: 7.5, missing: false, excused: false },
+            'lf-slides': { points: 7.5, missing: false, excused: false },
             'map-discovery-volcano-basic-questions': { points: 10, missing: false, excused: false },
             'matter-mystery-presentation-notes': { points: 10, missing: false, excused: false },
             'physical-properties-discovery': { points: 10, missing: false, excused: false },
@@ -2233,6 +2361,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -2253,7 +2383,7 @@ export const gradebook = {
     },
     {
       id: 'alexander-higareda',
-      name: 'Alexander Higareda',
+      name: "Alexander Higareda",
       pin: '576947',
       classes: {
         'caltech-math': {
@@ -2283,6 +2413,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -2322,7 +2454,7 @@ export const gradebook = {
     },
     {
       id: 'evan-ibarra',
-      name: 'Evan Ibarra',
+      name: "Evan Ibarra",
       pin: '751902',
       classes: {
         'caltech-math': {
@@ -2352,6 +2484,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -2391,7 +2525,7 @@ export const gradebook = {
     },
     {
       id: 'genesis-campos',
-      name: 'Genesis Campos',
+      name: "Genesis Campos",
       pin: '676938',
       classes: {
         'caltech-math': {
@@ -2421,6 +2555,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -2460,7 +2596,7 @@ export const gradebook = {
     },
     {
       id: 'gia-hernandez',
-      name: 'Gia Hernandez',
+      name: "Gia Hernandez",
       pin: '519921',
       classes: {
         'caltech-math': {
@@ -2490,6 +2626,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: null, missing: false, excused: true },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: null, missing: false, excused: true },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -2529,7 +2667,7 @@ export const gradebook = {
     },
     {
       id: 'gonzalo-pereida',
-      name: 'Gonzalo Pereida',
+      name: "Gonzalo Pereida",
       pin: '331578',
       classes: {
         'caltech-math': {
@@ -2559,6 +2697,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -2598,7 +2738,7 @@ export const gradebook = {
     },
     {
       id: 'isabella-arellano',
-      name: 'Isabella Arellano',
+      name: "Isabella Arellano",
       pin: '928410',
       classes: {
         'caltech-math': {
@@ -2628,6 +2768,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -2667,7 +2809,7 @@ export const gradebook = {
     },
     {
       id: 'israel-benites-mora',
-      name: 'Israel Benites Mora',
+      name: "Israel Benites Mora",
       pin: '878061',
       classes: {
         'caltech-math': {
@@ -2697,6 +2839,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -2736,7 +2880,7 @@ export const gradebook = {
     },
     {
       id: 'israel-reyes',
-      name: 'Israel Reyes',
+      name: "Israel Reyes",
       pin: '144034',
       classes: {
         'caltech-math': {
@@ -2766,6 +2910,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 10, missing: false, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -2805,7 +2951,7 @@ export const gradebook = {
     },
     {
       id: 'jonathan-castro',
-      name: 'Jonathan Castro',
+      name: "Jonathan Castro",
       pin: '467600',
       classes: {
         'caltech-math': {
@@ -2835,6 +2981,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -2874,7 +3022,7 @@ export const gradebook = {
     },
     {
       id: 'joseph-juarez',
-      name: 'Joseph Juarez',
+      name: "Joseph Juarez",
       pin: '545477',
       classes: {
         'caltech-math': {
@@ -2904,6 +3052,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -2943,7 +3093,7 @@ export const gradebook = {
     },
     {
       id: 'joshua-nunez',
-      name: 'Joshua Nunez',
+      name: "Joshua Nunez",
       pin: '632864',
       classes: {
         'caltech-math': {
@@ -2973,6 +3123,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -3012,7 +3164,7 @@ export const gradebook = {
     },
     {
       id: 'josue-granadeno-mejia',
-      name: 'Josue Granadeno Mejia',
+      name: "Josue Granadeno Mejia",
       pin: '823392',
       classes: {
         'caltech-math': {
@@ -3030,7 +3182,7 @@ export const gradebook = {
             'm1-tb-l9': { points: 10, missing: false, excused: false },
             'm1-topic-a-quiz': { points: 6.5, missing: false, excused: false },
             'm1-topic-b-quiz': { points: 7.3, missing: false, excused: false },
-            'map-scaling-homework': { points: 0, missing: true, excused: false },
+            'map-scaling-homework': { points: 10, missing: false, excused: false },
             'module-1-test': { points: 16, missing: false, excused: false },
             'module-2-homework-1': { points: 10, missing: false, excused: false },
             'module-2-lesson-10': { points: 0, missing: true, excused: false },
@@ -3040,10 +3192,12 @@ export const gradebook = {
             'module-2-lesson-16': { points: 0, missing: true, excused: false },
             'module-2-lesson-18': { points: 0, missing: true, excused: false },
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
-            'module-2-lesson-2': { points: 0, missing: true, excused: false },
+            'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
-            'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
-            'module-2-lesson-5': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
+            'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
+            'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
             'module-2-lesson-7': { points: 0, missing: true, excused: false },
             'module-2-topic-a-quiz': { points: 20, missing: false, excused: false },
@@ -3081,7 +3235,7 @@ export const gradebook = {
     },
     {
       id: 'juan-moreno',
-      name: 'Juan Moreno',
+      name: "Juan Moreno",
       pin: '353538',
       classes: {
         'caltech-math': {
@@ -3111,6 +3265,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -3150,7 +3306,7 @@ export const gradebook = {
     },
     {
       id: 'kaylee-becerra',
-      name: 'Kaylee Becerra',
+      name: "Kaylee Becerra",
       pin: '940984',
       classes: {
         'caltech-math': {
@@ -3180,6 +3336,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -3219,7 +3377,7 @@ export const gradebook = {
     },
     {
       id: 'kiara-gomez-miranda',
-      name: 'Kiara Gomez Miranda',
+      name: "Kiara Gomez Miranda",
       pin: '979946',
       classes: {
         'caltech-math': {
@@ -3249,6 +3407,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -3288,7 +3448,7 @@ export const gradebook = {
     },
     {
       id: 'kyarra-machado',
-      name: 'Kyarra Machado',
+      name: "Kyarra Machado",
       pin: '800005',
       classes: {
         'caltech-math': {
@@ -3318,6 +3478,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -3357,7 +3519,7 @@ export const gradebook = {
     },
     {
       id: 'madison-esquivel',
-      name: 'Madison Esquivel',
+      name: "Madison Esquivel",
       pin: '344116',
       classes: {
         'caltech-math': {
@@ -3384,9 +3546,11 @@ export const gradebook = {
             'module-2-lesson-15': { points: 10, missing: false, excused: false },
             'module-2-lesson-16': { points: 10, missing: false, excused: false },
             'module-2-lesson-18': { points: 10, missing: false, excused: false },
-            'module-2-lesson-19': { points: 0, missing: true, excused: false },
+            'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -3426,7 +3590,7 @@ export const gradebook = {
     },
     {
       id: 'marco-enriquez-tabares',
-      name: 'Marco Enriquez Tabares',
+      name: "Marco Enriquez Tabares",
       pin: '805480',
       classes: {
         'caltech-math': {
@@ -3456,6 +3620,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 10, missing: false, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -3495,7 +3661,7 @@ export const gradebook = {
     },
     {
       id: 'marlen-vega',
-      name: 'Marlen Vega',
+      name: "Marlen Vega",
       pin: '366865',
       classes: {
         'caltech-math': {
@@ -3525,6 +3691,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -3564,7 +3732,7 @@ export const gradebook = {
     },
     {
       id: 'mateo-medina',
-      name: 'Mateo Medina',
+      name: "Mateo Medina",
       pin: '901309',
       classes: {
         'caltech-math': {
@@ -3593,7 +3761,9 @@ export const gradebook = {
             'module-2-lesson-18': { points: 10, missing: false, excused: false },
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
-            'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -3633,7 +3803,7 @@ export const gradebook = {
     },
     {
       id: 'maximo-alcaraz',
-      name: 'Maximo Alcaraz',
+      name: "Maximo Alcaraz",
       pin: '101863',
       classes: {
         'caltech-math': {
@@ -3663,6 +3833,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 5, missing: false, excused: false },
@@ -3702,7 +3874,7 @@ export const gradebook = {
     },
     {
       id: 'michelle-hernandez',
-      name: 'Michelle Hernandez',
+      name: "Michelle Hernandez",
       pin: '196390',
       classes: {
         'caltech-math': {
@@ -3732,6 +3904,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -3771,7 +3945,7 @@ export const gradebook = {
     },
     {
       id: 'oskar-martinez',
-      name: 'Oskar Martinez',
+      name: "Oskar Martinez",
       pin: '530452',
       classes: {
         'caltech-math': {
@@ -3801,6 +3975,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -3840,7 +4016,7 @@ export const gradebook = {
     },
     {
       id: 'pedro-torres',
-      name: 'Pedro Torres',
+      name: "Pedro Torres",
       pin: '345574',
       classes: {
         'caltech-math': {
@@ -3870,6 +4046,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -3909,7 +4087,7 @@ export const gradebook = {
     },
     {
       id: 'richard-hernandez',
-      name: 'Richard Hernandez',
+      name: "Richard Hernandez",
       pin: '197636',
       classes: {
         'caltech-math': {
@@ -3938,7 +4116,9 @@ export const gradebook = {
             'module-2-lesson-18': { points: 0, missing: true, excused: false },
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
-            'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -3978,7 +4158,7 @@ export const gradebook = {
     },
     {
       id: 'ryan-sarracino',
-      name: 'Ryan Sarracino',
+      name: "Ryan Sarracino",
       pin: '429524',
       classes: {
         'caltech-math': {
@@ -4008,6 +4188,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -4047,7 +4229,7 @@ export const gradebook = {
     },
     {
       id: 'samantha-garcia',
-      name: 'Samantha Garcia',
+      name: "Samantha Garcia",
       pin: '853429',
       classes: {
         'caltech-math': {
@@ -4077,6 +4259,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -4116,7 +4300,7 @@ export const gradebook = {
     },
     {
       id: 'samuel-valdivia',
-      name: 'Samuel Valdivia',
+      name: "Samuel Valdivia",
       pin: '486282',
       classes: {
         'caltech-math': {
@@ -4146,6 +4330,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -4185,7 +4371,7 @@ export const gradebook = {
     },
     {
       id: 'selene-silvas',
-      name: 'Selene Silvas',
+      name: "Selene Silvas",
       pin: '322810',
       classes: {
         'caltech-math': {
@@ -4215,6 +4401,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 10, missing: false, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: 10, missing: false, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -4254,7 +4442,7 @@ export const gradebook = {
     },
     {
       id: 'victoria-vasquez-lopez',
-      name: 'Victoria Vasquez Lopez',
+      name: "Victoria Vasquez Lopez",
       pin: '993838',
       classes: {
         'caltech-math': {
@@ -4284,6 +4472,8 @@ export const gradebook = {
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-23': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 0, missing: true, excused: false },
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
@@ -4323,7 +4513,7 @@ export const gradebook = {
     },
     {
       id: 'vivienne-ramirez',
-      name: 'Vivienne Ramirez',
+      name: "Vivienne Ramirez",
       pin: '303188',
       classes: {
         'caltech-math': {
@@ -4352,7 +4542,9 @@ export const gradebook = {
             'module-2-lesson-18': { points: 10, missing: false, excused: false },
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
-            'module-2-lesson-21': { points: 0, missing: true, excused: false },
+            'module-2-lesson-21': { points: 10, missing: false, excused: false },
+            'module-2-lesson-23': { points: 10, missing: false, excused: false },
+            'module-2-lesson-25-26': { points: null, missing: false, excused: true },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
