@@ -13,13 +13,14 @@
  * graded quiz and test in that category into one 1–4 mark. Homework is not included.
  */
 export const gradebook = {
-  lastUpdated: '2026-11-13',
+  lastUpdated: '2026-11-20',
   accessSalt: 'c4e8a1d67b9035f2e6d48a17c0b59e33',
   accessHash: '979ff1ceb595f7faad86d5d3e5ca9668c3d6fc9a0a2215229572d6fdefbd6ab9',
   classes: {
     'hawaii-science': {
       assignments: [
         { id: 'choose-your-own-city-climate', title: "Choose your own city Climate", category: 'assignment', maxPoints: 10 },
+        { id: 'city-research-project', title: "City Research Project", category: 'assignment', maxPoints: 20 },
         { id: 'earth-layers-extension', title: "Earth Layers Extension", category: 'assignment', maxPoints: 10 },
         { id: 'evaporation-detective-new-cases', title: "Evaporation Detective: New Cases", category: 'assignment', maxPoints: 10 },
         { id: 'exploration-lab-science-changes-of-matter-water', title: "Exploration Lab Science: Changes of Matter Water", category: 'assignment', maxPoints: 10 },
@@ -78,6 +79,10 @@ export const gradebook = {
         { id: 'module-2-topic-c-quiz', title: "Module 2 Topic C Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 10 },
         { id: 'module-3-lesson-1', title: "Module 3 Lesson 1", category: 'assignment', maxPoints: 10 },
         { id: 'module-3-lesson-3', title: "Module 3 Lesson 3", category: 'assignment', maxPoints: 10 },
+        { id: 'module-3-lesson-5', title: "Module 3 Lesson 5", category: 'assignment', maxPoints: 10 },
+        { id: 'module-3-test', title: "Module 3 Test", category: 'test', academicCategory: "The Number System (NS)", maxPoints: 20 },
+        { id: 'module-3-topic-b-quiz', title: "Module 3 Topic B Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 10 },
+        { id: 'module-3-topic-c-quiz', title: "Module 3 Topic C Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 10 },
         { id: 'scale-factor-homework', title: "Scale Factor Homework", category: 'assignment', maxPoints: 10 },
         { id: 'topic-b-quiz', title: "Topic B Quiz", category: 'quiz', academicCategory: "Ratios and Proportional Relationships", maxPoints: 10 },
         { id: 'topic-c-review-homework', title: "Topic C Review Homework", category: 'assignment', maxPoints: 10 },
@@ -126,6 +131,10 @@ export const gradebook = {
         { id: 'module-2-topic-c-quiz', title: "Module 2 Topic C Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 10 },
         { id: 'module-3-lesson-1', title: "Module 3 Lesson 1", category: 'assignment', maxPoints: 10 },
         { id: 'module-3-lesson-3', title: "Module 3 Lesson 3", category: 'assignment', maxPoints: 10 },
+        { id: 'module-3-lesson-5', title: "Module 3 Lesson 5", category: 'assignment', maxPoints: 10 },
+        { id: 'module-3-test', title: "Module 3 Test", category: 'test', academicCategory: "The Number System (NS)", maxPoints: 20 },
+        { id: 'module-3-topic-b-quiz', title: "Module 3 Topic B Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 10 },
+        { id: 'module-3-topic-c-quiz', title: "Module 3 Topic C Quiz", category: 'quiz', academicCategory: "The Number System (NS)", maxPoints: 10 },
         { id: 'scale-factor-homework', title: "Scale Factor Homework", category: 'assignment', maxPoints: 10 },
         { id: 'm1-ta-l1-pgs-13-14', title: "M1 TA L1 (pgs 13 & 14)", category: 'assignment', maxPoints: 10 },
         { id: 'm1-ta-l2', title: "M1 TA L2", category: 'assignment', maxPoints: 10 },
@@ -136,6 +145,7 @@ export const gradebook = {
     'caltech-science': {
       assignments: [
         { id: 'choose-your-own-city-climate', title: "Choose your own city Climate", category: 'assignment', maxPoints: 10 },
+        { id: 'city-research-project', title: "City Research Project", category: 'assignment', maxPoints: 20 },
         { id: 'earth-layer-extension', title: "Earth Layer Extension", category: 'assignment', maxPoints: 10 },
         { id: 'evaporation-detective-new-cases', title: "Evaporation Detective: New Cases", category: 'assignment', maxPoints: 10 },
         { id: 'exploration-lab-science-changes-of-matter-water', title: "Exploration Lab Science: Changes of Matter Water", category: 'assignment', maxPoints: 10 },
@@ -168,6 +178,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -226,6 +237,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 9.8, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 8.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -245,6 +260,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -303,6 +319,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 9.8, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 9.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -322,6 +342,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -380,6 +401,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 10, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 6, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -399,6 +424,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -457,6 +483,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 3.3, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'topic-b-quiz': { points: 6, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -476,6 +506,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -534,6 +565,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 2.8, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'topic-b-quiz': { points: 1.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -553,6 +588,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -610,7 +646,11 @@ export const gradebook = {
             'module-2-topic-b-quiz': { points: 7, missing: false, excused: false },
             'module-2-topic-c-quiz': { points: 7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
-            'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 2, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -630,6 +670,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -688,6 +729,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 9.5, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 8.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -707,6 +752,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -765,6 +811,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 0.9, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'topic-b-quiz': { points: 0, missing: true, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -785,6 +835,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -843,6 +894,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 0, missing: true, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 2, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -862,6 +917,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -919,7 +975,11 @@ export const gradebook = {
             'module-2-topic-b-quiz': { points: 9.2, missing: false, excused: false },
             'module-2-topic-c-quiz': { points: 5.1, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
-            'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 7, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -939,6 +999,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -997,6 +1058,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 4.6, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 0, missing: true, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -1016,6 +1081,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -1074,6 +1140,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 3.5, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'topic-b-quiz': { points: 0.8, missing: false, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -1093,6 +1163,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -1151,6 +1222,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 3, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -1169,7 +1244,8 @@ export const gradebook = {
       classes: {
         'hawaii-science': {
           scores: {
-            'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -1228,6 +1304,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 5.8, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 6.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -1247,6 +1327,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -1305,6 +1386,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 9, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 8.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -1324,6 +1409,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -1382,6 +1468,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 9.8, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 7.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -1401,6 +1491,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -1457,8 +1548,12 @@ export const gradebook = {
             'module-2-topic-a-quiz': { points: 5.9, missing: false, excused: false },
             'module-2-topic-b-quiz': { points: 4.6, missing: false, excused: false },
             'module-2-topic-c-quiz': { points: 5.3, missing: false, excused: false },
-            'module-3-lesson-1': { points: 0, missing: true, excused: false },
-            'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-1': { points: 10, missing: false, excused: false },
+            'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 3, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -1478,6 +1573,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -1536,6 +1632,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 3.7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'topic-b-quiz': { points: 4, missing: false, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -1555,6 +1655,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -1612,7 +1713,11 @@ export const gradebook = {
             'module-2-topic-b-quiz': { points: 7, missing: false, excused: false },
             'module-2-topic-c-quiz': { points: 2.5, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
-            'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 9.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -1632,6 +1737,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -1690,6 +1796,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 8, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -1709,6 +1819,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -1767,6 +1878,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'topic-b-quiz': { points: 0.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -1786,6 +1901,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -1838,12 +1954,16 @@ export const gradebook = {
             'module-2-lesson-5': { points: 0, missing: true, excused: false },
             'module-2-lesson-6': { points: 0, missing: true, excused: false },
             'module-2-lesson-7': { points: 10, missing: false, excused: false },
-            'module-2-test': { points: 0, missing: true, excused: false },
+            'module-2-test': { points: 13, missing: false, excused: false },
             'module-2-topic-a-quiz': { points: 5.9, missing: false, excused: false },
             'module-2-topic-b-quiz': { points: 7, missing: false, excused: false },
             'module-2-topic-c-quiz': { points: 2.3, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 6.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -1863,6 +1983,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -1921,6 +2042,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 3.7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'topic-b-quiz': { points: 1.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -1940,6 +2065,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -1998,6 +2124,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 0, missing: true, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 7.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -2017,6 +2147,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -2075,6 +2206,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 2.3, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 4, missing: false, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -2094,6 +2229,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -2151,7 +2287,11 @@ export const gradebook = {
             'module-2-topic-b-quiz': { points: 4.6, missing: false, excused: false },
             'module-2-topic-c-quiz': { points: 5.3, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
-            'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 6.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -2171,6 +2311,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -2229,6 +2370,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7.2, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 4.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -2248,6 +2393,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -2305,7 +2451,11 @@ export const gradebook = {
             'module-2-topic-b-quiz': { points: 4.1, missing: false, excused: false },
             'module-2-topic-c-quiz': { points: 5.3, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
-            'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 7, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -2325,6 +2475,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -2383,6 +2534,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 6.3, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 6.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -2402,6 +2557,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -2460,6 +2616,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 0.5, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'topic-b-quiz': { points: 5.5, missing: false, excused: false },
             'topic-c-review-homework': { points: 0, missing: true, excused: false },
@@ -2479,6 +2639,7 @@ export const gradebook = {
         'hawaii-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layers-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -2537,6 +2698,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 10, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'topic-b-quiz': { points: 10, missing: false, excused: false },
             'topic-c-review-homework': { points: 10, missing: false, excused: false },
@@ -2592,6 +2757,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 6, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 0, missing: true, excused: false },
             'm1-ta-l2': { points: 0, missing: true, excused: false },
@@ -2602,6 +2771,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -2670,6 +2840,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 0, missing: true, excused: false },
@@ -2680,6 +2854,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -2748,6 +2923,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 0.9, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 5, missing: false, excused: false },
             'm1-ta-l2': { points: 0, missing: true, excused: false },
@@ -2758,6 +2937,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -2826,6 +3006,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: null, missing: false, excused: true },
             'm1-ta-l1-pgs-13-14': { points: null, missing: false, excused: true },
             'm1-ta-l2': { points: null, missing: false, excused: true },
@@ -2836,6 +3020,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: null, missing: false, excused: true },
             'exploration-lab-science-changes-of-matter-water': { points: null, missing: false, excused: true },
@@ -2904,6 +3089,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 0, missing: true, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -2914,6 +3103,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -2981,7 +3171,11 @@ export const gradebook = {
             'module-2-topic-b-quiz': { points: 9.7, missing: false, excused: false },
             'module-2-topic-c-quiz': { points: 10, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
-            'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -2991,7 +3185,8 @@ export const gradebook = {
         },
         'caltech-science': {
           scores: {
-            'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -3060,6 +3255,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -3070,6 +3269,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -3113,7 +3313,7 @@ export const gradebook = {
             'm1-tb-l8': { points: 10, missing: false, excused: false },
             'm1-tb-l9': { points: 10, missing: false, excused: false },
             'm1-topic-a-quiz': { points: 8, missing: false, excused: false },
-            'm1-topic-b-quiz': { points: 6, missing: false, excused: false },
+            'm1-topic-b-quiz': { points: 9, missing: false, excused: false },
             'map-scaling-homework': { points: 10, missing: false, excused: false },
             'module-1-test': { points: 5.8, missing: false, excused: false },
             'module-2-homework-1': { points: 10, missing: false, excused: false },
@@ -3138,6 +3338,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 9.8, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -3148,6 +3352,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -3216,6 +3421,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 5, missing: false, excused: false },
             'm1-ta-l2': { points: 5, missing: false, excused: false },
@@ -3226,6 +3435,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -3294,6 +3504,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 2.6, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -3304,6 +3518,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -3372,6 +3587,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 0.9, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 5, missing: false, excused: false },
             'm1-ta-l2': { points: 0, missing: true, excused: false },
@@ -3382,6 +3601,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -3424,7 +3644,7 @@ export const gradebook = {
             'm1-tb-l12': { points: 10, missing: false, excused: false },
             'm1-tb-l8': { points: 10, missing: false, excused: false },
             'm1-tb-l9': { points: 10, missing: false, excused: false },
-            'm1-topic-a-quiz': { points: 6.5, missing: false, excused: false },
+            'm1-topic-a-quiz': { points: 9, missing: false, excused: false },
             'm1-topic-b-quiz': { points: 7.3, missing: false, excused: false },
             'map-scaling-homework': { points: 10, missing: false, excused: false },
             'module-1-test': { points: 16, missing: false, excused: false },
@@ -3450,6 +3670,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 9, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -3460,6 +3684,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -3528,6 +3753,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 5, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -3538,6 +3767,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -3606,6 +3836,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 3.5, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -3616,6 +3850,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -3683,7 +3918,11 @@ export const gradebook = {
             'module-2-topic-b-quiz': { points: 7, missing: false, excused: false },
             'module-2-topic-c-quiz': { points: 0, missing: true, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
-            'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 5, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -3694,6 +3933,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -3762,6 +4002,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 0.7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 0, missing: true, excused: false },
             'm1-ta-l2': { points: 0, missing: true, excused: false },
@@ -3772,6 +4016,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: null, missing: false, excused: true },
@@ -3840,6 +4085,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 9.8, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -3850,6 +4099,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -3917,7 +4167,11 @@ export const gradebook = {
             'module-2-topic-b-quiz': { points: 7, missing: false, excused: false },
             'module-2-topic-c-quiz': { points: 0, missing: true, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
-            'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -3928,6 +4182,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -3996,6 +4251,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 4.2, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 0, missing: true, excused: false },
             'm1-ta-l2': { points: 0, missing: true, excused: false },
@@ -4006,6 +4265,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -4063,7 +4323,7 @@ export const gradebook = {
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
             'module-2-lesson-23': { points: 10, missing: false, excused: false },
-            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 10, missing: false, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -4073,7 +4333,11 @@ export const gradebook = {
             'module-2-topic-b-quiz': { points: 5.1, missing: false, excused: false },
             'module-2-topic-c-quiz': { points: 8, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
-            'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -4084,6 +4348,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -4152,6 +4417,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 5, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 0, missing: true, excused: false },
             'm1-ta-l2': { points: 0, missing: true, excused: false },
@@ -4162,6 +4431,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -4230,6 +4500,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 1.2, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 0, missing: true, excused: false },
             'm1-ta-l2': { points: 0, missing: true, excused: false },
@@ -4240,6 +4514,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -4308,6 +4583,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 5, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 5, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -4318,6 +4597,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -4386,6 +4666,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 2.6, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 0, missing: true, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -4396,6 +4680,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -4464,6 +4749,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 1.8, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 0, missing: true, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -4474,6 +4763,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -4516,7 +4806,7 @@ export const gradebook = {
             'm1-tb-l12': { points: 10, missing: false, excused: false },
             'm1-tb-l8': { points: 10, missing: false, excused: false },
             'm1-tb-l9': { points: 10, missing: false, excused: false },
-            'm1-topic-a-quiz': { points: 6.5, missing: false, excused: false },
+            'm1-topic-a-quiz': { points: 9, missing: false, excused: false },
             'm1-topic-b-quiz': { points: 9.5, missing: false, excused: false },
             'map-scaling-homework': { points: 10, missing: false, excused: false },
             'module-1-test': { points: 18.6, missing: false, excused: false },
@@ -4542,6 +4832,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7.4, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -4552,6 +4846,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -4599,12 +4894,12 @@ export const gradebook = {
             'map-scaling-homework': { points: 0, missing: true, excused: false },
             'module-1-test': { points: 5.8, missing: false, excused: false },
             'module-2-homework-1': { points: 10, missing: false, excused: false },
-            'module-2-lesson-10': { points: 0, missing: true, excused: false },
+            'module-2-lesson-10': { points: 10, missing: false, excused: false },
             'module-2-lesson-11': { points: 0, missing: true, excused: false },
             'module-2-lesson-14': { points: 0, missing: true, excused: false },
-            'module-2-lesson-15': { points: 0, missing: true, excused: false },
-            'module-2-lesson-16': { points: 0, missing: true, excused: false },
-            'module-2-lesson-18': { points: 0, missing: true, excused: false },
+            'module-2-lesson-15': { points: 10, missing: false, excused: false },
+            'module-2-lesson-16': { points: 10, missing: false, excused: false },
+            'module-2-lesson-18': { points: 10, missing: false, excused: false },
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
@@ -4620,6 +4915,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 4.2, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 5, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -4630,6 +4929,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -4682,7 +4982,7 @@ export const gradebook = {
             'module-2-lesson-14': { points: 10, missing: false, excused: false },
             'module-2-lesson-15': { points: 0, missing: true, excused: false },
             'module-2-lesson-16': { points: 0, missing: true, excused: false },
-            'module-2-lesson-18': { points: 0, missing: true, excused: false },
+            'module-2-lesson-18': { points: null, missing: false, excused: true },
             'module-2-lesson-19': { points: 0, missing: true, excused: false },
             'module-2-lesson-2': { points: 0, missing: true, excused: false },
             'module-2-lesson-21': { points: 0, missing: true, excused: false },
@@ -4698,6 +4998,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 7.7, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 0, missing: true, excused: false },
@@ -4708,6 +5012,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -4776,6 +5081,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 8.4, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 5, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -4786,6 +5095,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
@@ -4854,6 +5164,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 1.6, missing: false, excused: false },
             'module-3-lesson-1': { points: 0, missing: true, excused: false },
             'module-3-lesson-3': { points: 0, missing: true, excused: false },
+            'module-3-lesson-5': { points: null, missing: false, excused: true },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 0, missing: true, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 5, missing: false, excused: false },
             'm1-ta-l2': { points: 0, missing: true, excused: false },
@@ -4864,6 +5178,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 0, missing: true, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 0, missing: true, excused: false },
             'evaporation-detective-new-cases': { points: 0, missing: true, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 0, missing: true, excused: false },
@@ -4921,7 +5236,7 @@ export const gradebook = {
             'module-2-lesson-2': { points: 10, missing: false, excused: false },
             'module-2-lesson-21': { points: 10, missing: false, excused: false },
             'module-2-lesson-23': { points: 10, missing: false, excused: false },
-            'module-2-lesson-25-26': { points: 0, missing: true, excused: false },
+            'module-2-lesson-25-26': { points: 10, missing: false, excused: false },
             'module-2-lesson-3-homework': { points: 10, missing: false, excused: false },
             'module-2-lesson-5': { points: 10, missing: false, excused: false },
             'module-2-lesson-6': { points: 10, missing: false, excused: false },
@@ -4932,6 +5247,10 @@ export const gradebook = {
             'module-2-topic-c-quiz': { points: 9, missing: false, excused: false },
             'module-3-lesson-1': { points: 10, missing: false, excused: false },
             'module-3-lesson-3': { points: 10, missing: false, excused: false },
+            'module-3-lesson-5': { points: 10, missing: false, excused: false },
+            'module-3-test': { points: null, missing: false, excused: true },
+            'module-3-topic-b-quiz': { points: null, missing: false, excused: true },
+            'module-3-topic-c-quiz': { points: null, missing: false, excused: true },
             'scale-factor-homework': { points: 10, missing: false, excused: false },
             'm1-ta-l1-pgs-13-14': { points: 10, missing: false, excused: false },
             'm1-ta-l2': { points: 10, missing: false, excused: false },
@@ -4942,6 +5261,7 @@ export const gradebook = {
         'caltech-science': {
           scores: {
             'choose-your-own-city-climate': { points: 10, missing: false, excused: false },
+            'city-research-project': { points: null, missing: false, excused: true },
             'earth-layer-extension': { points: 10, missing: false, excused: false },
             'evaporation-detective-new-cases': { points: 10, missing: false, excused: false },
             'exploration-lab-science-changes-of-matter-water': { points: 10, missing: false, excused: false },
